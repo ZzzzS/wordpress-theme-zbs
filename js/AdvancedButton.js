@@ -9,6 +9,8 @@ function MainButton(position,w,h,r,p){
 		this.breath = false;
 		this.breathState = false;
 		this.loadRate = 0;
+		this.w = w;
+		this.h = h;
 	}
 }
 inheritPrototype(MainButton,Button);
@@ -71,6 +73,8 @@ MainButton.prototype.state = function(){
 MainButton.prototype.display = function(){
 	if(this.strokeCol){
 		this.p.stroke(this.strokeCol);
+	}else{
+		this.p.noStroke();
 	}
 	
 	this.p.rectMode('center');
@@ -81,28 +85,65 @@ MainButton.prototype.display = function(){
 	
 	switch(state){
 		case "hover":
+			//音效
+			if(this.pState == "mouseOut"){
+				if(this.sound) this.sound.play();
+			}
+
 			if(this.pState == "press"){
 				this.fire({type:"trunOff"});
 			}
 			this.p.fill(this.p.color(0,100,0));
-			this.drawGeometry()
+			this.drawGeometry();
 			if(this.width > 100){
 				this.breath = true;
 			}
 			$(this.p.canvas).css("cursor","pointer");
+			
+			var s = 1.1;
+			if(this.breath){
+				//呼吸效果
+				if(!this.breathState && this.width <= 100){
+					this.width *= 1.002;
+					this.height *= 1.002;
+				}else{
+					this.breathState = true;
+				}
+				if(this.breathState && this.width > 90){
+					this.width *= 0.995;
+					this.height *= 0.995;
+				}else{
+					this.breathState = false;
+				}
+			}else{
+				//放大
+				if(this.width <= 100){
+					this.width *= s;
+					this.height *= s;
+				}else{
+					
+				}
+			}
+			
 			this.fire({type:"hover"});
-			this.fire({type:"xx",state:"hover"});
 			this.pState = "hover";
 			break;
 		case "mouseOut":
 			if(this.fillCol){
 				this.p.fill(this.fillCol);
 			}
-			this.drawGeometry()
+			this.drawGeometry();
 			this.breath = false;
 			if(this.constructor.prototype.hoverObjCount == 0) $(this.p.canvas).css("cursor","default");
+			
+			//缩小
+			var s = 0.95;
+			if(this.width > this.w){
+				this.width *= s;
+				this.height *= s;
+			}
+			
 			this.fire({type:"mouseOut"});
-			this.fire({type:"xx",state:"mouseOut"});
 			this.pState = "mouseOut";
 			break;
 		case "press":	
@@ -131,7 +172,6 @@ MainButton.prototype.display = function(){
 			}
 			
 			this.fire({type:"press"});
-			this.fire({type:"xx",state:"press"});
 			this.pState = "press";
 			break;
 		case "click":
@@ -139,9 +179,8 @@ MainButton.prototype.display = function(){
 				this.fire({type:"turnOn"});
 			}
 			this.p.fill(this.p.color(100,100,100));
-			this.drawGeometry()
+			this.drawGeometry();
 			this.fire({type:"click"});
-			this.fire({type:"xx",state:"click"});
 			this.pState = "click";
 			break;
 		default:

@@ -1,33 +1,42 @@
+"use strict"; //严格模式
 var myCanvas;
 var b,c;
 var displayArray = [];
 var mainButton = [];
 var button = [];
+var soundFile;
 var sketch = function(p){
 	//p.frameRate(50);
-
+	p.preload = function() {
+		p.soundFormats('mp3', 'ogg');
+		soundFile = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
+	};
+	
 	p.setup = function(){
 		p.createCanvas(960,600);
 		p.canvas.id = "sketch";
-		b = new movingButton(new p5.Vector(50,50),50,50,25,p);
-		c = new MainButton(new p5.Vector(100,80),100,100,10,p);
-		//b.b.strokeCol = p.color(200,0,0);
-		b.b.fillCol = p.color(50,50,100);
-		b.reflect = true;
-		c.strokeCol = p.color(200,0,0);
-		c.fillCol = p.color(0,0,100);
-		b.b.addHandler("xx",handleMessage);
-		b.b.addHandler("hover",amplify);
-		b.b.addHandler("mouseOut",reduce);
-		b.b.addHandler("trunOff",mouseOut);
-		b.b.addHandler("press",pressed);
-		b.b.addHandler("click",clicked);
-		b.b.addHandler("turnOn",turnOn);
-		//b.b.addHandler("press",arc);
-		mainButton.push(b);
-		mainButton.push(c);
+		
+		for(var i=0;i<20;i++){
+			for(var j=0;j<9;j++){
+				var size = Math.random()*20 + 15;
+				var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * j + 30),size,size,25,p);
+				//newObj.sound = soundFile;
+				newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
+				newObj.reflect = true;
+				newObj.b.addHandler("hover",amplify);
+				newObj.b.addHandler("mouseOut",reduce);
+				newObj.b.addHandler("trunOff",mouseOut);
+				newObj.b.addHandler("click",clicked);
+				newObj.b.addHandler("turnOn",turnOn);
+				newObj.b.sound = soundFile;
+				mainButton.push(newObj);
+			}
+		}
+		
+
 		displayArray.push(mainButton);
 		displayArray.push(button);
+		
 	};
 	
 	p.draw = function(){
@@ -37,7 +46,6 @@ var sketch = function(p){
 				displayArray[i][j].display();
 			}
 		}
-		//$("#xx").html(displayArray.toString());
 	};	
 	
 };
@@ -57,58 +65,31 @@ function handleMessage(event){
 }
 
 function amplify(event){
-	event.target.s = 1.1;
-	if(event.target.breath){
-		if(!event.target.breathState && event.target.width <= 100){
-			event.target.width *= 1.002;
-			event.target.height *= 1.002;
-		}else{
-			event.target.breathState = true;
-		}
-		if(event.target.breathState && event.target.width > 90){
-			event.target.width *= 0.995;
-			event.target.height *= 0.995;
-		}else{
-			event.target.breathState = false;
-		}
-	}else{
-		if(event.target.width <= 100){
-			event.target.width *= event.target.s;
-			event.target.height *= event.target.s;
-		}else{
-			
-		}
-	}
-	$("#xx").html("有种你点击试试啊！！");
 	event.target.p.noStroke();
 	event.target.p.fill(0);
 	event.target.p.textAlign("center");
 	if(event.target.position.y < event.target.p.height/2){
-		event.target.p.text("有种你点击试试啊！！",event.target.position.x,event.target.position.y + 50);
+		event.target.p.text("有种你点击试试啊！！",event.target.position.x,event.target.position.y + 100);
 	}else{
-		event.target.p.text("有种你点击试试啊！！",event.target.position.x,event.target.position.y - 50);
+		event.target.p.text("有种你点击试试啊！！",event.target.position.x,event.target.position.y - 100);
 	}
 }
 
 function reduce(event){
-	event.target.s = 0.95;
-	if(event.target.width > 50){
-		event.target.width *= event.target.s;
-		event.target.height *= event.target.s;
-	}
-	$("#xx").html("");
+	
 }
 
-function breath(event){
-	$("#xx").append(event.state);
-}
 
-function pressed(event){
-	$("#xx").html("有种你别撒手啊！！");
-}
 
 function clicked(event){
-	$("#xx").html("你有种！！");
+	event.target.p.noStroke();
+	event.target.p.fill(0);
+	event.target.p.textAlign("center");
+	if(event.target.position.y < event.target.p.height/2){
+		event.target.p.text("你有种！！",event.target.position.x,event.target.position.y + 100);
+	}else{
+		event.target.p.text("你有种！！",event.target.position.x,event.target.position.y - 100);
+	}
 }
 function turnOn(event){
 	var vect = new p5.Vector(event.target.width / 2 + 30,0);
@@ -123,5 +104,4 @@ function turnOn(event){
 
 function mouseOut(event){
 	displayArray[1] = [];
-	//$("#xx").html(event.target.pState);
 }
