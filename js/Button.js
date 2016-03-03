@@ -59,6 +59,8 @@ Button.prototype.state = function(){
 Button.prototype.display = function(){
 	if(this.strokeCol){
 		this.p.stroke(this.strokeCol);
+	}else{
+		this.p.noStroke();
 	}
 	this.p.rectMode('center');
 	switch(this.state()){
