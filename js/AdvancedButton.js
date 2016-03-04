@@ -26,17 +26,18 @@ MainButton.prototype.isSelected = function(){
 	}
 }
 
-MainButton.prototype.state = function(){
+/*MainButton.prototype.state = function(){
 	if(this.pState == "click" || (this.pState == "press" && this.pSwitch == "on")){
 		if(this.isSelected()){
 			if(this.p.mouseIsPressed){
 				return "press";
 			}else{
 				if(this.pState == "press"){
-					this.pSwitch = "off";
-					this.constructor.prototype.clickObjCount -= 1;
-					return "hover";
+					
 				}
+				this.pSwitch = "off";
+				this.constructor.prototype.clickObjCount -= 1;
+				return "hover";
 			}
 		}
 		return "click";
@@ -45,7 +46,7 @@ MainButton.prototype.state = function(){
 			return;
 		}
 		if(this.isSelected()){
-			if(this.constructor.prototype.hoverObjCount == 1 && this.pState == "mouseOut"){
+			if(this.constructor.prototype.hoverObjCount >= 1 && this.pState == "mouseOut"){
 				return;
 			}
 			if(this.p.mouseIsPressed){
@@ -68,7 +69,57 @@ MainButton.prototype.state = function(){
 			return "mouseOut";
 		}
 	}
+}*/
+
+
+
+MainButton.prototype.state = function(){
+	if(this.isSelected()){
+		if(this.pState == "click"){
+			if(this.p.mouseIsPressed){
+				if(this.pState == "press"){
+					return "press";
+				}else{
+					//
+					return "press";
+				}
+			}else{
+				return "click";
+			}
+		}else{
+			if(this.p.mouseIsPressed){
+				if(this.pState == "press"){
+					return "press";
+				}else{
+					//
+					return "press";
+				}
+			}else{
+				if(this.pState == "press"){
+					if(this.pSwitch == "on"){
+						this.pSwitch = "off";
+						return "hover";
+					}else{
+						this.pSwitch = "on";
+						return "click";
+					}
+				}else{
+					return "hover";
+				}
+			}
+		}
+	}else{
+		if(this.pState == "click"){
+			return "click";
+		}else{
+			return "mouseOut";
+		}
+	}
 }
+
+
+
+
 
 MainButton.prototype.display = function(){
 	if(this.strokeCol){
@@ -155,16 +206,17 @@ MainButton.prototype.display = function(){
 			this.drawGeometry();
 			
 			if(this.pSwitch == "off"){
-				if(this.loadRate < 2 * Math.PI - 0.14){
+				if(this.loadRate < 2 * Math.PI){
 					this.loadRate += 0.15;
 				}
-				this.p.strokeWeight(10);
+				if(this.loadRate > 2 * Math.PI) this.loadRate = 2 * Math.PI - 0.01;
+				this.p.strokeWeight(3);
 				this.p.strokeCap("square");
 				this.p.stroke(this.p.color(50,100,100));
 				this.p.push();
 				this.p.translate(this.position.x,this.position.y);
 				this.p.noFill();
-				this.p.arc(0,0,this.width + 30,this.height + 30,0,this.loadRate);
+				this.p.arc(0,0,this.width + 3,this.height + 3,0,this.loadRate);
 				this.p.pop();
 				this.p.strokeWeight(1);
 			}else{
@@ -219,7 +271,7 @@ movingButton.prototype.update = function(){
 			this.velocity.y *= -1;
 		}
 	}
-	this.b.position.add(this.velocity);
+	//this.b.position.add(this.velocity);
 }
 
 movingButton.prototype.display = function(){
