@@ -15,7 +15,6 @@ function MainButton(position,w,h,r,p){
 }
 inheritPrototype(MainButton,Button);
 
-//MainButton.prototype.clickObjCount = 0;
 MainButton.prototype.hoverObjCount = 0;
 
 MainButton.prototype.isSelected = function(){
@@ -25,53 +24,6 @@ MainButton.prototype.isSelected = function(){
 		return false;
 	}
 }
-
-/*MainButton.prototype.state = function(){
-	if(this.pState == "click" || (this.pState == "press" && this.pSwitch == "on")){
-		if(this.isSelected()){
-			if(this.p.mouseIsPressed){
-				return "press";
-			}else{
-				if(this.pState == "press"){
-					
-				}
-				this.pSwitch = "off";
-				this.constructor.prototype.clickObjCount -= 1;
-				return "hover";
-			}
-		}
-		return "click";
-	}else{
-		if(this.constructor.prototype.clickObjCount == 1 && this.pState != "click"){
-			return;
-		}
-		if(this.isSelected()){
-			if(this.constructor.prototype.hoverObjCount >= 1 && this.pState == "mouseOut"){
-				return;
-			}
-			if(this.p.mouseIsPressed){
-				return "press";
-			}else{
-				if(this.pState == "press" && this.loadRate >= 2 * Math.PI - 0.15){
-					this.pSwitch = "on";
-					this.constructor.prototype.clickObjCount += 1;
-					return "click";
-				}
-			}
-			if(this.pState == "mouseOut"){
-				this.constructor.prototype.hoverObjCount += 1;
-			}
-			return "hover";
-		}else{
-			if(this.pState == "hover"){
-				this.constructor.prototype.hoverObjCount -= 1;
-			}
-			return "mouseOut";
-		}
-	}
-}*/
-
-
 
 MainButton.prototype.state = function(){
 	if(this.isSelected()){
@@ -88,10 +40,10 @@ MainButton.prototype.state = function(){
 		}else{
 			if(this.constructor.prototype.hoverObjCount <= 0 || this.pState != "mouseOut"){
 				if(this.p.mouseIsPressed){
-					if(this.pState != "mouseOut"){
-						return "press";
-					}else{
+					if(this.pState == "mouseOut"){
 						return "mouseOut";
+					}else{
+						return "press";
 					}
 				}else{
 					if(this.pState == "press"){
@@ -146,11 +98,11 @@ MainButton.prototype.display = function(){
 	if(state != "press"){
 		this.loadRate = 0
 	}
-	
+	this.cursorState(state);  //鼠标状态
 	switch(state){
 		case "hover":
 			//音效
-			if(this.pState == "mouseOut"){
+			if(this.pState == "mouseOut"){         //首次hover
 				if(this.sound) this.sound.play();
 			}
 
@@ -162,7 +114,6 @@ MainButton.prototype.display = function(){
 			if(this.width > 100){
 				this.breath = true;
 			}
-			$(this.p.canvas).css("cursor","pointer");
 			
 			var s = 1.1;
 			if(this.breath){
@@ -198,7 +149,6 @@ MainButton.prototype.display = function(){
 			}
 			this.drawGeometry();
 			this.breath = false;
-			if(this.constructor.prototype.hoverObjCount == 0) $(this.p.canvas).css("cursor","default");
 			
 			//缩小
 			var s = 0.95;
@@ -258,6 +208,19 @@ MainButton.prototype.display = function(){
 	}
 }
 
+MainButton.prototype.cursorState = function(state){
+	if(this.constructor.prototype.hoverObjCount == 0){
+		$(this.p.canvas).css("cursor","default");
+	}else{
+		if(state != "mouseOut"){
+			if(this.isSelected()){
+				$(this.p.canvas).css("cursor","pointer");
+			}else{
+				$(this.p.canvas).css("cursor","default");
+			}
+		}
+	}
+}
 
 function movingButton(position,w,h,r,p){
 	this.b = new MainButton(position,w,h,r,p);

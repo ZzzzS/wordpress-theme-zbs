@@ -5,10 +5,16 @@ var displayArray = [];
 var mainButton = [];
 var button = [];
 var soundFile;
+var buttonHoverCount;
 
 var xx=document.createElement("div");
 xx.setAttribute("id","xx");
 document.body.appendChild(xx);
+
+$(document).ready(function(){
+	//alert("xx");
+	getUser("basic_contributor");
+});
 
 var sketch = function(p){
 	//p.frameRate(50);
@@ -37,22 +43,30 @@ var sketch = function(p){
 				mainButton.push(newObj);
 			}
 		}
-		b = new Button(new p5.Vector(700,450),80,80,50,p);
-		button.push(b);
+		//b = new Button(new p5.Vector(700,450),80,80,50,p);
+		//button.push(b);
 		displayArray.push(mainButton);
 		displayArray.push(button);
 		
 	};
 	
 	p.draw = function(){
-		p.background("#eee");
+		p.background(255);
+		buttonHoverCount = 0;
 		for(var i = 0;i < displayArray.length;i++){
 			for(var j = 0;j < displayArray[i].length;j++){
 				displayArray[i][j].display();
+				if(i == 1 && displayArray[i][j].isSelected()){
+					buttonHoverCount++;
+				}
 			}
 		}
-		$("#xx").html(displayArray[0][0].b.hoverObjCount.toString());
-		$("#xx").append(displayArray[0][0].b.state());
+		if(buttonHoverCount > 0){
+			$(p.canvas).css("cursor","pointer");
+		}
+		
+		//$("#xx").html(displayArray[0][0].b.hoverObjCount.toString());
+		//$("#xx").append(displayArray[0][0].b.state());
 	};	
 	
 };
@@ -64,7 +78,21 @@ var myp5 = new p5(sketch,'zz');
 
 
 
-
+function getUser(userRole){
+	var xmlhttp;
+	if(window.XMLHttpRequest){
+		xmlhttp=new XMLHttpRequest();
+	}else{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange=function(){
+		if(xmlhttp.readyState==4 && xmlhttp.status==200){
+			$("#xx").append(xmlhttp.responseText);
+		}
+	}
+	xmlhttp.open("GET","wp-content/themes/zbs/getUserInfo.php" + "?userRole=" + userRole);
+	xmlhttp.send();
+}
 
 
 function handleMessage(event){
@@ -100,8 +128,10 @@ function clicked(event){
 }
 function turnOn(event){
 	var vect = new p5.Vector(event.target.width / 2 + 30,0);
-	for(var i = 0; i < 6; i++){
-		vect.rotate(0.68);
+	var count = 5;
+	vect.rotate(-0.68 * (count - 1) / 2);
+	for(var i = 0; i < count; i++){
+		if(i > 0) vect.rotate(0.68);
 		var b = new Button(new p5.Vector(event.target.position.x + vect.x,event.target.position.y + vect.y),30,30,10,event.target.p);
 		b.fillCol = event.target.p.color(Math.random()*100, Math.random()*50, Math.random()*200,200);
 		b.switchEffect = false;

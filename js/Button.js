@@ -65,7 +65,9 @@ Button.prototype.display = function(){
 		this.p.noStroke();
 	}
 	this.p.rectMode('center');
-	switch(this.state()){
+	var state = this.state();
+	//this.cursorState(state);  //鼠标状态
+	switch(state){
 		case "hover":
 			this.p.fill(this.p.color(0,100,0));
 			this.drawGeometry();
@@ -103,6 +105,13 @@ Button.prototype.display = function(){
 			this.drawGeometry();
 	}
 }
+/*Button.prototype.cursorState = function(state){
+	if(this.isSelected()){
+		$(this.p.canvas).css("cursor","pointer");
+	}else{
+		//$(this.p.canvas).css("cursor","default");
+	}
+}*/
 Button.prototype.drawGeometry = function(){
 	this.p.push();
 	this.p.translate(this.position.x,this.position.y);
