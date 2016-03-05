@@ -26,33 +26,35 @@ Button.prototype.isSelected = function(){
 	}
 }
 Button.prototype.state = function(){
-	if(this.pState == "click" || (this.pState == "press" && this.pSwitch == "on")){
-		if(this.isSelected()){
+	if(this.isSelected()){
+		if(this.pState == "click"){
+			if(this.p.mouseIsPressed){
+				return "press";
+			}else{
+				return "click";
+			}
+		}else{
 			if(this.p.mouseIsPressed){
 				return "press";
 			}else{
 				if(this.pState == "press"){
-					this.pSwitch = "off";
+					if(this.pSwitch == "on"){
+						this.pSwitch = "off";
+						return "hover";
+					}else{
+						this.pSwitch = "on";
+						return "click";
+					}
+				}else{
 					return "hover";
 				}
 			}
 		}
-		return "click";
 	}else{
-		if(this.isSelected()){
-			if(this.p.mouseIsPressed){
-				return "press";
-			}else{
-				if(this.pState == "press" && this.switchEffect){
-					this.pSwitch = "on";
-					return "click";
-				}
-			}
-			return "hover";
+		if(this.pState == "click"){
+			return "click";
 		}else{
-			if(this.pState == "hover"){
-				return "mouseOut";
-			}
+			return "mouseOut";
 		}
 	}
 }
@@ -73,6 +75,8 @@ Button.prototype.display = function(){
 		case "mouseOut":
 			if(this.fillCol){
 				this.p.fill(this.fillCol);
+			}else{
+				this.p.fill(this.p.color(0,0,100));
 			}
 			this.drawGeometry();
 			this.fire({type:"mouseOut"});

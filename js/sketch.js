@@ -5,6 +5,11 @@ var displayArray = [];
 var mainButton = [];
 var button = [];
 var soundFile;
+
+var xx=document.createElement("div");
+xx.setAttribute("id","xx");
+document.body.appendChild(xx);
+
 var sketch = function(p){
 	//p.frameRate(50);
 	p.preload = function() {
@@ -32,8 +37,8 @@ var sketch = function(p){
 				mainButton.push(newObj);
 			}
 		}
-		
-
+		b = new Button(new p5.Vector(700,450),80,80,50,p);
+		button.push(b);
 		displayArray.push(mainButton);
 		displayArray.push(button);
 		
@@ -46,6 +51,8 @@ var sketch = function(p){
 				displayArray[i][j].display();
 			}
 		}
+		$("#xx").html(displayArray[0][0].b.hoverObjCount.toString());
+		$("#xx").append(displayArray[0][0].b.state());
 	};	
 	
 };
