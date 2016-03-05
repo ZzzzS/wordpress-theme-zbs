@@ -6,75 +6,22 @@ var mainButton = [];
 var button = [];
 var soundFile;
 var buttonHoverCount;
+var sketch;
 
 var xx=document.createElement("div");
 xx.setAttribute("id","xx");
 document.body.appendChild(xx);
+var canvas=document.createElement("div");
+canvas.setAttribute("id","zz");
+document.body.appendChild(canvas);
+
 
 $(document).ready(function(){
 	//alert("xx");
 	getUser("basic_contributor");
 });
 
-var sketch = function(p){
-	//p.frameRate(50);
-	p.preload = function() {
-		p.soundFormats('mp3', 'ogg');
-		soundFile = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
-	};
-	
-	p.setup = function(){
-		p.createCanvas(960,600);
-		p.canvas.id = "sketch";
-		
-		for(var i=0;i<20;i++){
-			for(var j=0;j<9;j++){
-				var size = Math.random()*20 + 15;
-				var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * j + 30),size,size,25,p);
-				//newObj.sound = soundFile;
-				newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
-				newObj.reflect = true;
-				newObj.b.addHandler("hover",amplify);
-				newObj.b.addHandler("mouseOut",reduce);
-				newObj.b.addHandler("trunOff",mouseOut);
-				newObj.b.addHandler("click",clicked);
-				newObj.b.addHandler("turnOn",turnOn);
-				newObj.b.sound = soundFile;
-				mainButton.push(newObj);
-			}
-		}
-		//b = new Button(new p5.Vector(700,450),80,80,50,p);
-		//button.push(b);
-		displayArray.push(mainButton);
-		displayArray.push(button);
-		
-	};
-	
-	p.draw = function(){
-		p.background(255);
-		buttonHoverCount = 0;
-		for(var i = 0;i < displayArray.length;i++){
-			for(var j = 0;j < displayArray[i].length;j++){
-				displayArray[i][j].display();
-				if(i == 1 && displayArray[i][j].isSelected()){
-					buttonHoverCount++;
-				}
-			}
-		}
-		if(buttonHoverCount > 0){
-			$(p.canvas).css("cursor","pointer");
-		}
-		
-		//$("#xx").html(displayArray[0][0].b.hoverObjCount.toString());
-		//$("#xx").append(displayArray[0][0].b.state());
-	};	
-	
-};
 
-var canvas=document.createElement("div");
-canvas.setAttribute("id","zz");
-document.body.appendChild(canvas);
-var myp5 = new p5(sketch,'zz');
 
 
 
@@ -87,7 +34,85 @@ function getUser(userRole){
 	}
 	xmlhttp.onreadystatechange=function(){
 		if(xmlhttp.readyState==4 && xmlhttp.status==200){
-			$("#xx").append(xmlhttp.responseText);
+			var users = JSON.parse(xmlhttp.responseText);
+			
+			
+			//p5.js
+			var sketch = function(p){
+				//p.frameRate(50);
+				p.preload = function() {
+					p.soundFormats('mp3', 'ogg');
+					soundFile = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
+				};
+				
+				p.setup = function(){
+					p.createCanvas(960,600);
+					p.canvas.id = "sketch";
+					var i = 5;
+					for(var item in users){
+						var size = Math.random()*20 + 15;
+						var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * i + 30),size,size,25,p);
+						newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
+						newObj.reflect = true;
+						newObj.b.addHandler("hover",amplify);
+						newObj.b.addHandler("mouseOut",reduce);
+						newObj.b.addHandler("trunOff",mouseOut);
+						newObj.b.addHandler("click",clicked);
+						newObj.b.addHandler("turnOn",turnOn);
+						newObj.b.sound = soundFile;
+						newObj.b.info = users[item];
+						mainButton.push(newObj);
+						i += 2;
+					}
+					
+					/*for(var i=0;i<20;i++){
+						for(var j=0;j<9;j++){
+							var size = Math.random()*20 + 15;
+							var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * j + 30),size,size,25,p);
+							//newObj.sound = soundFile;
+							newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
+							newObj.reflect = true;
+							newObj.b.addHandler("hover",amplify);
+							newObj.b.addHandler("mouseOut",reduce);
+							newObj.b.addHandler("trunOff",mouseOut);
+							newObj.b.addHandler("click",clicked);
+							newObj.b.addHandler("turnOn",turnOn);
+							newObj.b.sound = soundFile;
+							mainButton.push(newObj);
+						}
+					}*/
+					//b = new Button(new p5.Vector(700,450),80,80,50,p);
+					//button.push(b);
+					displayArray.push(mainButton);
+					displayArray.push(button);
+					
+				};
+				
+				p.draw = function(){
+					p.background(255);
+					buttonHoverCount = 0;
+					for(var i = 0;i < displayArray.length;i++){
+						for(var j = 0;j < displayArray[i].length;j++){
+							displayArray[i][j].display();
+							if(i == 1 && displayArray[i][j].isSelected()){
+								buttonHoverCount++;
+							}
+						}
+					}
+					if(buttonHoverCount > 0){
+						$(p.canvas).css("cursor","pointer");
+					}
+					
+					//$("#xx").html(displayArray[0][0].b.hoverObjCount.toString());
+					//$("#xx").append(displayArray[0][0].b.state());
+				};	
+				
+			};
+			var myp5 = new p5(sketch,'zz');
+			
+			
+			
+			
 		}
 	}
 	xmlhttp.open("GET","wp-content/themes/zbs/getUserInfo.php" + "?userRole=" + userRole);
@@ -120,10 +145,14 @@ function clicked(event){
 	event.target.p.noStroke();
 	event.target.p.fill(0);
 	event.target.p.textAlign("center");
+	var text;
+	for(var item in event.target.info){
+		text = event.target.info[item];
+	}
 	if(event.target.position.y < event.target.p.height/2){
-		event.target.p.text("你有种！！",event.target.position.x,event.target.position.y + 100);
+		event.target.p.text(text,event.target.position.x,event.target.position.y + 100);
 	}else{
-		event.target.p.text("你有种！！",event.target.position.x,event.target.position.y - 100);
+		event.target.p.text(text,event.target.position.x,event.target.position.y - 100);
 	}
 }
 function turnOn(event){
