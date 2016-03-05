@@ -15,7 +15,7 @@ function MainButton(position,w,h,r,p){
 }
 inheritPrototype(MainButton,Button);
 
-MainButton.prototype.clickObjCount = 0;
+//MainButton.prototype.clickObjCount = 0;
 MainButton.prototype.hoverObjCount = 0;
 
 MainButton.prototype.isSelected = function(){
@@ -77,41 +77,54 @@ MainButton.prototype.state = function(){
 	if(this.isSelected()){
 		if(this.pState == "click"){
 			if(this.p.mouseIsPressed){
-				if(this.pState == "press"){
+				if(this.pState != "mouseOut"){
 					return "press";
 				}else{
-					//
-					return "press";
+					return;
 				}
 			}else{
 				return "click";
 			}
 		}else{
-			if(this.p.mouseIsPressed){
-				if(this.pState == "press"){
-					return "press";
-				}else{
-					//
-					return "press";
-				}
-			}else{
-				if(this.pState == "press"){
-					if(this.pSwitch == "on"){
-						this.pSwitch = "off";
-						return "hover";
+			if(this.constructor.prototype.hoverObjCount <= 0 || this.pState != "mouseOut"){
+				if(this.p.mouseIsPressed){
+					if(this.pState != "mouseOut"){
+						return "press";
 					}else{
-						this.pSwitch = "on";
-						return "click";
+						return "mouseOut";
 					}
 				}else{
-					return "hover";
+					if(this.pState == "press"){
+						if(this.pSwitch == "on"){
+							this.pSwitch = "off";
+							return "hover";
+						}else{
+							if(this.loadRate >= 2 * Math.PI - 0.15){
+								this.pSwitch = "on";
+								return "click";
+							}else{
+								return "hover";
+							}
+						}
+					}else{
+						if(this.pState != "hover"){
+							//first
+							this.constructor.prototype.hoverObjCount += 1;
+						}
+						return "hover";
+					}
 				}
+			}else{
+				return "mouseOut";
 			}
 		}
 	}else{
 		if(this.pState == "click"){
 			return "click";
 		}else{
+			if(this.pState == "hover" || this.pState == "press"){
+				this.constructor.prototype.hoverObjCount -= 1;
+			}
 			return "mouseOut";
 		}
 	}
@@ -271,7 +284,7 @@ movingButton.prototype.update = function(){
 			this.velocity.y *= -1;
 		}
 	}
-	//this.b.position.add(this.velocity);
+	this.b.position.add(this.velocity);
 }
 
 movingButton.prototype.display = function(){

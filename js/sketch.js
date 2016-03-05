@@ -37,8 +37,8 @@ var sketch = function(p){
 				mainButton.push(newObj);
 			}
 		}
-		
-
+		b = new Button(new p5.Vector(700,450),80,80,50,p);
+		button.push(b);
 		displayArray.push(mainButton);
 		displayArray.push(button);
 		
