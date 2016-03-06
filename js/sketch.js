@@ -35,6 +35,7 @@ function getUser(userRole){
 	xmlhttp.onreadystatechange=function(){
 		if(xmlhttp.readyState==4 && xmlhttp.status==200){
 			var users = JSON.parse(xmlhttp.responseText);
+			//alert(xmlhttp.responseText);
 			
 			
 			//p5.js
@@ -44,7 +45,6 @@ function getUser(userRole){
 					p.soundFormats('mp3', 'ogg');
 					soundFile = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
 				};
-				
 				p.setup = function(){
 					p.createCanvas(960,600);
 					p.canvas.id = "sketch";
@@ -60,6 +60,8 @@ function getUser(userRole){
 						newObj.b.addHandler("click",clicked);
 						newObj.b.addHandler("turnOn",turnOn);
 						newObj.b.sound = soundFile;
+						var img = p.loadImage('wp-content/themes/zbs/002.jpg');
+						newObj.b.img = img;
 						newObj.b.info = users[item];
 						mainButton.push(newObj);
 						i += 2;
@@ -69,7 +71,6 @@ function getUser(userRole){
 						for(var j=0;j<9;j++){
 							var size = Math.random()*20 + 15;
 							var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * j + 30),size,size,25,p);
-							//newObj.sound = soundFile;
 							newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
 							newObj.reflect = true;
 							newObj.b.addHandler("hover",amplify);
@@ -85,7 +86,6 @@ function getUser(userRole){
 					//button.push(b);
 					displayArray.push(mainButton);
 					displayArray.push(button);
-					
 				};
 				
 				p.draw = function(){
@@ -102,9 +102,6 @@ function getUser(userRole){
 					if(buttonHoverCount > 0){
 						$(p.canvas).css("cursor","pointer");
 					}
-					
-					//$("#xx").html(displayArray[0][0].b.hoverObjCount.toString());
-					//$("#xx").append(displayArray[0][0].b.state());
 				};	
 				
 			};
@@ -149,11 +146,7 @@ function clicked(event){
 	for(var item in event.target.info){
 		text = event.target.info[item];
 	}
-	if(event.target.position.y < event.target.p.height/2){
-		event.target.p.text(text,event.target.position.x,event.target.position.y + 100);
-	}else{
-		event.target.p.text(text,event.target.position.x,event.target.position.y - 100);
-	}
+	event.target.p.text(text,event.target.position.x,event.target.position.y);
 }
 function turnOn(event){
 	var vect = new p5.Vector(event.target.width / 2 + 30,0);
