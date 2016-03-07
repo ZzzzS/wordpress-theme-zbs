@@ -9,6 +9,9 @@
 		foreach ($blogusers as $user){
 			$userInfo = array();
 			$userInfo["name"] = $user->display_name;
+			$aaa = get_user_meta( $user->ID, 'wp_user_avatars', true );
+			if(!empty($aaa))
+			$userInfo["avatar"] = $aaa['250'];
 			$users[$user->display_name] = $userInfo;
 		}
 		$jsdata=json_encode($users,JSON_UNESCAPED_UNICODE);

@@ -60,8 +60,8 @@ function getUser(userRole){
 						newObj.b.addHandler("click",clicked);
 						newObj.b.addHandler("turnOn",turnOn);
 						newObj.b.sound = soundFile;
-						var img = p.loadImage('wp-content/themes/zbs/002.jpg');
-						newObj.b.img = img;
+						//var img = p.loadImage('wp-content/themes/zbs/002.jpg');
+						//newObj.b.img = img;
 						newObj.b.info = users[item];
 						mainButton.push(newObj);
 						i += 2;
@@ -130,6 +130,12 @@ function amplify(event){
 	}else{
 		event.target.p.text("有种你点击试试啊！！",event.target.position.x,event.target.position.y - 100);
 	}
+	
+	var text = event.target.info['avatar'];
+	if(text){
+		var img = event.target.p.loadImage(text);
+		event.target.img = img;
+	}
 }
 
 function reduce(event){
@@ -143,10 +149,12 @@ function clicked(event){
 	event.target.p.fill(0);
 	event.target.p.textAlign("center");
 	var text;
-	for(var item in event.target.info){
-		text = event.target.info[item];
+	text = event.target.info['name'];
+	if(text){
+		event.target.p.text(text,event.target.position.x,event.target.position.y);
 	}
-	event.target.p.text(text,event.target.position.x,event.target.position.y);
+	
+	
 }
 function turnOn(event){
 	var vect = new p5.Vector(event.target.width / 2 + 30,0);

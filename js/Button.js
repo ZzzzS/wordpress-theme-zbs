@@ -118,8 +118,8 @@ Button.prototype.drawGeometry = function(){
 	this.p.ellipse(0,0,this.width,this.height);
 	this.p.imageMode(this.p.CENTER);
 	if(this.img){
-		//this.img.resize(50,50);
-		this.p.image(this.img, 0, 0);
+		this.img.resize(100,100);
+		if(this.pState == "hover" || this.pState == "press") this.p.image(this.img, 0, -150);
 	}
 	this.p.pop();
 }

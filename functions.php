@@ -1,4 +1,5 @@
 <?php
+//require_once(TEMPLATEPATH . '/simple-local-avatars.php');
 add_theme_support('nav_menus');
 
 if(function_exists('register_nav_menus')){
@@ -1190,5 +1191,5 @@ function product_author_save_meta_box($post_id){
 
     $product_author = sanitize_text_field( $_POST['product_author'] );
     update_post_meta( $post_id, '_product_author', $product_author );
-
 }
+
