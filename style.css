@@ -10,3 +10,9 @@ License: Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 License URI: http://creativecommons.org/licenses/by-sa/3.0/
 */
 @import url('bootstrap/css/bootstrap.min.css');
+
+#sketch{
+	width:960px;
+	margin:0 auto;
+	//border:solid;
+}

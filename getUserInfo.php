@@ -10,13 +10,20 @@
 			$userInfo = array();
 			$userInfo["name"] = $user->display_name;
 			$aaa = get_user_meta( $user->ID, 'wp_user_avatars', true );
-			if(!empty($aaa))
-			$userInfo["avatar"] = $aaa['250'];
+			if(!empty($aaa)) $userInfo["avatar"] = $aaa['250'];
+			
+			global $wpdb; 
+			$author_id = $user->ID; 
+			$sql =  "SELECT * FROM $wpdb->posts WHERE post_status IN ('publish','static') AND post_author = '$author_id' AND post_type ='post'LIMIT 5" ; //查询作者文章数量   
+			$posts= $wpdb->get_results($sql);
+			$html = '';
+			foreach ($posts as $post) {
+				$html .= '<li><a href="'.$post->guid.'" rel="twipsy" title="'.$post->post_title.'">'. mb_strimwidth($post->post_title, 0, 20,"...").'</a></li>';   
+			} 
+			$userInfo["posts"] = $html;
 			$users[$user->display_name] = $userInfo;
 		}
 		$jsdata=json_encode($users,JSON_UNESCAPED_UNICODE);
 		echo $jsdata;
 	}
-	
-	
 ?>
