@@ -17,7 +17,6 @@ document.body.appendChild(canvas);
 
 
 $(document).ready(function(){
-	//alert("xx");
 	getUser("basic_contributor");
 });
 
@@ -47,22 +46,23 @@ function getUser(userRole){
 				};
 				p.setup = function(){
 					p.createCanvas(960,600);
-					p.canvas.id = "sketch";
+					p.canvas.id = "sketch_1";
 					var i = 5;
 					for(var item in users){
 						var size = Math.random()*20 + 15;
 						var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * i + 30),size,size,25,p);
 						newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
 						newObj.reflect = true;
-						newObj.b.addHandler("hover",amplify);
-						newObj.b.addHandler("mouseOut",reduce);
-						newObj.b.addHandler("trunOff",mouseOut);
+						newObj.b.addHandler("turnOff",turnOff);
 						newObj.b.addHandler("click",clicked);
 						newObj.b.addHandler("turnOn",turnOn);
 						newObj.b.sound = soundFile;
-						//var img = p.loadImage('wp-content/themes/zbs/002.jpg');
-						//newObj.b.img = img;
 						newObj.b.info = users[item];
+						var imgUrl = newObj.b.info['avatar'];
+						if(imgUrl){
+							var img = p.loadImage(imgUrl);
+							newObj.b.img = img;
+						}
 						mainButton.push(newObj);
 						i += 2;
 					}
@@ -105,7 +105,7 @@ function getUser(userRole){
 				};	
 				
 			};
-			var myp5 = new p5(sketch,'zz');
+			var myp5 = new p5(sketch,'sketch');
 			
 			
 			
@@ -117,30 +117,6 @@ function getUser(userRole){
 }
 
 
-function handleMessage(event){
-	//$("#xx").html(event.state);
-}
-
-function amplify(event){
-	event.target.p.noStroke();
-	event.target.p.fill(0);
-	event.target.p.textAlign("center");
-	if(event.target.position.y < event.target.p.height/2){
-		event.target.p.text("有种你点击试试啊！！",event.target.position.x,event.target.position.y + 100);
-	}else{
-		event.target.p.text("有种你点击试试啊！！",event.target.position.x,event.target.position.y - 100);
-	}
-	
-	var text = event.target.info['avatar'];
-	if(text){
-		var img = event.target.p.loadImage(text);
-		event.target.img = img;
-	}
-}
-
-function reduce(event){
-	
-}
 
 
 
@@ -167,8 +143,14 @@ function turnOn(event){
 		b.switchEffect = false;
 		displayArray[1].push(b);
 	}
+	
+	var post = event.target.info['posts'];
+	if(post){ 
+		$("#userInfo").html(post);
+	}
 }
 
-function mouseOut(event){
+function turnOff(event){
 	displayArray[1] = [];
+	$("#userInfo").html('');
 }

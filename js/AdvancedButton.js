@@ -49,10 +49,12 @@ MainButton.prototype.state = function(){
 					if(this.pState == "press"){
 						if(this.pSwitch == "on"){
 							this.pSwitch = "off";
+							this.fire({type:"turnOff"});
 							return "hover";
 						}else{
 							if(this.loadRate >= 2 * Math.PI - 0.15){
 								this.pSwitch = "on";
+								this.fire({type:"turnOn"});
 								return "click";
 							}else{
 								return "hover";
@@ -74,6 +76,10 @@ MainButton.prototype.state = function(){
 		if(this.pState == "click"){
 			return "click";
 		}else{
+			if(this.p.mouseIsPressed && this.pSwitch == "on"){
+				this.pSwitch = "off";
+				this.fire({type:"turnOff"});
+			}
 			if(this.pState == "hover" || this.pState == "press"){
 				this.constructor.prototype.hoverObjCount -= 1;
 			}
@@ -81,7 +87,6 @@ MainButton.prototype.state = function(){
 		}
 	}
 }
-
 
 
 
@@ -106,9 +111,6 @@ MainButton.prototype.display = function(){
 				if(this.sound) this.sound.play();
 			}
 
-			if(this.pState == "press"){
-				this.fire({type:"trunOff"});
-			}
 			this.p.fill(this.p.color(0,100,0));
 			this.drawGeometry();
 			if(this.width > 100){
@@ -190,9 +192,6 @@ MainButton.prototype.display = function(){
 			this.pState = "press";
 			break;
 		case "click":
-			if(this.pState != "click"){
-				this.fire({type:"turnOn"});
-			}
 			this.p.fill(this.p.color(100,100,100));
 			this.drawGeometry();
 			this.fire({type:"click"});
