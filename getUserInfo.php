@@ -9,8 +9,8 @@
 		foreach ($blogusers as $user){
 			$userInfo = array();
 			$userInfo["name"] = $user->display_name;
-			$aaa = get_user_meta( $user->ID, 'wp_user_avatars', true );
-			if(!empty($aaa)) $userInfo["avatar"] = $aaa['250'];
+			$avatars = get_user_meta( $user->ID, 'wp_user_avatars', true );
+			if(!empty($avatars)) $userInfo["avatar"] = $avatars['250'];
 			
 			global $wpdb; 
 			$author_id = $user->ID; 
