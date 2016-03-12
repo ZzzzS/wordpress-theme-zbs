@@ -1193,3 +1193,10 @@ function product_author_save_meta_box($post_id){
     update_post_meta( $post_id, '_product_author', $product_author );
 }
 
+//添加新角色
+add_role('basic_contributor', '精英用户', array(
+    'read' => true, // 使用 true 表示包含这个权限
+    'edit_posts' => flase,
+    'delete_posts' => false, // 使用 false 表示不包含这个权限
+));
+//remove_role( 'basic_contributor' );
