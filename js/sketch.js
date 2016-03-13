@@ -17,7 +17,7 @@ document.body.appendChild(canvas);
 
 
 $(document).ready(function(){
-	getPosts("basic_contributor");
+	getUsers("basic_contributor");
 });
 
 
