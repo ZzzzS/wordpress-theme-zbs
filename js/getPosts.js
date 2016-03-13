@@ -14,7 +14,6 @@ function getPosts(){
 			
 			//p5.js
 			var sketch = function(p){
-				//p.frameRate(50);
 				p.preload = function() {
 					p.soundFormats('mp3', 'ogg');
 					soundFile = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
@@ -22,10 +21,11 @@ function getPosts(){
 				p.setup = function(){
 					p.createCanvas(960,600);
 					p.canvas.id = "sketch_1";
-					var i = 5;
+					var anchor = new p5.Vector(200,200);
 					for(var item in posts){
 						var size = Math.random()*20 + 15;
-						var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * i + 30),size,size,25,p);
+						var newObj = new movingButton(new p5.Vector(Math.random()*900,Math.random()*600),size,size,25,p);
+						newObj.b.anchor = anchor;
 						newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
 						newObj.reflect = true;
 						newObj.b.addHandler("turnOff",turnOff);
@@ -33,9 +33,7 @@ function getPosts(){
 						newObj.b.addHandler("turnOn",turnOn);
 						newObj.b.sound = soundFile;
 						newObj.b.info = posts[item];
-
 						mainButton.push(newObj);
-						i += 2;
 					}
 					
 

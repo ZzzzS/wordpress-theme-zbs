@@ -229,14 +229,23 @@ function movingButton(position,w,h,r,p){
 
 movingButton.prototype.update = function(){
 	if(!this.velocity){
-		var random1 = Math.random()*((Math.random()>0.5)?-1:1);
-		var random2 = Math.random()-((Math.random()>0.5)?1:2);
+		var random1 = Math.random()*((Math.random()>0.5)?-0.5:0.5);
+		var random2 = Math.random()-((Math.random()>0.5)?0.5:1);
 		this.velocity = new p5.Vector(random1,random2);
 	}
 	if(!this.acceleration){
-		this.acceleration = new p5.Vector(0.02,0.05);
+		this.acceleration = new p5.Vector(0,0);
 	}
-	//this.velocity.add(this.acceleration);
+	if(this.b.anchor){
+		//console.log(this.b.anchor);
+		var force = p5.Vector.sub(this.b.anchor,this.b.position);
+		var dist = force.mag();
+		force.normalize();
+		force.mult(0.1);
+		this.acceleration.add(force);
+	}
+	this.velocity.add(this.acceleration);
+	this.acceleration.mult(0);
 	
 	if(this.reflect){
 		if(this.b.position.x < this.b.width/2 || this.b.position.x > this.p.width - this.b.width/2){
@@ -246,6 +255,7 @@ movingButton.prototype.update = function(){
 			this.velocity.y *= -1;
 		}
 	}
+	this.velocity.limit(5);
 	this.b.position.add(this.velocity);
 }
 
