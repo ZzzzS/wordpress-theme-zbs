@@ -24,9 +24,9 @@ function getPosts(){
 					var anchor = new p5.Vector(200,200);
 					for(var item in posts){
 						var size = Math.random()*20 + 15;
-						var newObj = new movingButton(new p5.Vector(Math.random()*900,Math.random()*600),size,size,25,p);
+						var newObj = new movingButton(new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),size,size,25,p);
 						newObj.b.anchor = anchor;
-						newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
+						newObj.b.fillCol = p.color(Math.random()*200, Math.random()*200, Math.random()*200,50);
 						newObj.reflect = true;
 						newObj.b.addHandler("turnOff",turnOff);
 						newObj.b.addHandler("click",clicked);

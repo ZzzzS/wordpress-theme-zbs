@@ -110,8 +110,8 @@ MainButton.prototype.display = function(){
 			if(this.pState == "mouseOut"){         //首次hover
 				if(this.sound) this.sound.play();
 			}
-
-			this.p.fill(this.p.color(0,100,0));
+			this.hoverCol = this.p.color(this.fillCol.getRed(),this.fillCol.getGreen(),this.fillCol.getBlue(),150);
+			this.p.fill(this.hoverCol);
 			this.drawGeometry();
 			if(this.width > 100){
 				this.breath = true;
@@ -164,9 +164,9 @@ MainButton.prototype.display = function(){
 			break;
 		case "press":	
 			if(this.loadRate >= 2 * Math.PI - 0.15){
-				this.p.fill(this.p.color(50,50,50));
+				this.p.fill(this.clickCol);
 			}else{
-				this.p.fill(this.p.color(50,0,0));
+				this.p.fill(this.pressCol);
 			}
 			this.drawGeometry();
 			
@@ -177,7 +177,7 @@ MainButton.prototype.display = function(){
 				if(this.loadRate > 2 * Math.PI) this.loadRate = 2 * Math.PI - 0.01;
 				this.p.strokeWeight(3);
 				this.p.strokeCap("square");
-				this.p.stroke(this.p.color(50,100,100));
+				this.p.stroke(this.p.color("#015666"));
 				this.p.push();
 				this.p.translate(this.position.x,this.position.y);
 				this.p.noFill();
@@ -192,7 +192,7 @@ MainButton.prototype.display = function(){
 			this.pState = "press";
 			break;
 		case "click":
-			this.p.fill(this.p.color(100,100,100));
+			this.p.fill(this.clickCol);
 			this.drawGeometry();
 			this.fire({type:"click"});
 			this.pState = "click";

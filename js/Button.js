@@ -15,6 +15,9 @@ function Button(position,w,h,r,p){
 		this.pState = "mouseOut";
 		this.pSwitch = "off";
 		this.switchEffect = true;
+		this.hoverCol = this.p.color("#06799F");
+		this.pressCol = this.p.color("#216278");
+		this.clickCol = this.p.color("#024E68");
 	}
 }
 inheritPrototype(Button,EventTarget);
@@ -68,7 +71,7 @@ Button.prototype.display = function(){
 	var state = this.state();
 	switch(state){
 		case "hover":
-			this.p.fill(this.p.color(0,100,0));
+			this.p.fill(this.hoverCol);
 			this.drawGeometry();
 			this.fire({type:"hover"});
 			this.pState = "hover";
@@ -84,13 +87,13 @@ Button.prototype.display = function(){
 			this.pState = "mouseOut";
 			break;
 		case "press":	
-			this.p.fill(this.p.color(50,0,0));
+			this.p.fill(this.pressCol);
 			this.drawGeometry();
 			this.fire({type:"press"});
 			this.pState = "press";
 			break;
 		case "click":
-			this.p.fill(this.p.color(0,0,0));
+			this.p.fill(this.clickCol);
 			this.drawGeometry();
 			this.fire({type:"click"});
 			this.pState = "click";
