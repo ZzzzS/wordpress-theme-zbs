@@ -1,12 +1,7 @@
 "use strict"; //严格模式
-var myCanvas;
-var b,c;
 var displayArray = [];
 var mainButton = [];
 var button = [];
-var soundFile;
-var buttonHoverCount;
-var sketch;
 
 var xx=document.createElement("div");
 xx.setAttribute("id","xx");
@@ -17,7 +12,21 @@ document.body.appendChild(canvas);
 
 
 $(document).ready(function(){
-	getPosts("basic_contributor");
+		var sketch = getPosts();
+	});
+	$("#getUsers").click(function(){
+		displayArray = [];
+		mainButton = [];
+		button = [];
+		$("#sketch").empty();
+		var sketch = getUsers("basic_contributor");
+	});
+	$("#getPosts").click(function(){
+		displayArray = [];
+		mainButton = [];
+		button = [];
+		$("#sketch").empty();
+		var sketch = getPosts();
 });
 
 

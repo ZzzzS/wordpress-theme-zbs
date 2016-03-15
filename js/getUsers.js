@@ -1,5 +1,12 @@
 function getUsers(userRole){
-	var xmlhttp;
+	
+	//displayArray = [];
+	//mainButton = [];
+	//button = [];
+	var soundFile = null;
+	var sketch = null;
+	var xmlhttp = null;
+	var myp5 = null;
 	if(window.XMLHttpRequest){
 		xmlhttp=new XMLHttpRequest();
 	}else{
@@ -12,7 +19,7 @@ function getUsers(userRole){
 			
 			
 			//p5.js
-			var sketch = function(p){
+			sketch = function(p){
 				//p.frameRate(50);
 				p.preload = function() {
 					p.soundFormats('mp3', 'ogg');
@@ -43,30 +50,14 @@ function getUsers(userRole){
 						mainButton.push(newObj);
 					}
 					
-					/*for(var i=0;i<20;i++){
-						for(var j=0;j<9;j++){
-							var size = Math.random()*20 + 15;
-							var newObj = new movingButton(new p5.Vector(30 * i + 30,30 * j + 30),size,size,25,p);
-							newObj.b.fillCol = p.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
-							newObj.reflect = true;
-							newObj.b.addHandler("hover",amplify);
-							newObj.b.addHandler("mouseOut",reduce);
-							newObj.b.addHandler("trunOff",mouseOut);
-							newObj.b.addHandler("click",clicked);
-							newObj.b.addHandler("turnOn",turnOn);
-							newObj.b.sound = soundFile;
-							mainButton.push(newObj);
-						}
-					}*/
-					//b = new Button(new p5.Vector(700,450),80,80,50,p);
-					//button.push(b);
+					
 					displayArray.push(mainButton);
 					displayArray.push(button);
 				};
 				
 				p.draw = function(){
 					p.background(255);
-					buttonHoverCount = 0;
+					var buttonHoverCount = 0;
 					for(var i = 0;i < displayArray.length;i++){
 						for(var j = 0;j < displayArray[i].length;j++){
 							displayArray[i][j].display();
@@ -79,9 +70,9 @@ function getUsers(userRole){
 						$(p.canvas).css("cursor","pointer");
 					}
 				};	
-				
 			};
-			var myp5 = new p5(sketch,'sketch');
+			
+			myp5 = new p5(sketch,'sketch');
 			
 			
 			

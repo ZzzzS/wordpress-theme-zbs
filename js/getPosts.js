@@ -1,5 +1,12 @@
 function getPosts(){
+	
+	//displayArray = [];
+	//mainButton = [];
+	//button = [];
+	var soundFile;
+	var sketch;
 	var xmlhttp;
+
 	if(window.XMLHttpRequest){
 		xmlhttp=new XMLHttpRequest();
 	}else{
@@ -13,7 +20,7 @@ function getPosts(){
 			
 			
 			//p5.js
-			var sketch = function(p){
+			sketch = function(p){
 				p.preload = function() {
 					p.soundFormats('mp3', 'ogg');
 					soundFile = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
@@ -37,15 +44,13 @@ function getPosts(){
 					}
 					
 
-					//b = new Button(new p5.Vector(700,450),80,80,50,p);
-					//button.push(b);
 					displayArray.push(mainButton);
 					displayArray.push(button);
 				};
 				
 				p.draw = function(){
 					p.background(255);
-					buttonHoverCount = 0;
+					var buttonHoverCount = 0;
 					for(var i = 0;i < displayArray.length;i++){
 						for(var j = 0;j < displayArray[i].length;j++){
 							displayArray[i][j].display();
@@ -60,11 +65,11 @@ function getPosts(){
 				};	
 				
 			};
+			
 			var myp5 = new p5(sketch,'sketch');
+
 			
-			
-			
-			
+			console.log(myp5);
 		}
 	}
 	xmlhttp.open("GET","wp-content/themes/zbs/getPostInfo.php");
