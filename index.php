@@ -11,9 +11,8 @@
 	<script src="<?php bloginfo('template_directory'); ?>/js/p5.sound.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/Button.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/AdvancedButton.js" type="text/javascript"></script>
+	<script src="<?php bloginfo('template_directory'); ?>/js/getInfo.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/sketch.js" type="text/javascript"></script>
-	<script src="<?php bloginfo('template_directory'); ?>/js/getUsers.js" type="text/javascript"></script>
-	<script src="<?php bloginfo('template_directory'); ?>/js/getPosts.js" type="text/javascript"></script>
 	<?php get_footer();?>
 	<script>
 		
