@@ -27,7 +27,7 @@ function getInfo(type,arg){
 					newObj.b.addHandler("turnOn",turnOn);
 					newObj.b.sound = SOUNDFILE;
 					newObj.b.info = posts[item];
-					console.log(newObj);
+					//console.log(newObj);
 					mainButton.push(newObj);
 				}
 				
@@ -61,7 +61,7 @@ function getInfo(type,arg){
 							var img = pp.loadImage(imgUrl);
 							newObj.b.img = img;
 						}
-						newObj.b.MARK = MARK;
+						newObj.b.mask = MARK;
 						mainButton.push(newObj);
 					}
 					
@@ -111,10 +111,6 @@ function turnOn(event){
 	}*/
 }
 
-function turnOff(event){
-	displayArray[1] = [];
-	$("#userInfo").html('');
-}
 
 function clicked_users(event){
 	event.target.p.noStroke();

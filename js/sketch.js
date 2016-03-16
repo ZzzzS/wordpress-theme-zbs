@@ -60,6 +60,20 @@ $(document).ready(function(){
 	$("#getPosts").click(function(){
 		getInfo("posts");
 	});
+	$("#align").click(function (){
+		var len = mainButton.length;
+		//;
+		for(var k=0; k<len; k++){
+			var i = Math.floor(k / 2) + 2;
+			var j = k % 2 + 2;
+			//console.log(i);
+			console.log(j);
+			var anchor = new p5.Vector(i*70,j*70);
+			mainButton[k].b.anchor = anchor;
+			mainButton[k].strength = 1.5;
+			//mainButton[k].topspeed = 1;
+		}
+	});
 });
 
 

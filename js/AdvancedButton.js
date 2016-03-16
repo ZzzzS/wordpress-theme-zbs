@@ -224,7 +224,9 @@ MainButton.prototype.cursorState = function(state){
 function movingButton(position,w,h,r,p){
 	this.b = new MainButton(position,w,h,r,p);
 	this.p = p;
+	this.strength = 0.1;
 	this.reflect = false;
+	this.topspeed = 5;
 }
 
 movingButton.prototype.update = function(){
@@ -241,7 +243,7 @@ movingButton.prototype.update = function(){
 		var force = p5.Vector.sub(this.b.anchor,this.b.position);
 		var dist = force.mag();
 		force.normalize();
-		force.mult(0.1);
+		force.mult(this.strength);
 		this.acceleration.add(force);
 	}
 	this.velocity.add(this.acceleration);
@@ -255,7 +257,7 @@ movingButton.prototype.update = function(){
 			this.velocity.y *= -1;
 		}
 	}
-	this.velocity.limit(5);
+	this.velocity.limit(this.topspeed);
 	this.b.position.add(this.velocity);
 }
 
