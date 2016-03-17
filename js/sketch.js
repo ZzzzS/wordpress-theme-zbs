@@ -71,6 +71,7 @@ $(document).ready(function(){
 			var anchor = new p5.Vector(i*70,j*70);
 			mainButton[k].b.anchor = anchor;
 			mainButton[k].strength = 1.5;
+			mainButton[k].fixed = true;
 			//mainButton[k].topspeed = 1;
 		}
 	});

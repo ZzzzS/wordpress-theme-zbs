@@ -227,6 +227,7 @@ function movingButton(position,w,h,r,p){
 	this.strength = 0.1;
 	this.reflect = false;
 	this.topspeed = 5;
+	this.fixed = false;
 }
 
 movingButton.prototype.update = function(){
@@ -258,6 +259,11 @@ movingButton.prototype.update = function(){
 		}
 	}
 	this.velocity.limit(this.topspeed);
+	
+	if(this.fixed && dist <= 1){
+		this.velocity.mult(0.5);
+	}
+	
 	this.b.position.add(this.velocity);
 }
 
