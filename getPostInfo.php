@@ -15,9 +15,9 @@
 		$i = 0;
 		while($query->have_posts()){
 		$query->the_post();
-		//echo "xxxx";
 		$postInfo = array();
 		$postInfo["title"] = $post->post_title;
+		$postInfo["link"] = $post->guid;
 		
 		$posts[$i] = $postInfo;
 		$i++;

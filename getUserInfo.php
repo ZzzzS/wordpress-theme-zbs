@@ -12,7 +12,8 @@
 			$avatars = get_user_meta( $user->ID, 'wp_user_avatars', true );
 			if(!empty($avatars)) $userInfo["avatar"] = $avatars['250'];
 			
-			global $wpdb; 
+			global $wpdb;
+			$userInfo["id"] = $user->ID;			
 			$author_id = $user->ID; 
 			$sql =  "SELECT * FROM $wpdb->posts WHERE post_status IN ('publish','static') AND post_author = '$author_id' AND post_type ='post'LIMIT 5" ; //查询作者文章数量   
 			$posts= $wpdb->get_results($sql);

@@ -23,7 +23,6 @@ sketch = function(p){
 	p.preload = function() {
 		p.soundFormats('mp3', 'ogg');
 		SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
-		MARK = p.loadImage("wp-content/themes/zbs/mask.png");
 		ANCHOR = new p5.Vector(200,200);
 	};
 	p.setup = function(){

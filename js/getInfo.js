@@ -54,13 +54,10 @@ function getInfo(type,arg){
 						newObj.b.addHandler("turnOff",turnOff);
 						newObj.b.addHandler("click",clicked_users);
 						newObj.b.addHandler("turnOn",turnOn);
+						newObj.b.addHandler("hover",showUserInfo);
+						newObj.b.addHandler("mouseOut",delUserInfo);
 						newObj.b.sound = SOUNDFILE;
 						newObj.b.info = users[item];
-						var imgUrl = newObj.b.info['avatar'];
-						if(imgUrl){
-							var img = pp.loadImage(imgUrl);
-							newObj.b.img = img;
-						}
 						newObj.b.mask = MARK;
 						mainButton.push(newObj);
 					}
@@ -136,13 +133,44 @@ function turnOn(event){
 		displayArray[1].push(b);
 	}
 	
-	var post = event.target.info['posts'];
+	/*var post = event.target.info['posts'];
 	if(post){ 
 		$("#userInfo").html(post);
-	}
+	}*/
 }
 
 function turnOff(event){
 	displayArray[1] = [];
 	$("#userInfo").html('');
+}
+
+function showUserInfo(event){
+	var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
+	if(!infoFrame){
+		var infoFrame = document.createElement("div");
+		infoFrame.id = "infoFrame"+event.target.info['id'];
+		infoFrame.style.cssText = "background:#eee;position:absolute;top:100px;right:200px;width:300px;height:200px;padding:20px;border:solid gray 1px;border-radius:10px;";
+		
+		var img = document.createElement("img");
+		img.src = event.target.info['avatar'];
+		img.style.cssText = "width:100px;height:100px;border-radius:50px;-moz-border-radius:50px;"
+		infoFrame.appendChild(img);
+		
+		var name = document.createElement("div");
+		name.innerHTML = "名字：" + event.target.info['name'];
+		infoFrame.appendChild(name);
+		
+		var posts = document.createElement("div");
+		posts.innerHTML = event.target.info['posts'];
+		infoFrame.appendChild(posts);
+		
+		document.body.appendChild(infoFrame);
+	}
+}
+
+function delUserInfo(event){
+	var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
+	if(infoFrame){
+		document.body.removeChild(infoFrame);
+	}
 }
