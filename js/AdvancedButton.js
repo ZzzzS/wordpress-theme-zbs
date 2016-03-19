@@ -8,7 +8,6 @@ function MainButton(position,w,h,r,p){
 	if(arguments.length > 0){
 		this.breath = false;
 		this.breathState = false;
-		this.loadRate = 0;
 		this.w = w;
 		this.h = h;
 	}
@@ -52,13 +51,11 @@ MainButton.prototype.state = function(){
 							this.fire({type:"turnOff"});
 							return "hover";
 						}else{
-							if(this.loadRate >= 2 * Math.PI - 0.15){
-								this.pSwitch = "on";
-								this.fire({type:"turnOn"});
-								return "click";
-							}else{
-								return "hover";
-							}
+							
+							this.pSwitch = "on";
+							this.fire({type:"turnOn"});
+							return "click";
+							
 						}
 					}else{
 						if(this.pState != "hover"){
@@ -100,9 +97,6 @@ MainButton.prototype.display = function(){
 	
 	this.p.rectMode('center');
 	var state = this.state();
-	if(state != "press"){
-		this.loadRate = 0
-	}
 	this.cursorState(state);  //鼠标状态
 	switch(state){
 		case "hover":
@@ -163,31 +157,8 @@ MainButton.prototype.display = function(){
 			this.pState = "mouseOut";
 			break;
 		case "press":	
-			if(this.loadRate >= 2 * Math.PI - 0.15){
-				this.p.fill(this.clickCol);
-			}else{
-				this.p.fill(this.pressCol);
-			}
+			this.p.fill(this.pressCol);
 			this.drawGeometry();
-			
-			if(this.pSwitch == "off"){
-				if(this.loadRate < 2 * Math.PI){
-					this.loadRate += 0.15;
-				}
-				if(this.loadRate > 2 * Math.PI) this.loadRate = 2 * Math.PI - 0.01;
-				this.p.strokeWeight(3);
-				this.p.strokeCap("square");
-				this.p.stroke(this.p.color("#015666"));
-				this.p.push();
-				this.p.translate(this.position.x,this.position.y);
-				this.p.noFill();
-				this.p.arc(0,0,this.width + 3,this.height + 3,0,this.loadRate);
-				this.p.pop();
-				this.p.strokeWeight(1);
-			}else{
-				this.p.fill(this.p.color(50,0,0));
-			}
-			
 			this.fire({type:"press"});
 			this.pState = "press";
 			break;
@@ -227,7 +198,15 @@ function movingButton(position,w,h,r,p){
 	this.strength = 0.1;
 	this.reflect = false;
 	this.topspeed = 5;
-	this.fixed = false;
+	this.vortex = true;
+	//this.attractPt = null;
+	if(!this.acceleration){
+		this.acceleration = new p5.Vector(0,0);
+	}
+}
+
+movingButton.prototype.applyForce = function(force){
+	this.acceleration.add(force);
 }
 
 movingButton.prototype.update = function(){
@@ -236,17 +215,25 @@ movingButton.prototype.update = function(){
 		var random2 = Math.random()-((Math.random()>0.5)?0.5:1);
 		this.velocity = new p5.Vector(random1,random2);
 	}
-	if(!this.acceleration){
-		this.acceleration = new p5.Vector(0,0);
-	}
-	if(this.b.anchor){
+	
+	/*if(this.b.anchor){
 		//console.log(this.b.anchor);
 		var force = p5.Vector.sub(this.b.anchor,this.b.position);
 		var dist = force.mag();
 		force.normalize();
 		force.mult(this.strength);
 		this.acceleration.add(force);
+	}*/
+	if(this.attractPt){
+		if(this.vortex){
+			var force = this.attractPt.vortexAttract(this,300);
+		}else{
+			var force = this.attractPt.attract(this);
+		}
+		
+		this.applyForce(force);
 	}
+	
 	this.velocity.add(this.acceleration);
 	this.acceleration.mult(0);
 	
@@ -260,9 +247,10 @@ movingButton.prototype.update = function(){
 	}
 	this.velocity.limit(this.topspeed);
 	
+	/*var dist = p5.Vector.sub(this.position,this.attractPt).mag();
 	if(this.fixed && dist <= 1){
 		this.velocity.mult(0.5);
-	}
+	}*/
 	
 	this.b.position.add(this.velocity);
 }
