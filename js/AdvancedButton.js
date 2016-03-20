@@ -167,6 +167,7 @@ MainButton.prototype.display = function(){
 			this.p.fill(this.clickCol);
 			this.drawGeometry();
 			
+			//点击反馈
 			if(this.pState === "press"){
 				this.clickTimeline = 0;
 			}else{
@@ -174,7 +175,7 @@ MainButton.prototype.display = function(){
 			}
 			if(this.clickTimeline < 40){
 				this.p.stroke(200,200,200,200-this.clickTimeline*5);
-				this.p.strokeWeight(5-this.clickTimeline/10);
+				this.p.strokeWeight(10-this.clickTimeline/4);
 				this.p.noFill();
 				this.p.ellipse(this.position.x,this.position.y,this.width+Math.sqrt(this.clickTimeline*50,2),this.height+Math.sqrt(this.clickTimeline*50,2));
 			}

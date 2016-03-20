@@ -16,15 +16,23 @@
 			$userInfo["id"] = $user->ID;			
 			$author_id = $user->ID; 
 			$sql =  "SELECT * FROM $wpdb->posts WHERE post_status IN ('publish','static') AND post_author = '$author_id' AND post_type ='post'LIMIT 5" ; //查询作者文章数量   
-			$posts= $wpdb->get_results($sql);
-			$html = '';
-			foreach ($posts as $post) {
-				$html .= '<li><a href="'.$post->guid.'" rel="twipsy" title="'.$post->post_title.'">'. mb_strimwidth($post->post_title, 0, 20,"...").'</a></li>';   
+			$ps= $wpdb->get_results($sql);
+			//$html = '';
+			$posts = array();
+			$n = 0;
+			foreach ($ps as $p) {
+				//$html .= '<li><a href="'.$p->guid.'" rel="twipsy" title="'.$p->post_title.'">'. mb_strimwidth($p->post_title, 0, 20,"...").'</a></li>';
+				$post = array();
+				$post["title"] = $p->post_title;
+				$post["id"] = $p->ID;
+				$post["link"] = $p->guid;
+				$posts[$n] = $post;
+				$n++;
 			} 
-			$userInfo["posts"] = $html;
+			$userInfo["posts"] = $posts;
 			$users[$user->display_name] = $userInfo;
 		}
-		$jsdata=json_encode($users,JSON_UNESCAPED_UNICODE);
+		$jsdata=json_encode($users);
 		echo $jsdata;
 	}
 ?>

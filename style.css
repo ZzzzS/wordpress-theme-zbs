@@ -10,11 +10,22 @@ License: Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 License URI: http://creativecommons.org/licenses/by-sa/3.0/
 */
 @import url('bootstrap/css/bootstrap.min.css');
+body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+	font-family:微软雅黑,宋体,Arial,Verdana,arial,serif;
+}
+
+#logo{
+	position:fixed;
+	left:0;
+	top:0;
+}
 
 #sketch{
 	width:962px;
 	height:602px;
-	margin:0 auto;
+	margin:60px auto;
 	//border:1px solid gray;
 }
 #buttonGroup{
@@ -32,17 +43,37 @@ License URI: http://creativecommons.org/licenses/by-sa/3.0/
 	height:120px;
 	padding:10px;
 	border:solid gray 1px;
+	display:none;
+	z-index:9999;
+}
+
+#infoFrame_fixed #postContent{
+	//position:absolute;
+	//top:120px;
+	border:solid gray 1px;
+	width:960px;
+	margin:120px auto;
+	overflow-y:scroll;
+	padding:20px;
+}
+
+#infoFrame_fixed #postContent_delet{
+	position:absolute;
+	top:20px;
+	right:200px;
+	//overflow-y:scroll;
 }
 
 #imgBlock{
 	position:absolute;
+	left:30px;
 	width:100px;
 	height:100px;
 	overflow:hidden;
 	border:solid 1px gray;
-	border-radius:3px;
-	-moz-border-radius:3px;
-	-webkit-border-radius:3px;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
 }
 #imgBlock img{
 	width:100px;
@@ -51,5 +82,5 @@ License URI: http://creativecommons.org/licenses/by-sa/3.0/
 
 #infoBlock{
 	position:absolute;
-	left:120px;
+	left:160px;
 }

@@ -26,10 +26,6 @@ sketch = function(p){
 		p.soundFormats('wav', 'ogg');
 		SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
 		ANCHOR = new p5.Vector(200,200);
-	};
-	p.setup = function(){
-		p.createCanvas(960,600);
-		p.canvas.id = "sketch_1";
 		var option = {
 			"p":p,
 			"position" : new p5.Vector(300,300),
@@ -44,6 +40,10 @@ sketch = function(p){
 		};
 		attractPt = new AttractPoint(option);
 		attractPt_1 = new AttractPoint(option_1);
+	};
+	p.setup = function(){
+		p.createCanvas(960,600);
+		p.canvas.id = "sketch_1";
 	};
 	
 	p.draw = function(){
@@ -115,6 +115,58 @@ $(document).ready(function(){
 	});
 });
 
+function getPostContent(id){
+	//alert("xxxxxxx");
+	if(window.XMLHttpRequest){
+		XMLHTTP=new XMLHttpRequest();
+	}else{
+		XMLHTTP=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	XMLHTTP.onreadystatechange=function(){
+		if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+			//alert(XMLHTTP.responseText);
+			var postContent = document.getElementById("postContent");
+			if(!postContent){
+				var postContent = document.createElement("div");
+				postContent.id = "postContent";
+			}
+			postContent.innerHTML = XMLHTTP.responseText;
+			//$("#infoFrame_fixed").append(XMLHTTP.responseText);
+			
+			var infoFrame_fixed = document.getElementById("infoFrame_fixed");
+			infoFrame_fixed.appendChild(postContent);
+			
+			var height = document.documentElement.clientHeight - 60 ;
+			$("#infoFrame_fixed").animate({height:height});
+			
+			var cancel = document.getElementById("postContent_delet");
+			if(!cancel){
+				var cancel = document.createElement("button");
+				cancel.id = "postContent_delet";
+				cancel.className = "btn btn-default";
+				cancel.innerHTML = "返回";
+				cancel.onclick = function (){
+					$("#infoFrame_fixed").animate({height:"120px"});
+					infoFrame_fixed.removeChild(this);
+					infoFrame_fixed.removeChild(postContent);
+				}
+				infoFrame_fixed.appendChild(cancel);
+			}
+			
+			
+			$("#postContent").css("display","none");
+			$("#postContent").fadeIn();
+			
+		}
+	}
+	XMLHTTP.open("GET","wp-content/themes/zbs/getPostContent.php?id="+id);
+	XMLHTTP.send();
+}
+
+$(window).resize(function() {
+  $("#infoFrame_fixed").css("height",document.documentElement.clientHeight - 60);
+});
 
 function change(){
 	
