@@ -12,7 +12,44 @@ License URI: http://creativecommons.org/licenses/by-sa/3.0/
 @import url('bootstrap/css/bootstrap.min.css');
 
 #sketch{
-	width:960px;
-	height:600px;
+	width:962px;
+	height:602px;
 	margin:0 auto;
+	//border:1px solid gray;
+}
+#buttonGroup{
+	position:absolute;
+	top:100px;
+	right:50px;
+}
+
+#infoFrame_fixed{
+	background-color:white;
+	position:fixed;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:120px;
+	padding:10px;
+	border:solid gray 1px;
+}
+
+#imgBlock{
+	position:absolute;
+	width:100px;
+	height:100px;
+	overflow:hidden;
+	border:solid 1px gray;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+}
+#imgBlock img{
+	width:100px;
+	height:100px;
+}
+
+#infoBlock{
+	position:absolute;
+	left:120px;
 }

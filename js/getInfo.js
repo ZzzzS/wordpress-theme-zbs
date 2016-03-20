@@ -47,13 +47,15 @@ function getInfo(type,arg){
 					
 					for(var item in users){
 						var size = Math.random()*20 + 15;
-						var newObj = new movingButton(new p5.Vector(Math.random()*900,Math.random()*600),size,size,25,pp);
+						var newObj = new movingButton(new p5.Vector(Math.random()*900+30,Math.random()*550+25),size,size,25,pp);
 						newObj.attractPt = attractPt;
 						newObj.b.fillCol = pp.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
 						newObj.reflect = true;
 						newObj.b.addHandler("turnOff",turnOff);
 						newObj.b.addHandler("click",clicked_users);
-						newObj.b.addHandler("turnOn",turnOn);
+						newObj.b.addHandler("turnOn",delUserInfo);
+						newObj.b.addHandler("turnOn",showUserInfo_fixed);
+						newObj.b.addHandler("turnOff",delUserInfo_fixed);
 						newObj.b.addHandler("hover",showUserInfo);
 						newObj.b.addHandler("mouseOut",delUserInfo);
 						newObj.b.sound = SOUNDFILE;
@@ -145,11 +147,15 @@ function turnOff(event){
 }
 
 function showUserInfo(event){
+	var sketch = document.getElementById("sketch");
+	var top = getElementTop(sketch);
+	var left = getElementLeft(sketch);
+	//console.log(left);
 	var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
 	if(!infoFrame){
 		var infoFrame = document.createElement("div");
 		infoFrame.id = "infoFrame"+event.target.info['id'];
-		infoFrame.style.cssText = "background:#eee;position:absolute;top:100px;right:200px;width:300px;height:200px;padding:20px;border:solid gray 1px;border-radius:10px;";
+		infoFrame.style.cssText = "background:#fff;position:absolute;top:"+(top+event.target.position.y-50)+"px;left:"+(left+event.target.position.x+50)+"px;width:300px;height:200px;padding:20px;border:solid gray 1px;border-radius:5px;";
 		
 		var img = document.createElement("img");
 		img.src = event.target.info['avatar'];
@@ -172,5 +178,47 @@ function delUserInfo(event){
 	var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
 	if(infoFrame){
 		document.body.removeChild(infoFrame);
+	}
+}
+
+function showUserInfo_fixed(event){
+	var sketch = document.getElementById("sketch");
+	var top = getElementTop(sketch);
+	var left = getElementLeft(sketch);
+	var infoFrame_fixed = document.getElementById("infoFrame_fixed");
+	if(!infoFrame_fixed){
+		var infoFrame_fixed = document.createElement("div");
+		infoFrame_fixed.id = "infoFrame_fixed";
+		infoFrame_fixed.style.cssText = "";
+		
+		
+		var imgBlock = document.createElement("div");
+		imgBlock.id = "imgBlock";
+		infoFrame_fixed.appendChild(imgBlock);
+		
+			var img = document.createElement("img");
+			img.src = event.target.info['avatar'];
+			imgBlock.appendChild(img);
+		
+		var infoBlock = document.createElement("div");
+		infoBlock.id = "infoBlock";
+		infoFrame_fixed.appendChild(infoBlock);
+		
+			var name = document.createElement("div");
+			name.innerHTML = "名字：" + event.target.info['name'];
+			infoBlock.appendChild(name);
+			
+			var posts = document.createElement("div");
+			posts.innerHTML = event.target.info['posts'];
+			infoBlock.appendChild(posts);
+			
+		document.body.appendChild(infoFrame_fixed);
+	}
+}
+
+function delUserInfo_fixed(event){
+	var infoFrame_fixed = document.getElementById("infoFrame_fixed");
+	if(infoFrame_fixed){
+		document.body.removeChild(infoFrame_fixed);
 	}
 }

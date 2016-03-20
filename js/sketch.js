@@ -23,7 +23,7 @@ var attractPt_1;
 sketch = function(p){
 	pp = p;
 	p.preload = function() {
-		p.soundFormats('mp3', 'ogg');
+		p.soundFormats('wav', 'ogg');
 		SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
 		ANCHOR = new p5.Vector(200,200);
 	};
@@ -60,7 +60,7 @@ sketch = function(p){
 				var vect = p5.Vector.sub(displayArray[i][j].b.position,displayArray[i][j].attractPt.position);
 				var angle = vect.heading();
 				var len = vect.mag();
-				console.log(displayArray[i][j].attractPt.cloclwise);
+				
 				if(!displayArray[i][j].attractPt.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
 					displayArray[i][j].attractPt = attractPt_1;
 				}else{
@@ -87,7 +87,7 @@ var myp5 = new p5(sketch,'sketch');
 
 
 $(document).ready(function(){
-	getInfo("posts");
+	getInfo("users","basic_contributor");
 	$("#getUsers").click(function(){
 		getInfo("users","basic_contributor");
 	});
@@ -101,7 +101,7 @@ $(document).ready(function(){
 			var i = Math.floor(k / 2) + 2;
 			var j = k % 2 + 2;
 			//console.log(i);
-			console.log(j);
+			//console.log(j);
 			var option = {
 				"position" : new p5.Vector(i*70,j*70),
 				"strength" : 1.5

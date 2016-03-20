@@ -10,6 +10,7 @@ function MainButton(position,w,h,r,p){
 		this.breathState = false;
 		this.w = w;
 		this.h = h;
+		this.clickTimeline = 0;
 	}
 }
 inheritPrototype(MainButton,Button);
@@ -165,6 +166,20 @@ MainButton.prototype.display = function(){
 		case "click":
 			this.p.fill(this.clickCol);
 			this.drawGeometry();
+			
+			if(this.pState === "press"){
+				this.clickTimeline = 0;
+			}else{
+				this.clickTimeline++;
+			}
+			if(this.clickTimeline < 40){
+				this.p.stroke(200,200,200,200-this.clickTimeline*5);
+				this.p.strokeWeight(5-this.clickTimeline/10);
+				this.p.noFill();
+				this.p.ellipse(this.position.x,this.position.y,this.width+Math.sqrt(this.clickTimeline*50,2),this.height+Math.sqrt(this.clickTimeline*50,2));
+			}
+			
+			
 			this.fire({type:"click"});
 			this.pState = "click";
 			break;
