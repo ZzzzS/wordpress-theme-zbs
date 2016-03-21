@@ -113,6 +113,7 @@ $(document).ready(function(){
 			//mainButton[k].topspeed = 1;
 		}
 	});
+	
 });
 
 function getPostContent(id){
@@ -152,7 +153,8 @@ function getPostContent(id){
 				//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
 				cancel.onclick = function (){
 					$("#infoFrame_fixed").animate({height:"120px"});
-					$("#infoFrame_xx").scrollTop(0);
+					//$("#infoFrame_xx").scrollTop(0);
+					$("#infoFrame_xx").animate({ scrollTop: 0 }, 400);
 					$("#postContent").fadeOut();
 					setTimeout("infoFrame_xx.removeChild(postContent);",300);
 					this.remove();
@@ -163,10 +165,45 @@ function getPostContent(id){
 				}
 				infoFrame_fixed.appendChild(cancel);
 			}
+			var toTop = document.getElementById("toTop");
+			if(!toTop){
+				var toTop = document.createElement("button");
+				toTop.id = "toTop";
+				toTop.className = "btn btn-default btn-sm";
+				toTop.onclick = function (){
+					//$("#infoFrame_xx").scrollTop(0);
+					$("#infoFrame_xx").animate({ scrollTop: 0 }, 400);
+				}
+				
+				infoFrame_fixed.appendChild(toTop);
+			}
 			
 			$("#postContent").css("display","none");
 			$("#postContent").fadeIn();
 			
+			/*检查滚动*/
+			var sTop;
+			sTop = document.getElementById("infoFrame_xx").scrollTop; 
+
+			$("#infoFrame_xx").scroll(function(){    
+				sTop = document.getElementById("infoFrame_xx").scrollTop; 
+			});
+			
+			if(sTop == 0)
+				{
+					$("#toTop").css("display","none");
+				}else{
+					$("#toTop").css("display","block");
+				}
+			$("#infoFrame_xx").scroll(function(){     
+				if(sTop == 0)
+				{
+					$("#toTop").fadeOut();
+				}else{
+					$("#toTop").fadeIn();
+				}
+			});
+			/**/
 		}
 	}
 	XMLHTTP.open("GET","wp-content/themes/zbs/getPostContent.php?id="+id);

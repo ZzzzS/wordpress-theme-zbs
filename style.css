@@ -72,6 +72,19 @@ body {
 	//overflow-y:scroll;
 }
 
+#infoFrame_fixed #toTop{
+	position:absolute;
+	top:20px;
+	right:90px;
+	width:30px;
+	height:30px;
+	display:none;
+	border-radius:15px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	//overflow-y:scroll;
+}
+
 #imgBlock{
 	position:absolute;
 	left:30px;
