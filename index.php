@@ -4,6 +4,7 @@
 	<div id="sketch1"></div>
 	<div id="sketch2"></div>
 	<div id="info"></div>
+
 	<div class="btn-group-vertical" role="group" aria-label="..." id="buttonGroup">
 		<button type="button" class="btn btn-default" id="getUsers">getUsers</button>
 		<button type="button" class="btn btn-default" id="getPosts">getPosts</button>

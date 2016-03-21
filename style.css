@@ -41,26 +41,34 @@ body {
 	left:0;
 	width:100%;
 	height:120px;
-	padding:10px;
+	padding:10px 0;
 	border:solid gray 1px;
 	display:none;
 	z-index:9999;
 }
-
+#infoFrame_fixed #infoFrame_xx{
+	position:relative;
+	overflow-y:auto;
+}
 #infoFrame_fixed #postContent{
 	//position:absolute;
 	//top:120px;
 	border:solid gray 1px;
 	width:960px;
 	margin:120px auto;
-	overflow-y:scroll;
+	//overflow-y:auto;
 	padding:20px;
 }
 
 #infoFrame_fixed #postContent_delet{
 	position:absolute;
 	top:20px;
-	right:200px;
+	right:50px;
+	width:30px;
+	height:30px;
+	border-radius:15px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
 	//overflow-y:scroll;
 }
 

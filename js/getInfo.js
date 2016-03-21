@@ -47,7 +47,7 @@ function getInfo(type,arg){
 					console.log(XMLHTTP.responseText);
 					
 					var i = 0;
-					var count = getJsonObjLength(users)
+					var count = getJsonObjLength(users);
 					for(var item in users){
 						var size = Math.random()*20 + 15;
 						var newObj = new movingButton(new p5.Vector(Math.random()*900+30,Math.random()*550+25),size,size,25,pp);
@@ -213,12 +213,15 @@ function showUserInfo_fixed(event){
 	if(!infoFrame_fixed){
 		var infoFrame_fixed = document.createElement("div");
 		infoFrame_fixed.id = "infoFrame_fixed";
-		infoFrame_fixed.style.cssText = "";
 		
+		var infoFrame_xx = document.createElement("div");
+		infoFrame_xx.id = "infoFrame_xx";
+		infoFrame_xx.style.cssText = "height:"+(document.documentElement.clientHeight-80)+"px";
+		infoFrame_fixed.appendChild(infoFrame_xx);
 		
 		var imgBlock = document.createElement("div");
 		imgBlock.id = "imgBlock";
-		infoFrame_fixed.appendChild(imgBlock);
+		infoFrame_xx.appendChild(imgBlock);
 		
 			var img = document.createElement("img");
 			img.src = event.target.info['avatar'];
@@ -226,7 +229,7 @@ function showUserInfo_fixed(event){
 		
 		var infoBlock = document.createElement("div");
 		infoBlock.id = "infoBlock";
-		infoFrame_fixed.appendChild(infoBlock);
+		infoFrame_xx.appendChild(infoBlock);
 		
 			var name = document.createElement("div");
 			name.innerHTML = "<b>名字：</b>" + event.target.info['name'];
@@ -256,7 +259,7 @@ function delUserInfo_fixed(event){
 	var infoFrame_fixed = document.getElementById("infoFrame_fixed");
 	if(infoFrame_fixed){
 		$("#infoFrame_fixed").fadeOut();
-		setTimeout("info.removeChild(infoFrame_fixed)",500);
+		setTimeout("info.removeChild(infoFrame_fixed)",200);
 		//info.removeChild(infoFrame_fixed);
 	}
 }

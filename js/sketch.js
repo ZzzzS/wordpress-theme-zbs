@@ -134,26 +134,35 @@ function getPostContent(id){
 			postContent.innerHTML = XMLHTTP.responseText;
 			//$("#infoFrame_fixed").append(XMLHTTP.responseText);
 			
-			var infoFrame_fixed = document.getElementById("infoFrame_fixed");
-			infoFrame_fixed.appendChild(postContent);
+			var infoFrame_xx = document.getElementById("infoFrame_xx");
+			infoFrame_xx.appendChild(postContent);
 			
 			var height = document.documentElement.clientHeight - 60 ;
 			$("#infoFrame_fixed").animate({height:height});
+			
+			$("#sketch").fadeOut();
+			setTimeout("$('#sketch').css('position','fixed')",200);  //将sketch移出显示范围，否则即使被遮盖也会有交互效果
+			$("#sketch").css("bottom","-900px");
 			
 			var cancel = document.getElementById("postContent_delet");
 			if(!cancel){
 				var cancel = document.createElement("button");
 				cancel.id = "postContent_delet";
-				cancel.className = "btn btn-default";
-				cancel.innerHTML = "返回";
+				cancel.className = "btn btn-danger btn-sm";
+				//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
 				cancel.onclick = function (){
 					$("#infoFrame_fixed").animate({height:"120px"});
-					infoFrame_fixed.removeChild(this);
-					infoFrame_fixed.removeChild(postContent);
+					$("#infoFrame_xx").scrollTop(0);
+					$("#postContent").fadeOut();
+					setTimeout("infoFrame_xx.removeChild(postContent);",300);
+					this.remove();
+					
+
+					$("#sketch").css("position","static"); //将sketch移回
+					$("#sketch").fadeIn();
 				}
 				infoFrame_fixed.appendChild(cancel);
 			}
-			
 			
 			$("#postContent").css("display","none");
 			$("#postContent").fadeIn();
@@ -165,10 +174,13 @@ function getPostContent(id){
 }
 
 $(window).resize(function() {
-  $("#infoFrame_fixed").css("height",document.documentElement.clientHeight - 60);
+	if($("#infoFrame_fixed").css("height") != "120px"){ //若高度大于停靠在下方是的高度时
+		$("#infoFrame_fixed").css("height",document.documentElement.clientHeight - 60);
+	}
+	
+	$("#infoFrame_xx").css("height",document.documentElement.clientHeight-80);
+	//alert($("#infoFrame_fixed").css("height"));
 });
 
-function change(){
-	
-}
+
 
