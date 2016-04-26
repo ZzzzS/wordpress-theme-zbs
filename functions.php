@@ -1188,15 +1188,39 @@ function product_author_save_meta_box($post_id){
     if ( ! isset( $_POST['product_author'] ) ) {
         return;
     }
-
+	//ini_set('xdebug.max_nesting_level', 100);
     $product_author = sanitize_text_field( $_POST['product_author'] );
-    update_post_meta( $post_id, '_product_author', $product_author );
+	
+	if ( ! wp_is_post_revision( $post_id ) ){
+	
+		// unhook this function so it doesn't loop infinitely
+		remove_action('save_post', 'product_author_save_meta_box');
+	
+		// update the post, which calls save_post again
+		//有待排查bug
+		$my_post = array();
+		$my_post['ID'] = $post_id;
+		//$my_post['post_title'] = "abc";
+		global $post;
+		$my_post['post_author'] = $product_author;
+		wp_update_post( $my_post );
+
+		// re-hook this function
+		add_action('save_post', 'product_author_save_meta_box');
+	}
+	
+	
+	
+	// Update the post into the database
+	//wp_update_post( $post );
+	
+    //update_post_meta( $post_id, '_product_author', $product_author );
 }
 
 //添加新角色
 add_role('basic_contributor', '精英用户', array(
     'read' => true, // 使用 true 表示包含这个权限
-    'edit_posts' => flase,
+    'edit_posts' => false,
     'delete_posts' => false, // 使用 false 表示不包含这个权限
 ));
 //remove_role( 'basic_contributor' );
