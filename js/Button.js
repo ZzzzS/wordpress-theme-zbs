@@ -4,21 +4,19 @@ by:Zzzz
 date:2016-03-03
 */
 
-function Button(position,w,h,r,p){
+function Button(options){
 	EventTarget.call(this);
-	if(arguments.length > 0){
-		this.position = position.copy();
-		this.width = w;
-		this.height = h;
-		this.radius = r;
-		this.p = p;
-		this.pState = "mouseOut";
-		this.pSwitch = "off";
-		this.switchEffect = true;
-		this.hoverCol = this.p.color("#06799F");
-		this.pressCol = this.p.color("#216278");
-		this.clickCol = this.p.color("#024E68");
-	}
+	this.position = options.position.copy();
+	this.width = options.width;
+	this.height = options.height;
+	this.radius = options.r;
+	this.p = options.p;
+	this.pState = "mouseOut";
+	this.pSwitch = "off";
+	this.switchEffect = true;
+	this.hoverCol = options.hoverCol || this.p.color("#06799F");
+	this.pressCol = options.pressCol || this.p.color("#216278");
+	this.clickCol = options.clickCol || this.p.color("#024E68");
 }
 inheritPrototype(Button,EventTarget);
 Button.prototype.isSelected = function(){
@@ -147,8 +145,3 @@ EventTarget.prototype.removeHandler = function(type,handler){
 		handlers.splice(i,1);
 	}
 }
-
-
-
-
-

@@ -18,8 +18,15 @@ function getInfo(type,arg){
 				//alert(XMLHTTP.responseText);
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
-					var newObj = new movingButton(new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),size,size,25,pp);
-					newObj.attractPt = attractPt;
+					var options = {
+						position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+						width : size,
+						height : size,
+						r : 25,
+						p : pp
+					}
+					var newObj = new movingButton(options);
+					newObj.attractPtL = attractPtL;
 					newObj.b.fillCol = pp.color(Math.random()*200, Math.random()*200, Math.random()*200,50);
 					newObj.reflect = true;
 					newObj.b.addHandler("turnOff",turnOff);
@@ -27,7 +34,6 @@ function getInfo(type,arg){
 					newObj.b.addHandler("turnOn",turnOn);
 					newObj.b.sound = SOUNDFILE;
 					newObj.b.info = posts[item];
-					//console.log(newObj);
 					mainButton.push(newObj);
 				}
 				
@@ -50,11 +56,18 @@ function getInfo(type,arg){
 					var count = getJsonObjLength(users);
 					for(var item in users){
 						var size = Math.random()*20 + 15;
-						var newObj = new movingButton(new p5.Vector(Math.random()*900+30,Math.random()*550+25),size,size,25,pp);
+						var options = {
+							position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
+							width : size,
+							height : size,
+							r : 25,
+							p : pp
+						}
+						var newObj = new movingButton(options);
 						if(i < count/2){
-							newObj.attractPt = attractPt;
+							newObj.attractPtL = attractPtL;
 						}else{
-							newObj.attractPt = attractPt_1;
+							newObj.attractPtL = attractPtR;
 						}
 
 						newObj.b.fillCol = pp.color(Math.random()*100, Math.random()*50, Math.random()*200,50);

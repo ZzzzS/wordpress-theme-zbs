@@ -3,15 +3,13 @@
 by:Zzzz
 date:2016-03-03
 */
-function MainButton(position,w,h,r,p){
-	Button.call(this,position,w,h,r,p);
-	if(arguments.length > 0){
-		this.breath = false;
-		this.breathState = false;
-		this.w = w;
-		this.h = h;
-		this.clickTimeline = 0;
-	}
+function MainButton(options){
+	Button.call(this,options);
+	this.breath = false;
+	this.breathState = false;
+	this.w = options.width;  //原始宽度数据备份
+	this.h = options.height;  //原始高度数据备份
+	this.clickTimeline = 0;
 }
 inheritPrototype(MainButton,Button);
 
@@ -85,9 +83,6 @@ MainButton.prototype.state = function(){
 		}
 	}
 }
-
-
-
 
 MainButton.prototype.display = function(){
 	if(this.strokeCol){
@@ -208,14 +203,14 @@ MainButton.prototype.cursorState = function(state){
 	}
 }
 
-function movingButton(position,w,h,r,p){
-	this.b = new MainButton(position,w,h,r,p);
-	this.p = p;
+function movingButton(options){
+	this.b = new MainButton(options);
+	this.p = options.p;
 	this.strength = 0.1;
 	this.reflect = false;
-	this.topspeed = 5;
+	this.topspeed = options.topspeed || Math.random() * 3 + 2;  //控制最高速度
 	this.vortex = true;
-	//this.attractPt = null;
+	//this.attractPtL = null;
 	if(!this.acceleration){
 		this.acceleration = new p5.Vector(0,0);
 	}
@@ -240,11 +235,11 @@ movingButton.prototype.update = function(){
 		force.mult(this.strength);
 		this.acceleration.add(force);
 	}*/
-	if(this.attractPt){
+	if(this.attractPtL){
 		if(this.vortex){
-			var force = this.attractPt.vortexAttract(this,300);
+			var force = this.attractPtL.vortexAttract(this,300);
 		}else{
-			var force = this.attractPt.attract(this);
+			var force = this.attractPtL.attract(this);
 		}
 		
 		this.applyForce(force);
@@ -263,7 +258,7 @@ movingButton.prototype.update = function(){
 	}
 	this.velocity.limit(this.topspeed);
 	
-	/*var dist = p5.Vector.sub(this.position,this.attractPt).mag();
+	/*var dist = p5.Vector.sub(this.position,this.attractPtL).mag();
 	if(this.fixed && dist <= 1){
 		this.velocity.mult(0.5);
 	}*/
