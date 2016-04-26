@@ -1,4 +1,4 @@
-function AttractPoint(option){
+AttractPoint = function (option){
 	this.position = option.position.copy();
 	this.strength = option.strength;
 	this.p = option.p;
@@ -39,3 +39,5 @@ AttractPoint.prototype.vortexAttract = function (b,threshold){
 AttractPoint.prototype.display = function(){
 	this.p.ellipse(this.position.x,this.position.y,50,50);
 }
+
+module.exports = AttractPoint;

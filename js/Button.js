@@ -4,8 +4,7 @@ by:Zzzz
 date:2016-03-03
 */
 
-function Button(options){
-	EventTarget.call(this);
+var Button = function (options){
 	this.position = options.position.copy();
 	this.width = options.width;
 	this.height = options.height;
@@ -17,6 +16,7 @@ function Button(options){
 	this.hoverCol = options.hoverCol || this.p.color("#06799F");
 	this.pressCol = options.pressCol || this.p.color("#216278");
 	this.clickCol = options.clickCol || this.p.color("#024E68");
+	this.handlers = {};  //事件处理器
 }
 inheritPrototype(Button,EventTarget);
 Button.prototype.isSelected = function(){
@@ -113,17 +113,15 @@ Button.prototype.drawGeometry = function(){
 	this.p.pop();
 }
 
-function EventTarget(){
-	this.handlers = {};
-}
 
-EventTarget.prototype.addHandler = function(type,handler){
+//事件相关
+Button.prototype.addHandler = function(type,handler){
 	if(typeof this.handlers[type] == "undefined"){
 		this.handlers[type] = [];
 	}
 	this.handlers[type].push(handler);
 }
-EventTarget.prototype.fire = function(event){
+Button.prototype.fire = function(event){
 	if(!event.target){
 		event.target = this;
 	}
@@ -134,7 +132,7 @@ EventTarget.prototype.fire = function(event){
 		}
 	}
 }
-EventTarget.prototype.removeHandler = function(type,handler){
+Button.prototype.removeHandler = function(type,handler){
 	if(this.handlers[type] instanceof Array){
 		var handlers = this.handlers[type];
 		for(var i = 0,len = handlers.length; i < len;i++){
@@ -145,3 +143,6 @@ EventTarget.prototype.removeHandler = function(type,handler){
 		handlers.splice(i,1);
 	}
 }
+
+
+module.exports = Button;

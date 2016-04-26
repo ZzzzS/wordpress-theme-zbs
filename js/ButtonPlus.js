@@ -3,7 +3,10 @@
 by:Zzzz
 date:2016-03-03
 */
-function MainButton(options){
+var Button = require("./Button.js");
+var util = require("./util.js");
+
+function ButtonPlus(options){
 	Button.call(this,options);
 	this.breath = false;
 	this.breathState = false;
@@ -11,11 +14,11 @@ function MainButton(options){
 	this.h = options.height;  //原始高度数据备份
 	this.clickTimeline = 0;
 }
-inheritPrototype(MainButton,Button);
+util.inheritPrototype(ButtonPlus,Button);
 
-MainButton.prototype.hoverObjCount = 0;
+ButtonPlus.prototype.hoverObjCount = 0;
 
-MainButton.prototype.isSelected = function(){
+ButtonPlus.prototype.isSelected = function(){
 	if(Math.pow((this.p.mouseX - this.position.x),2) + Math.pow((this.p.mouseY - this.position.y),2) <= Math.pow(this.width/2,2)){
 		return true;
 	}else{
@@ -23,7 +26,7 @@ MainButton.prototype.isSelected = function(){
 	}
 }
 
-MainButton.prototype.state = function(){
+ButtonPlus.prototype.state = function(){
 	if(this.isSelected()){
 		if(this.pState == "click"){
 			if(this.p.mouseIsPressed){
@@ -84,7 +87,7 @@ MainButton.prototype.state = function(){
 	}
 }
 
-MainButton.prototype.display = function(){
+ButtonPlus.prototype.display = function(){
 	if(this.strokeCol){
 		this.p.stroke(this.strokeCol);
 	}else{
@@ -189,7 +192,7 @@ MainButton.prototype.display = function(){
 	}
 }
 
-MainButton.prototype.cursorState = function(state){
+ButtonPlus.prototype.cursorState = function(state){
 	if(this.constructor.prototype.hoverObjCount == 0){
 		$(this.p.canvas).css("cursor","default");
 	}else{
@@ -203,72 +206,5 @@ MainButton.prototype.cursorState = function(state){
 	}
 }
 
-function movingButton(options){
-	this.b = new MainButton(options);
-	this.p = options.p;
-	this.strength = 0.1;
-	this.reflect = false;
-	this.topspeed = options.topspeed || Math.random() * 3 + 2;  //控制最高速度
-	this.vortex = true;
-	//this.attractPtL = null;
-	if(!this.acceleration){
-		this.acceleration = new p5.Vector(0,0);
-	}
-}
+module.exports = ButtonPlus;
 
-movingButton.prototype.applyForce = function(force){
-	this.acceleration.add(force);
-}
-
-movingButton.prototype.update = function(){
-	if(!this.velocity){
-		var random1 = Math.random()*((Math.random()>0.5)?-0.5:0.5);
-		var random2 = Math.random()-((Math.random()>0.5)?0.5:1);
-		this.velocity = new p5.Vector(random1,random2);
-	}
-	
-	/*if(this.b.anchor){
-		//console.log(this.b.anchor);
-		var force = p5.Vector.sub(this.b.anchor,this.b.position);
-		var dist = force.mag();
-		force.normalize();
-		force.mult(this.strength);
-		this.acceleration.add(force);
-	}*/
-	if(this.attractPtL){
-		if(this.vortex){
-			var force = this.attractPtL.vortexAttract(this,300);
-		}else{
-			var force = this.attractPtL.attract(this);
-		}
-		
-		this.applyForce(force);
-	}
-	
-	this.velocity.add(this.acceleration);
-	this.acceleration.mult(0);
-	
-	if(this.reflect){
-		if(this.b.position.x < this.b.width/2 || this.b.position.x > this.p.width - this.b.width/2){
-			this.velocity.x *= -1;
-		}
-		if(this.b.position.y < this.b.height/2 || this.b.position.y > this.p.height - this.b.height/2){
-			this.velocity.y *= -1;
-		}
-	}
-	this.velocity.limit(this.topspeed);
-	
-	/*var dist = p5.Vector.sub(this.position,this.attractPtL).mag();
-	if(this.fixed && dist <= 1){
-		this.velocity.mult(0.5);
-	}*/
-	
-	this.b.position.add(this.velocity);
-}
-
-movingButton.prototype.display = function(){
-	if(this.b.pState != "click" && this.b.pState != "hover" && this.b.pState != "press"){
-		this.update();
-	}
-	this.b.display();
-}
