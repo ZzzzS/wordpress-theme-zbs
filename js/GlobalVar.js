@@ -7,3 +7,5 @@ var GlobalVar = {
     attractPtL : null,
     attractPtR : null
 }
+
+//module.exports = GlobalVar;

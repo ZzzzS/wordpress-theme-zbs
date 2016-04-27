@@ -1,5 +1,5 @@
 "use strict"; //严格模式
-var getInfo = require("./getInfo.js");
+
 var AttractPoint = require("./AttractPoint.js");
 var globalVar = require("./GlobalVar.js");
 

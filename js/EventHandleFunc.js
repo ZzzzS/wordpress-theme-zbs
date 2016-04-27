@@ -1,5 +1,5 @@
 var util = require("./util.js");
-var DomCtrl = require("./DomCtrl.js");
+var domCtrl = require("./DomCtrl.js");
 
 var eventHandleFunc = {
     clicked : function (event){
@@ -128,15 +128,24 @@ var eventHandleFunc = {
                 
                 var posts = document.createElement("div");
                 var ps = event.target.info['posts'];
-                var html = '<b>作品：</b>';
-                html += "<ul>";
+                var ul = document.createElement("ul");
+                ul.innerHTML = '<b>作品：</b>';
+
                 for(var i=0;i<ps.length;i++){
-                    html += "<li><a role='button' class='getPostContentButton' onclick = DomCtrl.getPostContent(" + ps[i].id + ")>"
-                    html += ps[i].title;
-                    html += "</a></li>"
+                    var li = document.createElement("li");
+                    var a = document.createElement("a");
+                    a.id = "getPostContentButton" + ps[i].id;
+                    a.className = 'getPostContentButton';
+                    a.innerHTML = ps[i].title;
+                    a.data_id = ps[i].id;
+                    li.appendChild(a);
+                    a.onclick = function (){
+                        domCtrl.getPostContent(this.data_id);
+                    };
+                    ul.appendChild(li);
                 }
-                html += "</ul>";
-                posts.innerHTML = html;
+
+                posts.appendChild(ul);
                 infoBlock.appendChild(posts);
             
             var info = document.getElementById("info");
