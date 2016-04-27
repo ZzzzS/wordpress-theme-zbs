@@ -1,3 +1,6 @@
+var util = require("./util.js");
+var DomCtrl = require("./DomCtrl.js");
+
 var eventHandleFunc = {
     clicked : function (event){
         event.target.p.noStroke();
@@ -11,7 +14,7 @@ var eventHandleFunc = {
     },
 
     turnOn : function (event){
-        var vect = new p5.Vector(event.target.width / 2 + 30,0);
+        /*var vect = new p5.Vector(event.target.width / 2 + 30,0);
         var count = 5;
         vect.rotate(-0.68 * (count - 1) / 2);
         for(var i = 0; i < count; i++){
@@ -20,7 +23,7 @@ var eventHandleFunc = {
             b.fillCol = event.target.p.color(Math.random()*100, Math.random()*50, Math.random()*200,200);
             b.switchEffect = false;
             displayArray[1].push(b);
-        }
+        }*/
         
         /*var post = event.target.info['posts'];
         if(post){ 
@@ -52,15 +55,15 @@ var eventHandleFunc = {
     },
 
 
-    turnOff : function (event){
+    turnOff : function (event){/*
         displayArray[1] = [];
-        $("#userInfo").html('');
+        $("#userInfo").html('');*/
     },
 
     showUserInfo : function (event){
         var sketch = document.getElementById("sketch");
-        var top = getElementTop(sketch);
-        var left = getElementLeft(sketch);
+        var top = util.getElementTop(sketch);
+        var left = util.getElementLeft(sketch);
         //console.log(left);
         var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
         if(!infoFrame){
@@ -95,8 +98,8 @@ var eventHandleFunc = {
 
     showUserInfo_fixed : function (event){
         var sketch = document.getElementById("sketch");
-        var top = getElementTop(sketch);
-        var left = getElementLeft(sketch);
+        var top = util.getElementTop(sketch);
+        var left = util.getElementLeft(sketch);
         var infoFrame_fixed = document.getElementById("infoFrame_fixed");
         if(!infoFrame_fixed){
             var infoFrame_fixed = document.createElement("div");
@@ -128,7 +131,7 @@ var eventHandleFunc = {
                 var html = '<b>作品：</b>';
                 html += "<ul>";
                 for(var i=0;i<ps.length;i++){
-                    html += "<li><a role='button' class='getPostContentButton' onclick=getPostContent(" + ps[i].id + ")>"
+                    html += "<li><a role='button' class='getPostContentButton' onclick = DomCtrl.getPostContent(" + ps[i].id + ")>"
                     html += ps[i].title;
                     html += "</a></li>"
                 }

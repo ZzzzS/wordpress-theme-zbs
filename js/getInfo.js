@@ -1,12 +1,15 @@
 
 var eventHandleFunc = require("./EventHandleFunc.js");
 var util = require("./util.js");
+var globalVar = require("./GlobalVar.js");
+var ButtonParticle = require("./ButtonParticle.js");
+var ButtonPlus = require("./ButtonPlus.js");
 
 var getInfo = function (type,arg){
 	
-	displayArray = [];
-	mainButton = [];
-	button = [];
+	globalVar.displayArray = [];
+	globalVar.mainButton = [];
+	globalVar.button = [];
 	
 
 	if(window.XMLHttpRequest){
@@ -18,6 +21,7 @@ var getInfo = function (type,arg){
 	if(type === "posts"){
 		XMLHTTP.onreadystatechange=function(){
 			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+				ButtonPlus.stateReset();
 				var posts = JSON.parse(XMLHTTP.responseText);
 				//alert(XMLHTTP.responseText);
 				for(var item in posts){
@@ -27,22 +31,22 @@ var getInfo = function (type,arg){
 						width : size,
 						height : size,
 						r : 25,
-						p : pp
+						p : globalVar.pp
 					}
-					var newObj = new movingButton(options);
-					newObj.attractPtL = attractPtL;
-					newObj.b.fillCol = pp.color(Math.random()*200, Math.random()*200, Math.random()*200,50);
+					var newObj = new ButtonParticle(options);
+					newObj.attractPtL = globalVar.attractPtL;
+					newObj.b.fillCol = globalVar.pp.color(Math.random()*200, Math.random()*200, Math.random()*200,50);
 					newObj.reflect = true;
 					newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
 					newObj.b.addHandler("click",eventHandleFunc.clicked);
 					newObj.b.addHandler("turnOn",eventHandleFunc.turnOn);
-					newObj.b.sound = SOUNDFILE;
+					newObj.b.sound = globalVar.SOUNDFILE;
 					newObj.b.info = posts[item];
-					mainButton.push(newObj);
+					globalVar.mainButton.push(newObj);
 				}
 				
-				displayArray.push(mainButton);
-				displayArray.push(button);
+				globalVar.displayArray.push(globalVar.mainButton);
+				globalVar.displayArray.push(globalVar.button);
 				
 			}
 		}
@@ -51,6 +55,7 @@ var getInfo = function (type,arg){
 	}else{
 		if(type === "users"){
 			XMLHTTP.onreadystatechange=function(){
+				ButtonPlus.stateReset();
 				if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 					var users = JSON.parse(XMLHTTP.responseText);
 					//alert(XMLHTTP.responseText);
@@ -65,16 +70,16 @@ var getInfo = function (type,arg){
 							width : size,
 							height : size,
 							r : 25,
-							p : pp
+							p : globalVar.pp
 						}
-						var newObj = new movingButton(options);
+						var newObj = new ButtonParticle(options);
 						if(i < count/2){
-							newObj.attractPtL = attractPtL;
+							newObj.attractPtL = globalVar.attractPtL;
 						}else{
-							newObj.attractPtL = attractPtR;
+							newObj.attractPtL = globalVar.attractPtR;
 						}
 
-						newObj.b.fillCol = pp.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
+						newObj.b.fillCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
 						newObj.reflect = true;
 						newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
 						newObj.b.addHandler("click",eventHandleFunc.clicked_users);
@@ -83,18 +88,18 @@ var getInfo = function (type,arg){
 						newObj.b.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
 						newObj.b.addHandler("hover",eventHandleFunc.showUserInfo);
 						newObj.b.addHandler("mouseOut",eventHandleFunc.delUserInfo);
-						newObj.b.sound = SOUNDFILE;
+						newObj.b.sound = globalVar.SOUNDFILE;
 						newObj.b.info = users[item];
-						newObj.b.mask = MARK;
-						mainButton.push(newObj);
+						//newObj.b.mask = MARK;
+						globalVar.mainButton.push(newObj);
 						i++;
 					}
 					i = null;
 					count = null;
 					
 					
-					displayArray.push(mainButton);
-					displayArray.push(button);
+					globalVar.displayArray.push(globalVar.mainButton);
+					globalVar.displayArray.push(globalVar.button);
 					
 			
 					

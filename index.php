@@ -20,5 +20,5 @@
 	<script src="<?php bloginfo('template_directory'); ?>/js/AttractPoint.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/AdvancedButton.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/getInfo.js" type="text/javascript"></script>-->
-	<script src="<?php bloginfo('template_directory'); ?>/js/bundle.js" type="text/javascript"></script>
+	<script src="<?php bloginfo('template_directory'); ?>/js/infinite.js" type="text/javascript"></script>
 	<?php get_footer();?>

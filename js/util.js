@@ -1,7 +1,7 @@
 var util = {
 	//用于继承
 	inheritPrototype : function (subType,superType){
-		var prototype = object(superType.prototype);
+		var prototype = this.object(superType.prototype);
 		prototype.constructor = subType;
 		subType.prototype = prototype;
 	},
@@ -10,6 +10,7 @@ var util = {
 		F.prototype = o;
 		return new F();
 	},
+	
 	//用于获取元素的绝对位置
 	getElementLeft : function (element){
 		var actualLeft = element.offsetLeft;
@@ -29,6 +30,7 @@ var util = {
 		}
 		return actualTop;
 	},
+	
 	getJsonObjLength : function (jsonObj) {
 		var Length = 0;
 		for (var item in jsonObj) {

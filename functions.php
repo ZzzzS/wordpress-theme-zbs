@@ -142,7 +142,6 @@ add_filter( 'nav_menu_css_class', 'mytheme_nav_menu_css_class' );
 
 /**
     *WordPress 文章列表分页导航
-    *http://www.endskin.com/page-navi/
 */
 function par_pagenavi($range = 9){
 	global $paged, $wp_query;
@@ -290,7 +289,7 @@ function categorycolorsave($term_id){
 
 
 /**
- * 为WordPress后台的文章、分类等显示ID From wpdaxue.com
+ * 为WordPress后台的文章、分类等显示ID
  */
 // 添加一个新的列 ID
 function ssid_column($cols) {
@@ -360,7 +359,7 @@ add_action('admin_init', 'ssid_add');
 
 /**
  * 自定义用户个人资料信息
- * http://www.wpdaxue.com/add-remove-display-wordpress-user-profile-fields.html
+ * 
  */
 add_filter( 'user_contactmethods', 'wpdaxue_add_contact_fields' );
 function wpdaxue_add_contact_fields( $contactmethods ) {
@@ -1220,7 +1219,7 @@ function product_author_save_meta_box($post_id){
 //添加新角色
 add_role('basic_contributor', '精英用户', array(
     'read' => true, // 使用 true 表示包含这个权限
-    'edit_posts' => false,
+    'edit_posts' => true,
     'delete_posts' => false, // 使用 false 表示不包含这个权限
 ));
 //remove_role( 'basic_contributor' );

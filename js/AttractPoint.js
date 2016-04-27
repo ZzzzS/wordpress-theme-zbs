@@ -1,4 +1,6 @@
-AttractPoint = function (option){
+var ButtonParticle = require("./ButtonParticle.js");
+
+var AttractPoint = function (option){
 	this.position = option.position.copy();
 	this.strength = option.strength;
 	this.p = option.p;
@@ -10,7 +12,7 @@ AttractPoint = function (option){
 }
 
 AttractPoint.prototype.attract = function(b){
-	if(b instanceof movingButton){
+	if(b instanceof ButtonParticle){
 		var force = p5.Vector.sub(this.position,b.b.position);
 		var dist = force.mag();
 		force.normalize();
@@ -20,7 +22,7 @@ AttractPoint.prototype.attract = function(b){
 }
 
 AttractPoint.prototype.vortexAttract = function (b,threshold){
-	if(b instanceof movingButton){
+	if(b instanceof ButtonParticle){
 		var force = p5.Vector.sub(this.position,b.b.position);
 		
 		var ff = force.copy();

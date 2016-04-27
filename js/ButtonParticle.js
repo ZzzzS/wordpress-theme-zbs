@@ -8,16 +8,21 @@ var ButtonParticle = function (options){
 	this.topspeed = options.topspeed || Math.random() * 3 + 2;  //控制最高速度
 	this.vortex = true;
 	//this.attractPtL = null;
+	
+	//加速度
 	if(!this.acceleration){
-		this.acceleration = new p5.Vector(0,0);
+		this.acceleration = new p5.Vector(0,0);  
 	}
 }
 
+//粒子作用力
 ButtonParticle.prototype.applyForce = function(force){
 	this.acceleration.add(force);
 }
 
+//更新粒子状态
 ButtonParticle.prototype.update = function(){
+	//速度
 	if(!this.velocity){
 		var random1 = Math.random()*((Math.random()>0.5)?-0.5:0.5);
 		var random2 = Math.random()-((Math.random()>0.5)?0.5:1);
@@ -43,7 +48,7 @@ ButtonParticle.prototype.update = function(){
 	}
 	
 	this.velocity.add(this.acceleration);
-	this.acceleration.mult(0);
+	this.acceleration.mult(0);  //加速度清零
 	
 	if(this.reflect){
 		if(this.b.position.x < this.b.width/2 || this.b.position.x > this.p.width - this.b.width/2){
@@ -53,6 +58,7 @@ ButtonParticle.prototype.update = function(){
 			this.velocity.y *= -1;
 		}
 	}
+	
 	this.velocity.limit(this.topspeed);
 	
 	/*var dist = p5.Vector.sub(this.position,this.attractPtL).mag();
@@ -63,6 +69,7 @@ ButtonParticle.prototype.update = function(){
 	this.b.position.add(this.velocity);
 }
 
+//绘制粒子
 ButtonParticle.prototype.display = function(){
 	if(this.b.pState != "click" && this.b.pState != "hover" && this.b.pState != "press"){
 		this.update();
