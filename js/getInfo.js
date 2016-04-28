@@ -11,7 +11,6 @@ var getInfo = function (type,arg){
 	globalVar.mainButton = [];
 	globalVar.button = [];
 	
-
 	if(window.XMLHttpRequest){
 		XMLHTTP=new XMLHttpRequest();
 	}else{

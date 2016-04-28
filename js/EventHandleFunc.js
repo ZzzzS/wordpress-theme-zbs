@@ -1,5 +1,5 @@
 var util = require("./util.js");
-var domCtrl = require("./DomCtrl.js");
+var getPostContent = require("./getPostContent.js");
 
 var eventHandleFunc = {
     clicked : function (event){
@@ -140,7 +140,7 @@ var eventHandleFunc = {
                     a.data_id = ps[i].id;
                     li.appendChild(a);
                     a.onclick = function (){
-                        domCtrl.getPostContent(this.data_id);
+                        getPostContent(this.data_id);
                     };
                     ul.appendChild(li);
                 }

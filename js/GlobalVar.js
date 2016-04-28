@@ -8,4 +8,4 @@ var GlobalVar = {
     attractPtR : null
 }
 
-//module.exports = GlobalVar;
+module.exports = GlobalVar;
