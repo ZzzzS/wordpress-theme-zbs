@@ -169,6 +169,9 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 吸引点
+	 */
 	var ButtonParticle = __webpack_require__(2);
 
 	var AttractPoint = function (option){
@@ -345,14 +348,14 @@
 
 	//判断ButtonPlus的状态（加强版）
 	ButtonPlus.prototype.state = function () {
-		/*
-		**hover (pState) ： 鼠标悬浮（被选中）
-		**press (pState) ： 鼠标按下
-		**click (pState) ： 鼠标点击
-		**mouseOut (pState) ： 鼠标从button上移开/未被选中
-		**on (pSwitch) : Button处于开启状态
-		**off (pSwitch) ： Button处于关闭状态
-		*/
+		/**
+		 * hover (pState) ： 鼠标悬浮（被选中）
+		 * press (pState) ： 鼠标按下
+		 * click (pState) ： 鼠标点击
+		 * mouseOut (pState) ： 鼠标从button上移开/未被选中
+		 * on (pSwitch) : Button处于开启状态
+		 * off (pSwitch) ： Button处于关闭状态
+		 */
 		if (this.isSelected()) {
 			if (this.pState == "click") {
 				if (this.p.mouseIsPressed) {
@@ -532,11 +535,12 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*
-	Button类，基于p5.js
-	by:Zzzz
-	date:2016-03-03
-	*/
+	/**
+	 * Button类，基于p5.js
+	 * by:Zzzz
+	 * date:2016-03-03
+	 */
+
 	var util = __webpack_require__(5);
 
 	var Button = function (options) {
@@ -559,14 +563,14 @@
 
 	//判断Button的状态
 	Button.prototype.state = function () {
-		/*
-		**hover (pState) ： 鼠标悬浮（被选中）
-		**press (pState) ： 鼠标按下
-		**click (pState) ： 鼠标点击
-		**mouseOut (pState) ： 鼠标从button上移开/未被选中
-		**on (pSwitch) : Button处于开启状态
-		**off (pSwitch) ： Button处于关闭状态
-		*/
+		/**
+		 * hover (pState) ： 鼠标悬浮（被选中）
+		 * press (pState) ： 鼠标按下
+		 * click (pState) ： 鼠标点击
+		 * mouseOut (pState) ： 鼠标从button上移开/未被选中
+		 * on (pSwitch) : Button处于开启状态
+		 * off (pSwitch) ： Button处于关闭状态
+		 */
 		if (this.isSelected()) {
 			if (this.pState == "click") {
 				if (this.p.mouseIsPressed) {
@@ -709,6 +713,9 @@
 /* 5 */
 /***/ function(module, exports) {
 
+	/**
+	 * 工具包
+	 */
 	var util = {
 		//用于继承
 		inheritPrototype : function (subType,superType){
@@ -763,6 +770,10 @@
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
+
+	/**
+	 * infinite程序内部全局变量
+	 */
 
 	var GlobalVar = {
 	    displayArray : null,
@@ -900,6 +911,9 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 定义与Button绑定的事件处理程序
+	 */
 	var util = __webpack_require__(5);
 	var getPostContent = __webpack_require__(9);
 

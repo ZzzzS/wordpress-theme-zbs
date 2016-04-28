@@ -1,8 +1,9 @@
-/*
-Button类，基于p5.js
-by:Zzzz
-date:2016-03-03
-*/
+/**
+ * Button类，基于p5.js
+ * by:Zzzz
+ * date:2016-03-03
+ */
+
 var util = require("./util.js");
 
 var Button = function (options) {
@@ -25,14 +26,14 @@ Button.prototype.isSelected = function () {
 
 //判断Button的状态
 Button.prototype.state = function () {
-	/*
-	**hover (pState) ： 鼠标悬浮（被选中）
-	**press (pState) ： 鼠标按下
-	**click (pState) ： 鼠标点击
-	**mouseOut (pState) ： 鼠标从button上移开/未被选中
-	**on (pSwitch) : Button处于开启状态
-	**off (pSwitch) ： Button处于关闭状态
-	*/
+	/**
+	 * hover (pState) ： 鼠标悬浮（被选中）
+	 * press (pState) ： 鼠标按下
+	 * click (pState) ： 鼠标点击
+	 * mouseOut (pState) ： 鼠标从button上移开/未被选中
+	 * on (pSwitch) : Button处于开启状态
+	 * off (pSwitch) ： Button处于关闭状态
+	 */
 	if (this.isSelected()) {
 		if (this.pState == "click") {
 			if (this.p.mouseIsPressed) {

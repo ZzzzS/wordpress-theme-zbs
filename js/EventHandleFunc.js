@@ -1,3 +1,6 @@
+/**
+ * 定义与Button绑定的事件处理程序
+ */
 var util = require("./util.js");
 var getPostContent = require("./getPostContent.js");
 

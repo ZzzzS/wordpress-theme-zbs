@@ -1,3 +1,7 @@
+/**
+ * infinite程序内部全局变量
+ */
+
 var GlobalVar = {
     displayArray : null,
     mainButton : null,

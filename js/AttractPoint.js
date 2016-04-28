@@ -1,3 +1,6 @@
+/**
+ * 吸引点
+ */
 var ButtonParticle = require("./ButtonParticle.js");
 
 var AttractPoint = function (option){

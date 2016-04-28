@@ -1,3 +1,6 @@
+/**
+ * 工具包
+ */
 var util = {
 	//用于继承
 	inheritPrototype : function (subType,superType){
