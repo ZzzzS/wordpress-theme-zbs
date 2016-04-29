@@ -120,11 +120,11 @@
 	$(document).ready(function(){
 	    var getInfo = __webpack_require__(7);
 		//默认获取用户
-		getInfo("users","basic_contributor");
+		getInfo("users","special_invitation");
 		
 		//获取用户
 		$("#getUsers").click(function(){
-			getInfo("users","basic_contributor");
+			getInfo("users","special_invitation");
 		});
 		
 		//获取文章

@@ -74,11 +74,11 @@ var myp5 = new p5(sketch,'sketch');
 $(document).ready(function(){
     var getInfo = require("./getInfo.js");
 	//默认获取用户
-	getInfo("users","basic_contributor");
+	getInfo("users","special_invitation");
 	
 	//获取用户
 	$("#getUsers").click(function(){
-		getInfo("users","basic_contributor");
+		getInfo("users","special_invitation");
 	});
 	
 	//获取文章
