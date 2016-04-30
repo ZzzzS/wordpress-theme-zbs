@@ -1,6 +1,6 @@
 <?php 
 	define('BASE_PATH',str_replace( '\\' , '/' , realpath(dirname(__FILE__).'/../../../../')));//获取根目录
-	require(BASE_PATH.'/public_html/wp-load.php' );//关联wordpress，可以调用wordpress里的函数 !!!!!这里在服务器会出错!!!!!!
+	require(BASE_PATH.'/public_html/wp-load.php' );//关联wordpress，可以调用wordpress里的函数 
 	$userRole = $_GET["userRole"];
 	if(strlen($userRole) > 0){
 		$args = array('role' => $userRole, );
@@ -15,7 +15,7 @@
 			global $wpdb;
 			$userInfo["id"] = $user->ID;			
 			$author_id = $user->ID; 
-			$sql =  "SELECT * FROM $wpdb->posts WHERE post_status IN ('publish','static') AND post_author = '$author_id' AND post_type ='post'LIMIT 5" ; //查询作者文章数量   
+			$sql =  "SELECT * FROM $wpdb->posts WHERE post_status IN ('publish','static') AND post_author = '$author_id' AND (post_type ='post' OR post_type ='product') LIMIT 15" ; //查询作者文章数量   
 			$ps= $wpdb->get_results($sql);
 			//$html = '';
 			$posts = array();

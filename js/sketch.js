@@ -74,7 +74,7 @@ var myp5 = new p5(sketch,'sketch');
 $(document).ready(function(){
     var getInfo = require("./getInfo.js");
 	//默认获取用户
-	getInfo("users","special_invitation");
+	getInfo("users","特邀用户");
 	
 	//获取用户
 	$("#getUsers").click(function(){

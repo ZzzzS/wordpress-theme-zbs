@@ -374,8 +374,8 @@ add_role('special_invitation', '特邀用户', array(
 //自定义文章类型
 function my_custom_post_product() {
   $labels = array(
-    'name'               => _x( 'Products', 'post type 名称' ),
-    'singular_name'      => _x( 'Product', 'post type 单个 item 时的名称，因为英文有复数' ),
+    'name'               => _x( '作品', 'post type 名称' ),
+    'singular_name'      => _x( '作品', 'post type 单个 item 时的名称，因为英文有复数' ),
     'add_new'            => _x( '新建作品', '添加新内容的链接名称' ),
     'add_new_item'       => __( '新建一个作品' ),
     'edit_item'          => __( '编辑作品' ),
@@ -426,674 +426,32 @@ add_action( 'init', 'my_taxonomies_product', 0 );
 
 
 
+//引进自定义js脚本
+function my_scripts_method() {
+    wp_enqueue_script('getUserByRole-aa', get_template_directory_uri().'/js/getUserByRole.js', array('jquery'));           
+}
+add_action('admin_enqueue_scripts', 'my_scripts_method');
 
 
 
-
-
-
-
-
-
-
-/*
-add_action( 'add_meta_boxes', 'product_theme' );
-function product_theme() {
-    add_meta_box(
-        'product_theme',
-        '主题',
-        'product_theme_meta_box',
-        'product',
-        'side',
-        'low'
-    );
+function getUserByRole() {
+    $Role = isset( $_POST['role'] ) ? $_POST['role'] : null;
+    if(strlen($Role) > 0){
+        $args = array('role' => $Role, );
+        $blogusers = get_users($args);
+?>
+        <?php foreach ($blogusers as $user){?>
+            <option><?php echo $user->display_name; ?></option>
+        <?php 
+        }
+    }
+    die();
 }
 
-function product_theme_meta_box($post) {
+add_action('wp_ajax_getUser_action', 'getUserByRole');
+add_action( 'wp_ajax_nopriv_getUser_action', 'getUserByRole' );
 
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_theme_meta_box', 'product_theme_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_theme', true );
 
-    ?>
-
-    <label for="product_theme"></label>
-    <input type="text" id="product_theme" name="product_theme" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品主题" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_theme_save_meta_box' );
-function product_theme_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_theme_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_theme_meta_box_nonce'], 'product_theme_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_theme'] ) ) {
-        return;
-    }
-
-    $product_theme = sanitize_text_field( $_POST['product_theme'] );
-    update_post_meta( $post_id, '_product_theme', $product_theme );
-
-}
-
-
-
-add_action( 'add_meta_boxes', 'product_material' );
-function product_material() {
-    add_meta_box(
-        'product_material',
-        '材料',
-        'product_material_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_material_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_material_meta_box', 'product_material_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_material', true );
-
-    ?>
-
-    <label for="product_material"></label>
-    <input type="text" id="product_material" name="product_material" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品所用的材料" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_material_save_meta_box' );
-function product_material_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_material_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_material_meta_box_nonce'], 'product_material_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_material'] ) ) {
-        return;
-    }
-
-    $product_material = sanitize_text_field( $_POST['product_material'] );
-    update_post_meta( $post_id, '_product_material', $product_material );
-
-}
-
-
-
-
-add_action( 'add_meta_boxes', 'product_major' );
-function product_major() {
-    add_meta_box(
-        'product_major',
-        '专业类别',
-        'product_major_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_major_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_major_meta_box', 'product_major_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_major', true );
-
-    ?>
-
-    <label for="product_major"></label>
-    <input type="text" id="product_major" name="product_major" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品所属的专业类别" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_major_save_meta_box' );
-function product_major_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_major_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_major_meta_box_nonce'], 'product_major_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_major'] ) ) {
-        return;
-    }
-
-    $product_major = sanitize_text_field( $_POST['product_major'] );
-    update_post_meta( $post_id, '_product_major', $product_major );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_technology' );
-function product_technology() {
-    add_meta_box(
-        'product_technology',
-        '工艺',
-        'product_technology_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_technology_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_technology_meta_box', 'product_technology_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_technology', true );
-
-    ?>
-
-    <label for="product_technology"></label>
-    <input type="text" id="product_technology" name="product_technology" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品所使用的工艺" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_technology_save_meta_box' );
-function product_technology_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_technology_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_technology_meta_box_nonce'], 'product_technology_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_technology'] ) ) {
-        return;
-    }
-
-    $product_technology = sanitize_text_field( $_POST['product_technology'] );
-    update_post_meta( $post_id, '_product_technology', $product_technology );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_cost' );
-function product_cost() {
-    add_meta_box(
-        'product_cost',
-        '费用',
-        'product_cost_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_cost_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_cost_meta_box', 'product_cost_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_cost', true );
-
-    ?>
-
-    <label for="product_cost"></label>
-    <input type="text" id="product_cost" name="product_cost" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品的制作费用" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_cost_save_meta_box' );
-function product_cost_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_cost_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_cost_meta_box_nonce'], 'product_cost_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_cost'] ) ) {
-        return;
-    }
-
-    $product_cost = sanitize_text_field( $_POST['product_cost'] );
-    update_post_meta( $post_id, '_product_cost', $product_cost );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_state' );
-function product_state() {
-    add_meta_box(
-        'product_state',
-        '专业阶段',
-        'product_state_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_state_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_state_meta_box', 'product_state_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_state', true );
-
-    ?>
-
-    <label for="product_state"></label>
-    <input type="text" id="product_state" name="product_state" value="<?php echo esc_attr( $value ); ?>" placeholder="输入完成作品时的专业阶段" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_state_save_meta_box' );
-function product_state_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_state_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_state_meta_box_nonce'], 'product_state_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_state'] ) ) {
-        return;
-    }
-
-    $product_state = sanitize_text_field( $_POST['product_state'] );
-    update_post_meta( $post_id, '_product_state', $product_state );
-
-}
-
-add_action( 'add_meta_boxes', 'product_award' );
-function product_award() {
-    add_meta_box(
-        'product_award',
-        '荣誉',
-        'product_award_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_award_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_award_meta_box', 'product_award_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_award', true );
-
-    ?>
-
-    <label for="product_award"></label>
-    <input type="text" id="product_award" name="product_award" value="<?php echo esc_attr( $value ); ?>" placeholder="输入该作品所获得的荣誉奖项" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_award_save_meta_box' );
-function product_award_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_award_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_award_meta_box_nonce'], 'product_award_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_award'] ) ) {
-        return;
-    }
-
-    $product_award = sanitize_text_field( $_POST['product_award'] );
-    update_post_meta( $post_id, '_product_award', $product_award );
-
-}
-
-add_action( 'add_meta_boxes', 'product_tutor' );
-function product_tutor() {
-    add_meta_box(
-        'product_tutor',
-        '导师',
-        'product_tutor_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_tutor_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_tutor_meta_box', 'product_tutor_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_tutor', true );
-
-    ?>
-
-    <label for="product_tutor"></label>
-    <input type="text" id="product_tutor" name="product_tutor" value="<?php echo esc_attr( $value ); ?>" placeholder="输入导师名称" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_tutor_save_meta_box' );
-function product_tutor_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_tutor_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_tutor_meta_box_nonce'], 'product_tutor_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_tutor'] ) ) {
-        return;
-    }
-
-    $product_tutor = sanitize_text_field( $_POST['product_tutor'] );
-    update_post_meta( $post_id, '_product_tutor', $product_tutor );
-
-}
-
-add_action( 'add_meta_boxes', 'product_partner' );
-function product_partner() {
-    add_meta_box(
-        'product_partner',
-        '合作人',
-        'product_partner_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_partner_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_partner_meta_box', 'product_partner_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_partner', true );
-
-    ?>
-
-    <label for="product_partner"></label>
-    <input type="text" id="product_partner" name="product_partner" value="<?php echo esc_attr( $value ); ?>" placeholder="输入合作人名称" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_partner_save_meta_box' );
-function product_partner_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_partner_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_partner_meta_box_nonce'], 'product_partner_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_partner'] ) ) {
-        return;
-    }
-
-    $product_partner = sanitize_text_field( $_POST['product_partner'] );
-    update_post_meta( $post_id, '_product_partner', $product_partner );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_software' );
-function product_software() {
-    add_meta_box(
-        'product_software',
-        '软件',
-        'product_software_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_software_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_software_meta_box', 'product_software_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_software', true );
-
-    ?>
-
-    <label for="product_software"></label>
-    <input type="text" id="product_software" name="product_software" value="<?php echo esc_attr( $value ); ?>" placeholder="输入完成该作品所使用的软件" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_software_save_meta_box' );
-function product_software_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_software_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_software_meta_box_nonce'], 'product_software_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_software'] ) ) {
-        return;
-    }
-
-    $product_software = sanitize_text_field( $_POST['product_software'] );
-    update_post_meta( $post_id, '_product_software', $product_software );
-
-}
-
-add_action( 'add_meta_boxes', 'product_location' );
-function product_location() {
-    add_meta_box(
-        'product_location',
-        '创作地点',
-        'product_location_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_location_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_location_meta_box', 'product_location_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_location', true );
-
-    ?>
-
-    <label for="product_location"></label>
-    <input type="text" id="product_location" name="product_location" value="<?php echo esc_attr( $value ); ?>" placeholder="输入该作品的创作地点" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_location_save_meta_box' );
-function product_location_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_location_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_location_meta_box_nonce'], 'product_location_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_location'] ) ) {
-        return;
-    }
-
-    $product_location = sanitize_text_field( $_POST['product_location'] );
-    update_post_meta( $post_id, '_product_location', $product_location );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_time' );
-function product_time() {
-    add_meta_box(
-        'product_time',
-        '创作时间',
-        'product_time_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_time_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_time_meta_box', 'product_time_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_time', true );
-
-    ?>
-
-    <label for="product_time"></label>
-    <input type="text" id="product_time" name="product_time" value="<?php echo esc_attr( $value ); ?>" placeholder="输入该作品的创作时间" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_time_save_meta_box' );
-function product_time_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_time_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_time_meta_box_nonce'], 'product_time_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_time'] ) ) {
-        return;
-    }
-
-    $product_time = sanitize_text_field( $_POST['product_time'] );
-    update_post_meta( $post_id, '_product_time', $product_time );
-
-}*/
 
 
 
@@ -1115,15 +473,48 @@ function product_author_meta_box($post) {
     wp_nonce_field( 'product_author_meta_box', 'product_author_meta_box_nonce' );
     // 获取之前存储的值
     $value = get_the_author_meta( 'display_name', $post->post_author );
-
+    
+    //获取当前用户,用于检验权限
     $currentUser = wp_get_current_user();
-
+    
+    //获取某一角色的用户
+    $args = array('role' => 'special_invitation', );
+	$blogusers = get_users($args);
+    
 ?>
 
     <label for="product_author"></label>
 	<?php if(!empty($currentUser->roles) && in_array('administrator', $currentUser->roles)) : ?>
-    <input type="text" id="product_author" name="product_author" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作者名称" >
+    <?php echo esc_attr( $value ); ?>
+    <?php if($post->post_status == 'publish'):?>
+        </br>修改/设置为：
+        <div>
+            <!--<select name="product_author">
+                <?php foreach ($blogusers as $user): ?>
+                    <option value=<?php echo $user->ID; ?>><?php echo $user->display_name; ?></option>
+                <?php endforeach; ?>
+            </select>-->
+            
+            <?php
+                $roles_obj = new WP_Roles();
+                //var_dump($roles_obj);
+                $roles_names_array = $roles_obj->get_names();
+            ?>
+            <select id="selectRole" name="role" >
+                <option >用户角色</option>
+            <?php foreach ($roles_names_array as $role_name => $display_name) {?>
+                    <option value=<?php echo $role_name ?>><?php echo $display_name; ?></option>
+                    <?php  ?>
+            <?php } ?>
+            </select>
+            <select id="selectUser">
+            </select>
+            <span id="abcde"></span>
+            
 
+        </div>
+    <?php endif; ?>
+    
     <?php else:?>
     <span><?php echo esc_attr( $value ); ?></span>
 	<?php endif;
@@ -1159,7 +550,7 @@ function product_author_save_meta_box($post_id){
 		remove_action('save_post', 'product_author_save_meta_box');
 	
 		// update the post, which calls save_post again
-		//有待排查bug
+		//有待排查bug(真的有吗?)
 		$my_post = array();
 		$my_post['ID'] = $post_id;
 		global $post;

@@ -120,7 +120,7 @@
 	$(document).ready(function(){
 	    var getInfo = __webpack_require__(7);
 		//默认获取用户
-		getInfo("users","special_invitation");
+		getInfo("users","特邀用户");
 		
 		//获取用户
 		$("#getUsers").click(function(){
