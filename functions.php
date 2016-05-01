@@ -415,6 +415,7 @@ function my_taxonomies_product() {
     'menu_name'         => __( '作品分类' ),
   );
   $args = array(
+	  'show_ui' => true,
     'labels' => $labels,
     'hierarchical' => true,
   );
@@ -432,16 +433,16 @@ function my_scripts_method() {
 }
 add_action('admin_enqueue_scripts', 'my_scripts_method');
 
-
-
+//getUser_action
 function getUserByRole() {
     $Role = isset( $_POST['role'] ) ? $_POST['role'] : null;
     if(strlen($Role) > 0){
         $args = array('role' => $Role, );
         $blogusers = get_users($args);
-?>
+?> 
+		<option value=''>请选择用户</option>
         <?php foreach ($blogusers as $user){?>
-            <option><?php echo $user->display_name; ?></option>
+            <option value=<?php echo $user->ID; ?>><?php echo $user->display_name; ?></option>
         <?php 
         }
     }
@@ -452,9 +453,9 @@ add_action('wp_ajax_getUser_action', 'getUserByRole');
 add_action( 'wp_ajax_nopriv_getUser_action', 'getUserByRole' );
 
 
-
-
-
+/*****************/
+/*添加修改作者表单*/
+/*****************/
 add_action( 'add_meta_boxes', 'product_author' );
 function product_author() {
     add_meta_box(
@@ -463,7 +464,7 @@ function product_author() {
         'product_author_meta_box',
         'product',
         'side',
-        'low'
+        'high'
     );
 }
 
@@ -483,43 +484,36 @@ function product_author_meta_box($post) {
     
 ?>
 
-    <label for="product_author"></label>
 	<?php if(!empty($currentUser->roles) && in_array('administrator', $currentUser->roles)) : ?>
-    <?php echo esc_attr( $value ); ?>
-    <?php if($post->post_status == 'publish'):?>
-        </br>修改/设置为：
-        <div>
-            <!--<select name="product_author">
-                <?php foreach ($blogusers as $user): ?>
-                    <option value=<?php echo $user->ID; ?>><?php echo $user->display_name; ?></option>
-                <?php endforeach; ?>
-            </select>-->
-            
-            <?php
-                $roles_obj = new WP_Roles();
-                //var_dump($roles_obj);
-                $roles_names_array = $roles_obj->get_names();
-            ?>
-            <select id="selectRole" name="role" >
-                <option >用户角色</option>
-            <?php foreach ($roles_names_array as $role_name => $display_name) {?>
-                    <option value=<?php echo $role_name ?>><?php echo $display_name; ?></option>
-                    <?php  ?>
-            <?php } ?>
-            </select>
-            <select id="selectUser">
-            </select>
-            <span id="abcde"></span>
-            
-
-        </div>
-    <?php endif; ?>
+    <div style="text-align:center;font-size:16px"><?php echo esc_attr( $value ); ?></div>
+        
+	<label for="product_author">修改/设置为：</label>
+	<div style="margin:7px 0">
+		
+		<?php
+			$roles_obj = new WP_Roles();
+			$roles_names_array = $roles_obj->get_names();
+			//！！！！！！！！！引入getUserByRole.js后，"#selectRole"的value一旦修改就会触发ajax
+		?>
+		<select id="selectRole" name="role">
+			<option value=''>选择用户角色</option>
+		<?php foreach ($roles_names_array as $role_name => $display_name) {?>
+				<option value=<?php echo $role_name ?>><?php echo $display_name; ?></option>
+				<?php  ?>
+		<?php } ?>
+		</select>
+		<select id="selectUser" name="product_author">
+			<option value=''>请选择用户</option>
+		</select>
+		<div id="spinner_selectUser" style="background:url(images/spinner.gif) no-repeat;width:20px;height:20px;margin:5px 0;float:right;display:none"></div>
+	</div>
     
     <?php else:?>
     <span><?php echo esc_attr( $value ); ?></span>
 	<?php endif;
 }
 
+//修改文章作者
 add_action( 'save_post', 'product_author_save_meta_box' );
 function product_author_save_meta_box($post_id){
 
@@ -538,11 +532,11 @@ function product_author_save_meta_box($post_id){
     }
 
     // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_author'] ) ) {
+    if ( ! isset( $_POST['product_author']) || $_POST['product_author'] == '') {
         return;
     }
 	//ini_set('xdebug.max_nesting_level', 100);
-    $product_author = sanitize_text_field( $_POST['product_author'] );
+    $product_author = sanitize_text_field( $_POST['product_author']);
 	
 	if ( ! wp_is_post_revision( $post_id ) ){
 	
@@ -561,3 +555,183 @@ function product_author_save_meta_box($post_id){
 		add_action('save_post', 'product_author_save_meta_box');
 	}
 }
+
+
+// 添加作品信息表单
+add_action( 'add_meta_boxes', 'product_info' );
+function product_info() {
+    add_meta_box(
+        'product_info',
+        '作品信息',
+        'product_info_meta_box',
+        'product',
+        'side',
+        'high'
+    );
+}
+
+function product_info_meta_box($post) {
+
+    // 创建临时隐藏表单，为了安全
+    wp_nonce_field( 'product_info_meta_box', 'product_info_meta_box_nonce' );
+    // 获取之前存储的值
+    //$value = get_the_author_meta( 'display_name', $post->post_author );
+	$valueAttribute = get_post_meta( $post->ID, '_product_attribute', true );
+	$valueDate = get_post_meta( $post->ID, '_product_creation_date', true );
+	$valueMajor = get_post_meta( $post->ID, '_product_major', true );
+	$valueSubMajor = get_post_meta( $post->ID, '_product_subMajor', true );
+	$valueMaterial = get_post_meta( $post->ID, '_product_material', true );
+	$materials = ["纸本水墨","纸本彩墨","绢本彩墨","布面油彩","木板油彩","布面丙烯","丝网版画","黑白木刻","雕塑","陶","瓷","DV","装置","综合媒材","纸本","铸铜"]
+?>
+	<style>
+		.product_info_box{
+			margin:8px 0;
+		}
+		.product_info_box label{
+			font-weight : bold;
+		}
+	</style>
+	
+    <div class="product_info_box">
+	<label for="product_attribute">作品属性:</label>
+	<select id="product_attribute" name="product_attribute">
+		<option value='homework' <?php echo $valueAttribute == 'homework'?  "selected" : ''?>>作业</option>
+		<option value='graduation_project' <?php echo $valueAttribute == 'graduation_project'?  "selected" : ''?>>毕业设计</option>
+		<option value='others' <?php echo $valueAttribute == 'others'?  "selected" : ''?>>其他</option>
+	</select>
+	</div>
+	
+	<div class="product_info_box">
+	<label for="product_creation_date">创作年份:</label>
+	<select id="product_creation_date" name="product_creation_date">
+		<?php for ($i = 2010; $i <= date("Y"); $i++):?>
+			<option value=<?php echo $i ?> <?php echo $valueDate == $i?  "selected" : ''?>><?php echo $i ?></option>
+		<?php endfor; ?>
+	</select>
+	</div>
+	
+	<div class="product_info_box">
+	<label for="product_major">专业:</label>
+	<select id="product_major" name="product_major">
+		<?php  
+			$majorJson = get_template_directory_uri()."/major.json";
+			$majorJson_string = file_get_contents($majorJson);
+			$majors=json_decode($majorJson_string,true);
+			
+			foreach($majors as $major => $subMajor): ?>
+				<option value=<?php echo $major; ?> <?php echo $valueMajor == $major?  "selected" : ''?>><?php echo $major; ?></option>
+			<?php endforeach; ?>		
+	</select>
+	
+	<select id="product_subMajor" name="product_subMajor" style="display:<?php echo $valueSubMajor != "" ? "inline" : "none" ?>;margin-left:34px">
+	<?php if ($valueMajor != ""): ?>
+		<?php for($i = 0; $i < count($majors[$valueMajor]) ;$i++): ?>
+			<option value=<?php echo $majors[$valueMajor][$i]; ?> <?php echo $majors[$valueMajor][$i] == $valueSubMajor?  "selected" : ''?>><?php echo $majors[$valueMajor][$i]; ?></option>
+		<?php endfor; ?>
+	<?php endif; ?>
+	</select>
+	<div id="spinner_major" style="background:url(images/spinner.gif) no-repeat;width:20px;height:20px;margin:5px 0;float:right;display:none"></div>
+
+	</div>
+	
+	<div class="product_info_box">
+	<label for="product_material">材料:</label>
+	<select id="product_material" name="product_material">
+		<?php for($i = 0; $i < count($materials); $i++): ?>
+		<option value=<?php echo $materials[$i] ?> <?php echo $valueMaterial == $materials[$i]?  "selected" : ''?>><?php echo $materials[$i] ?></option>
+		<?php endfor; ?>
+	</select>
+	</div>
+	
+<?php 
+}
+
+add_action( 'save_post', 'product_info_save_meta_box' );
+function product_info_save_meta_box($post_id){
+
+    // 安全检查
+    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
+    if ( ! isset( $_POST['product_info_meta_box_nonce'] ) ) {
+        return;
+    }
+    // 判断隐藏表单的值与之前是否相同
+    if ( ! wp_verify_nonce( $_POST['product_info_meta_box_nonce'], 'product_info_meta_box' ) ) {
+        return;
+    }
+    // 判断该用户是否有权限
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    // 判断 product_attribute 是否为空
+    if ( ! isset( $_POST['product_attribute'] ) ) {
+        return;
+    }
+
+    $product_attribute = sanitize_text_field( $_POST['product_attribute'] );
+    update_post_meta( $post_id, '_product_attribute', $product_attribute );
+	
+	
+	// 判断 product_creation_date 是否为空
+    if ( ! isset( $_POST['product_creation_date'] ) ) {
+        return;
+    }
+
+    $product_creation_date = sanitize_text_field( $_POST['product_creation_date'] );
+    update_post_meta( $post_id, '_product_creation_date', $product_creation_date );
+	
+	
+	// 判断 product_major 是否为空
+    if ( ! isset( $_POST['product_major'] ) ) {
+        return;
+    }
+
+    $product_major = sanitize_text_field( $_POST['product_major'] );
+    update_post_meta( $post_id, '_product_major', $product_major );
+	
+	
+	// 判断 product_subMajor 是否为空
+    if ( ! isset( $_POST['product_subMajor'] ) ) {
+        return;
+    }
+
+    $product_subMajor = sanitize_text_field( $_POST['product_subMajor'] );
+    update_post_meta( $post_id, '_product_subMajor', $product_subMajor );
+	
+	
+	// 判断 product_material 是否为空
+    if ( ! isset( $_POST['product_material'] ) ) {
+        return;
+    }
+
+    $product_material = sanitize_text_field( $_POST['product_material'] );
+    update_post_meta( $post_id, '_product_material', $product_material );
+
+}
+
+//getSubMajor_action
+function getSubMajor() {
+    $major = isset( $_POST['major'] ) ? $_POST['major'] : null;
+    if(strlen($major) > 0){
+		if(!$majors){
+			$majorJson = get_template_directory_uri()."/major.json";
+			$majorJson_string = file_get_contents($majorJson);
+			$majors=json_decode($majorJson_string,true);
+		}
+		$count_subMajor = count($majors[$major]);
+?>
+		<?php for($i = 0; $i < $count_subMajor; $i++): ?>
+			<option value=<?php echo $majors[$major][$i]; ?>><?php echo $majors[$major][$i]; ?></option>
+		<?php endfor; ?>
+	<?php 
+	}
+    die();
+}
+
+add_action('wp_ajax_getSubMajor_action', 'getSubMajor');
+add_action( 'wp_ajax_nopriv_getSubMajor_action', 'getSubMajor' );
+
+
+
+
+
