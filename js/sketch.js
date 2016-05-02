@@ -49,7 +49,7 @@ var sketch = function(p){
 					globalVar.displayArray[i][j].attractPtL = globalVar.attractPtR;
 				}else{
 					if(globalVar.displayArray[i][j].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
-						console.log(len);
+						//console.log(len);
 						globalVar.displayArray[i][j].attractPtL = globalVar.attractPtL;
 					}
 				}

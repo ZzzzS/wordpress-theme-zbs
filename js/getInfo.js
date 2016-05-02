@@ -23,6 +23,7 @@ var getInfo = function (type,arg){
 				ButtonPlus.stateReset();
 				var posts = JSON.parse(XMLHTTP.responseText);
 				//alert(XMLHTTP.responseText);
+				console.log(XMLHTTP.responseText);
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
 					var options = {
@@ -34,13 +35,13 @@ var getInfo = function (type,arg){
 					}
 					var newObj = new ButtonParticle(options);
 					newObj.attractPtL = globalVar.attractPtL;
-					newObj.b.fillCol = globalVar.pp.color(Math.random()*200, Math.random()*200, Math.random()*200,50);
 					newObj.reflect = true;
 					newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
 					newObj.b.addHandler("click",eventHandleFunc.clicked);
 					newObj.b.addHandler("turnOn",eventHandleFunc.turnOn);
 					newObj.b.sound = globalVar.SOUNDFILE;
 					newObj.b.info = posts[item];
+					newObj.b.buttonCol = newObj.b.info["color"];
 					globalVar.mainButton.push(newObj);
 				}
 				
@@ -58,7 +59,7 @@ var getInfo = function (type,arg){
 				if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 					var users = JSON.parse(XMLHTTP.responseText);
 					//alert(XMLHTTP.responseText);
-					console.log(XMLHTTP.responseText);
+					//console.log(XMLHTTP.responseText);
 					
 					var i = 0;
 					var count = util.getJsonObjLength(users);
@@ -78,7 +79,7 @@ var getInfo = function (type,arg){
 							newObj.attractPtL = globalVar.attractPtR;
 						}
 
-						newObj.b.fillCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
+						newObj.b.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 						newObj.reflect = true;
 						newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
 						newObj.b.addHandler("click",eventHandleFunc.clicked_users);

@@ -16,6 +16,8 @@ var Button = function (options) {
 	this.hoverCol = options.hoverCol || this.p.color("#06799F");  //鼠标悬浮时Button的颜色
 	this.pressCol = options.pressCol || this.p.color("#216278");  //鼠标按下时Button的颜色
 	this.clickCol = options.clickCol || this.p.color("#024E68");  //Button处于on状态时的颜色
+	this.fillCol = null;
+	this.positions = [];  //储存位置
 	this.handlers = {};  //事件处理程序
 }
 
@@ -82,8 +84,12 @@ Button.prototype.cursorState = function(state){
 	}
 }
 
+Button.prototype.update = function(){
+}
+
 //根据不同的状态绘制Button
 Button.prototype.display = function () {
+	//this.update();
 	if (this.strokeCol) {
 		this.p.stroke(this.strokeCol);
 	} else {
@@ -93,38 +99,38 @@ Button.prototype.display = function () {
 	var state = this.state();
 	switch (state) {
 		case "hover":
-			this.p.fill(this.hoverCol);
+			this.fillCol = this.hoverCol;
 			this.drawGeometry();
 			this.fire({ type: "hover" });
 			this.pState = "hover";
 			break;
 		case "mouseOut":
-			if (this.fillCol) {
-				this.p.fill(this.fillCol);
+			if (this.buttonCol) {
+				this.fillCol = this.buttonCol;
 			} else {
-				this.p.fill(this.p.color(0, 0, 100));
+				this.fillCol = this.p.color(0, 0, 100);
 			}
 			this.drawGeometry();
 			this.fire({ type: "mouseOut" });
 			this.pState = "mouseOut";
 			break;
 		case "press":
-			this.p.fill(this.pressCol);
+			this.fillCol = this.pressCol;
 			this.drawGeometry();
 			this.fire({ type: "press" });
 			this.pState = "press";
 			break;
 		case "click":
-			this.p.fill(this.clickCol);
+			this.fillCol = this.clickCol;
 			this.drawGeometry();
 			this.fire({ type: "click" });
 			this.pState = "click";
 			break;
 		default:
-			if (this.fillCol) {
-				this.p.fill(this.fillCol);
+			if (this.buttonCol) {
+				this.fillCol = this.buttonCol;
 			} else {
-				this.p.fill(this.p.color(0, 0, 100));
+				this.fillCol = this.p.color(0, 0, 100);
 			}
 			this.drawGeometry();
 	}
@@ -132,6 +138,7 @@ Button.prototype.display = function () {
 
 // 绘制几何图形
 Button.prototype.drawGeometry = function () {
+	this.p.fill(this.fillCol);
 	this.p.push();
 	this.p.translate(this.position.x, this.position.y);
 	this.p.ellipse(0, 0, this.width, this.height);

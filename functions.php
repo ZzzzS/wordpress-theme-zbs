@@ -251,9 +251,9 @@ global $texonomy_slug_color;
 $texonomy_slug_color='category';
 add_action($texonomy_slug_color.'_add_form_fields','categorycolor');
 function categorycolor($taxonomy){ ?>
-    <div>
+    <div class="form-field term-slug-wrap">
     <label for="tag-color">分类颜色</label>
-    <input type="text" name="tag-color" id="tag-color" value="" /><br /><span>请在此输入分类颜色。</span>    
+    <input type="text" name="tag-color" id="tag-color" value="" size="40"/><br /><p>请在此输入分类颜色。</p>    
 </div>
 <?php }
 add_action($texonomy_slug_color.'_edit_form_fields','categorycoloredit');
@@ -271,7 +271,6 @@ function categorycolorsave($term_id){
             update_option('_category_color'.$term_id,$_POST['tag-color'] );
     }
 }
-
 
 
 
@@ -370,8 +369,9 @@ add_role('special_invitation', '特邀用户', array(
 
 
 
-
-//自定义文章类型
+/***************************************************/
+/*************自定义文章类型*************************/
+/***************************************************/
 function my_custom_post_product() {
   $labels = array(
     'name'               => _x( '作品', 'post type 名称' ),
@@ -417,6 +417,7 @@ function my_taxonomies_product() {
   $args = array(
 	  'show_ui' => true,
     'labels' => $labels,
+	'show_admin_column'     => true,
     'hierarchical' => true,
   );
   register_taxonomy( 'product_category', 'product', $args );
@@ -424,10 +425,121 @@ function my_taxonomies_product() {
 add_action( 'init', 'my_taxonomies_product', 0 );
 
 
+function my_taxonomies_product_mat() {
+  $labels = array(
+    'name'              => _x( '作品材料', 'taxonomy 名称' ),
+    'singular_name'     => _x( '作品材料', 'taxonomy 单数名称' ),
+    'search_items'      => __( '搜索作品材料' ),
+	'popular_items'     => __( '热门材料' ),
+    'all_items'         => __( '所有作品材料' ),
+    'parent_item'       => null,
+    'parent_item_colon' => null,
+    'edit_item'         => __( '编辑作品材料' ),
+    'update_item'       => __( '更新作品材料' ),
+    'add_new_item'      => __( '添加新的作品材料' ),
+    'new_item_name'     => __( '新作品材料' ),
+    'menu_name'         => __( '作品材料' ),
+	'separate_items_with_commas' => __( '多个材料请用英文逗号（,）分开' ),
+	'add_or_remove_items'        => __( '添加或删除材料' ),
+	'choose_from_most_used'      => __( '从热门材料中选择' ),
+	'not_found'                  => __( '未找到材料' ),
+	'menu_name'                  => __( '作品材料' )
+  );
+  $args = array(
+	  'show_ui' => true,
+    'labels' => $labels,
+	'show_admin_column'     => true,
+	'rewrite' => array( 'slug' => 'writer' ),
+	'show_tagcloud' => true,
+    'hierarchical' => false,
+	'update_count_callback' => '_update_post_term_count',
+	'query_var'             => true,
+  );
+  register_taxonomy( 'product_post_tag', 'product', $args );
+}
+add_action( 'init', 'my_taxonomies_product_mat', 0 );
+
+//添加栏目
+add_filter( 'manage_edit-product_columns', 'my_columns' );
+function my_columns( $columns ) {
+    $columns['product_creation_date'] = '创作年份';
+    return $columns;
+}
+
+add_action( 'manage_posts_custom_column', 'populate_columns' );
+function populate_columns( $column ) {
+    if ( 'product_creation_date' == $column ) {
+        $creation_date = esc_html( get_post_meta( get_the_ID(), '_product_creation_date', true ) );
+        echo $creation_date;
+    }
+}
+
+add_filter( 'manage_edit-product_sortable_columns', 'sort_me' );
+function sort_me( $columns ) {
+    $columns['product_creation_date'] = 'product_creation_date';
+ 
+    return $columns;
+}
+
+/******************/
+//添加分类颜色
+/******************/
+global $product_category_color;
+$product_category_color='product_category';
+add_action($product_category_color.'_add_form_fields','productCategoryColor');
+function productCategoryColor($taxonomy){ ?>
+    <div class="form-field term-slug-wrap">
+    <label for="tag-color">分类颜色</label>
+    <input type="text" name="tag-color" id="tag-color" value=""  size="40"/><br /><p>请在此输入分类颜色。</p>    
+</div>
+<?php }
+add_action($product_category_color.'_edit_form_fields','productCategoryColorCdit');
+function productCategoryColorCdit($taxonomy){ ?>
+<tr class="form-field">
+    <th scope="row" valign="top"><label for="tag-color">颜色</label></th>
+    <td><div style="float:left;width:28px;height:28px;background-color:<?php echo get_option('product_category_color'.$taxonomy->term_id); ?>;margin-right:5px;border-radius:5px;-moz-border-radius:5px;"></div><input style="width:200px;" type="text" name="tag-color" id="tag-color" value="<?php echo get_option('product_category_color'.$taxonomy->term_id); ?>" /><br /><span class="description">请在此输入分类颜色。</span></td>
+</tr>              
+<?php  }
+add_action('edit_term','productCategoryColorCave');
+add_action('create_term','productCategoryColorCave');
+function productCategoryColorCave($term_id){
+    if(isset($_POST['tag-color'])){
+        if(isset($_POST['tag-color']))
+            update_option('product_category_color'.$term_id,$_POST['tag-color'] );
+    }
+}
+
+
+// 通过动作/过滤器输出各种表格和CSS
+function product_ssid_add() {
+	add_action('admin_head', 'ssid_css');
+
+	foreach ( get_taxonomies(array('name'=> 'product_category')) as $taxonomy ) {
+		add_action("manage_edit-${taxonomy}_columns", 'ssid_column');
+
+		function product_sscolor_value($column_name ,$id) {
+			if ($column_name == 'sscolor')
+				echo get_option('product_category_color'.$id);
+		}
+		add_action("manage_edit-${taxonomy}_columns", 'sscolor_column');
+		add_filter("manage_${taxonomy}_custom_column", 'ssid_return_value', 10, 3);
+		
+		function product_sscolor_return_value($value, $column_name ,$id) {
+			if ($column_name == 'sscolor')
+				$value = "<div style='float:left;width:28px;height:28px;background-color:".get_option('product_category_color'.$id).";margin:5px 5px 0 0;border-radius:5px;-moz-border-radius:5px;'></div>";
+			return $value;
+		}
+		add_filter("manage_${taxonomy}_custom_column", 'sscolor_return_value', 10, 3);
+	}	
+}
+ 
+add_action('admin_init', 'product_ssid_add');
 
 
 
-//引进自定义js脚本
+/*************************/
+/**后台引进自定义js脚本****/
+/*************************/
 function my_scripts_method() {
     wp_enqueue_script('getUserByRole-aa', get_template_directory_uri().'/js/getUserByRole.js', array('jquery'));           
 }
@@ -485,6 +597,12 @@ function product_author_meta_box($post) {
 ?>
 
 	<?php if(!empty($currentUser->roles) && in_array('administrator', $currentUser->roles)) : ?>
+	<?php  
+		$avatars = get_user_meta( get_the_author_meta( 'id', $post->post_author ), 'wp_user_avatars', true );
+		if(!empty($avatars)):
+	?>
+	<img src = <?php echo $avatars['250'] ?> style="width:70px;height:70px;border:solid #ccc 1px;border-radius:35px;-webkit-border-radius:35px;-moz-border-radius:35px;margin:10px auto;display:block">
+	<?php endif; ?>
     <div style="text-align:center;font-size:16px"><?php echo esc_attr( $value ); ?></div>
         
 	<label for="product_author">修改/设置为：</label>
@@ -581,7 +699,7 @@ function product_info_meta_box($post) {
 	$valueMajor = get_post_meta( $post->ID, '_product_major', true );
 	$valueSubMajor = get_post_meta( $post->ID, '_product_subMajor', true );
 	$valueMaterial = get_post_meta( $post->ID, '_product_material', true );
-	$materials = ["纸本水墨","纸本彩墨","绢本彩墨","布面油彩","木板油彩","布面丙烯","丝网版画","黑白木刻","雕塑","陶","瓷","DV","装置","综合媒材","纸本","铸铜"]
+	//$materials = ["纸本水墨","纸本彩墨","绢本彩墨","布面油彩","木板油彩","布面丙烯","丝网版画","黑白木刻","雕塑","陶","瓷","DV","装置","综合媒材","纸本","铸铜"]
 ?>
 	<style>
 		.product_info_box{
@@ -634,14 +752,14 @@ function product_info_meta_box($post) {
 
 	</div>
 	
-	<div class="product_info_box">
+	<!--<div class="product_info_box">
 	<label for="product_material">材料:</label>
 	<select id="product_material" name="product_material">
 		<?php for($i = 0; $i < count($materials); $i++): ?>
 		<option value=<?php echo $materials[$i] ?> <?php echo $valueMaterial == $materials[$i]?  "selected" : ''?>><?php echo $materials[$i] ?></option>
 		<?php endfor; ?>
 	</select>
-	</div>
+	</div>-->
 	
 <?php 
 }
@@ -733,5 +851,16 @@ add_action( 'wp_ajax_nopriv_getSubMajor_action', 'getSubMajor' );
 
 
 
-
+// 页面链接添加html后缀
+add_action('init', 'html_page_permalink', -1);
+function html_page_permalink() {
+    global $wp_rewrite;
+    if ( !strpos($wp_rewrite->get_page_permastruct(), '.html')){
+        $wp_rewrite->page_structure = $wp_rewrite->page_structure . '.html';
+    }
+	
+	// if ( !strpos($wp_rewrite->get_category_permastruct(), '.html')){
+    //     $wp_rewrite->category_structure = $wp_rewrite->category_structure . '.html';
+    // }
+}
 

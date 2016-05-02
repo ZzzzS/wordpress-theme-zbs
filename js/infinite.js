@@ -95,7 +95,7 @@
 						globalVar.displayArray[i][j].attractPtL = globalVar.attractPtR;
 					}else{
 						if(globalVar.displayArray[i][j].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
-							console.log(len);
+							//console.log(len);
 							globalVar.displayArray[i][j].attractPtL = globalVar.attractPtL;
 						}
 					}
@@ -418,6 +418,7 @@
 
 	//根据不同的状态绘制ButtonPlus（加强版）
 	ButtonPlus.prototype.display = function () {
+		//this.update();
 		if (this.strokeCol) {
 			this.p.stroke(this.strokeCol);
 		} else {
@@ -433,8 +434,8 @@
 				if (this.pState == "mouseOut") {         //首次hover
 					if (this.sound) this.sound.play();
 				}
-				this.hoverCol = this.p.color(this.fillCol.getRed(), this.fillCol.getGreen(), this.fillCol.getBlue(), 150);
-				this.p.fill(this.hoverCol);
+				this.fillCol = this.buttonCol;
+				//this.p.fill(this.fillCol);
 				this.drawGeometry();
 				if (this.width > 100) {
 					this.breath = true;
@@ -469,8 +470,8 @@
 				this.pState = "hover";
 				break;
 			case "mouseOut":
-				if (this.fillCol) {
-					this.p.fill(this.fillCol);
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
 				}
 				this.drawGeometry();
 				this.breath = false;
@@ -486,13 +487,13 @@
 				this.pState = "mouseOut";
 				break;
 			case "press":
-				this.p.fill(this.pressCol);
+				this.fillCol = this.pressCol;
 				this.drawGeometry();
 				this.fire({ type: "press" });
 				this.pState = "press";
 				break;
 			case "click":
-				this.p.fill(this.clickCol);
+				this.fillCol = this.clickCol;
 				this.drawGeometry();
 
 				//点击反馈
@@ -513,10 +514,10 @@
 				this.pState = "click";
 				break;
 			default:
-				if (this.fillCol) {
-					this.p.fill(this.fillCol);
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
 				} else {
-					this.p.fill(this.p.color(0, 0, 100));
+					this.fillCol = this.p.color(0, 0, 100);
 				}
 				this.drawGeometry();
 		}
@@ -528,7 +529,6 @@
 	}; 
 
 	module.exports = ButtonPlus;
-
 
 
 /***/ },
@@ -553,6 +553,8 @@
 		this.hoverCol = options.hoverCol || this.p.color("#06799F");  //鼠标悬浮时Button的颜色
 		this.pressCol = options.pressCol || this.p.color("#216278");  //鼠标按下时Button的颜色
 		this.clickCol = options.clickCol || this.p.color("#024E68");  //Button处于on状态时的颜色
+		this.fillCol = null;
+		this.positions = [];  //储存位置
 		this.handlers = {};  //事件处理程序
 	}
 
@@ -619,8 +621,12 @@
 		}
 	}
 
+	Button.prototype.update = function(){
+	}
+
 	//根据不同的状态绘制Button
 	Button.prototype.display = function () {
+		//this.update();
 		if (this.strokeCol) {
 			this.p.stroke(this.strokeCol);
 		} else {
@@ -630,38 +636,38 @@
 		var state = this.state();
 		switch (state) {
 			case "hover":
-				this.p.fill(this.hoverCol);
+				this.fillCol = this.hoverCol;
 				this.drawGeometry();
 				this.fire({ type: "hover" });
 				this.pState = "hover";
 				break;
 			case "mouseOut":
-				if (this.fillCol) {
-					this.p.fill(this.fillCol);
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
 				} else {
-					this.p.fill(this.p.color(0, 0, 100));
+					this.fillCol = this.p.color(0, 0, 100);
 				}
 				this.drawGeometry();
 				this.fire({ type: "mouseOut" });
 				this.pState = "mouseOut";
 				break;
 			case "press":
-				this.p.fill(this.pressCol);
+				this.fillCol = this.pressCol;
 				this.drawGeometry();
 				this.fire({ type: "press" });
 				this.pState = "press";
 				break;
 			case "click":
-				this.p.fill(this.clickCol);
+				this.fillCol = this.clickCol;
 				this.drawGeometry();
 				this.fire({ type: "click" });
 				this.pState = "click";
 				break;
 			default:
-				if (this.fillCol) {
-					this.p.fill(this.fillCol);
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
 				} else {
-					this.p.fill(this.p.color(0, 0, 100));
+					this.fillCol = this.p.color(0, 0, 100);
 				}
 				this.drawGeometry();
 		}
@@ -669,6 +675,7 @@
 
 	// 绘制几何图形
 	Button.prototype.drawGeometry = function () {
+		this.p.fill(this.fillCol);
 		this.p.push();
 		this.p.translate(this.position.x, this.position.y);
 		this.p.ellipse(0, 0, this.width, this.height);
@@ -816,6 +823,7 @@
 					ButtonPlus.stateReset();
 					var posts = JSON.parse(XMLHTTP.responseText);
 					//alert(XMLHTTP.responseText);
+					console.log(XMLHTTP.responseText);
 					for(var item in posts){
 						var size = Math.random()*20 + 15;
 						var options = {
@@ -827,13 +835,13 @@
 						}
 						var newObj = new ButtonParticle(options);
 						newObj.attractPtL = globalVar.attractPtL;
-						newObj.b.fillCol = globalVar.pp.color(Math.random()*200, Math.random()*200, Math.random()*200,50);
 						newObj.reflect = true;
 						newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
 						newObj.b.addHandler("click",eventHandleFunc.clicked);
 						newObj.b.addHandler("turnOn",eventHandleFunc.turnOn);
 						newObj.b.sound = globalVar.SOUNDFILE;
 						newObj.b.info = posts[item];
+						newObj.b.buttonCol = newObj.b.info["color"];
 						globalVar.mainButton.push(newObj);
 					}
 					
@@ -851,7 +859,7 @@
 					if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 						var users = JSON.parse(XMLHTTP.responseText);
 						//alert(XMLHTTP.responseText);
-						console.log(XMLHTTP.responseText);
+						//console.log(XMLHTTP.responseText);
 						
 						var i = 0;
 						var count = util.getJsonObjLength(users);
@@ -871,7 +879,7 @@
 								newObj.attractPtL = globalVar.attractPtR;
 							}
 
-							newObj.b.fillCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
+							newObj.b.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 							newObj.reflect = true;
 							newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
 							newObj.b.addHandler("click",eventHandleFunc.clicked_users);

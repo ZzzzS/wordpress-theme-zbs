@@ -109,6 +109,7 @@ ButtonPlus.prototype.state = function () {
 
 //根据不同的状态绘制ButtonPlus（加强版）
 ButtonPlus.prototype.display = function () {
+	//this.update();
 	if (this.strokeCol) {
 		this.p.stroke(this.strokeCol);
 	} else {
@@ -124,8 +125,8 @@ ButtonPlus.prototype.display = function () {
 			if (this.pState == "mouseOut") {         //首次hover
 				if (this.sound) this.sound.play();
 			}
-			this.hoverCol = this.p.color(this.fillCol.getRed(), this.fillCol.getGreen(), this.fillCol.getBlue(), 150);
-			this.p.fill(this.hoverCol);
+			this.fillCol = this.buttonCol;
+			//this.p.fill(this.fillCol);
 			this.drawGeometry();
 			if (this.width > 100) {
 				this.breath = true;
@@ -160,8 +161,8 @@ ButtonPlus.prototype.display = function () {
 			this.pState = "hover";
 			break;
 		case "mouseOut":
-			if (this.fillCol) {
-				this.p.fill(this.fillCol);
+			if (this.buttonCol) {
+				this.fillCol = this.buttonCol;
 			}
 			this.drawGeometry();
 			this.breath = false;
@@ -177,13 +178,13 @@ ButtonPlus.prototype.display = function () {
 			this.pState = "mouseOut";
 			break;
 		case "press":
-			this.p.fill(this.pressCol);
+			this.fillCol = this.pressCol;
 			this.drawGeometry();
 			this.fire({ type: "press" });
 			this.pState = "press";
 			break;
 		case "click":
-			this.p.fill(this.clickCol);
+			this.fillCol = this.clickCol;
 			this.drawGeometry();
 
 			//点击反馈
@@ -204,10 +205,10 @@ ButtonPlus.prototype.display = function () {
 			this.pState = "click";
 			break;
 		default:
-			if (this.fillCol) {
-				this.p.fill(this.fillCol);
+			if (this.buttonCol) {
+				this.fillCol = this.buttonCol;
 			} else {
-				this.p.fill(this.p.color(0, 0, 100));
+				this.fillCol = this.p.color(0, 0, 100);
 			}
 			this.drawGeometry();
 	}
@@ -219,4 +220,3 @@ ButtonPlus.stateReset = function () {
 }; 
 
 module.exports = ButtonPlus;
-
