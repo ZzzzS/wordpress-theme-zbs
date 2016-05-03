@@ -2,7 +2,8 @@
 
 var AttractPoint = require("./AttractPoint.js");
 var globalVar = require("./GlobalVar.js");
-
+var VisualObject = require("./VisualObject.js");
+var Particle = require("./Particle.js");
 
 var sketch = function(p){
 	globalVar.pp = p;
@@ -28,6 +29,22 @@ var sketch = function(p){
 	p.setup = function(){
 		p.createCanvas(960,600);
 		p.canvas.id = "sketch_1";
+		globalVar.displayArray.backgroundBall = [];
+		for(var i = 0; i < 50; i++){
+			var size = Math.random()*20 + 15;
+			var optionsVO = {
+				position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+				width : size,
+				height : size,
+				p : globalVar.pp
+			}
+			var options = {
+				visualObject : new VisualObject(optionsVO),
+				p : globalVar.pp
+			}
+			globalVar.displayArray.backgroundBall.push(new Particle(options));
+		}
+		
 	};
 	
 	p.draw = function(){
@@ -35,32 +52,27 @@ var sketch = function(p){
 		//globalVar.attractPtL.display();
 		//globalVar.attractPtR.display();
 		var buttonHoverCount = 0;
-		//console.log(globalVar.displayArray.ButtonParticle);
 		for(var objType in globalVar.displayArray){
 			if (objType === "ButtonParticle"){
-				//console.log("haha");
 				resortButtonParticle(globalVar.displayArray);
 			}
 			for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
-				/*var force = attractPtL.vortexAttract(globalVar.displayArray[objType][i],300);
-				globalVar.displayArray[objType][i].applyForce(force);*/
 				globalVar.displayArray[objType][i].display();
 				
-				var vect = p5.Vector.sub(globalVar.displayArray[objType][i].b.position,globalVar.displayArray[objType][i].attractPtL.position);
-				var angle = vect.heading();
-				var len = vect.mag();
-				
-				if(!globalVar.displayArray[objType][i].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
-					globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtR;
-				}else{
-					if(globalVar.displayArray[objType][i].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
-						//console.log(len);
-						globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtL;
+				if (objType === "ButtonParticle"){
+					var vect = p5.Vector.sub(globalVar.displayArray[objType][i].visualObject.position,globalVar.displayArray[objType][i].attractPtL.position);
+					var angle = vect.heading();
+					var len = vect.mag();
+					
+					if(!globalVar.displayArray[objType][i].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
+						globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtR;
+					}else{
+						if(globalVar.displayArray[objType][i].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
+							globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtL;
+						}
 					}
 				}
-				
-				
-				// if(i === 1 && globalVar.displayArray[objType][i].b.isSelected()){
+				// if(i === 1 && globalVar.displayArray[objType][i].visualObject.isSelected()){
 				// 	buttonHoverCount++;
 				// }
 			}
@@ -75,12 +87,13 @@ var sketch = function(p){
 var myp5 = new p5(sketch,'sketch');
 
 function resortButtonParticle(bp){
+	/**
+	 * 为displayArray.ButtonParticle
+	 */
 	var newList = [],
 		selectObj = null;
-		//console.log(newList);
 	for(var i = 0, len = bp.ButtonParticle.length; i < len; i++){
-		//console.log(bp.ButtonParticle[i].b.pState);
-		if(bp.ButtonParticle[i].b.pState === "mouseOut"){
+		if(bp.ButtonParticle[i].visualObject.pState === "mouseOut"){
 			newList.push(bp.ButtonParticle[i]);
 		}else{
 			selectObj = bp.ButtonParticle[i];
@@ -89,7 +102,6 @@ function resortButtonParticle(bp){
 	if(selectObj !== null){
 		newList.push(selectObj);
 	}
-	//bp.ButtonParticle = [];
 	bp.ButtonParticle = newList;
 	
 }

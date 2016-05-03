@@ -16,7 +16,7 @@ var AttractPoint = function (option){
 
 AttractPoint.prototype.attract = function(b){
 	if(b instanceof ButtonParticle){
-		var force = p5.Vector.sub(this.position,b.b.position);
+		var force = p5.Vector.sub(this.position,b.visualObject.position);
 		var dist = force.mag();
 		force.normalize();
 		force.mult(this.strength);
@@ -26,7 +26,7 @@ AttractPoint.prototype.attract = function(b){
 
 AttractPoint.prototype.vortexAttract = function (b,threshold){
 	if(b instanceof ButtonParticle){
-		var force = p5.Vector.sub(this.position,b.b.position);
+		var force = p5.Vector.sub(this.position,b.visualObject.position);
 		
 		var ff = force.copy();
 		if(this.clockwise){

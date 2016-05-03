@@ -1,19 +1,19 @@
-var ButtonPlus = require("./ButtonPlus.js")
+var util = require("./util.js");
+var Particle = require("./Particle.js");
 
 var ButtonParticle = function (options){
-	this.b = new ButtonPlus(options);
-	this.p = options.p;
+	Particle.call(this,{
+		visualObject : options.visualObject,   //visualObject为实现了display方法的对象
+		p : options.p,
+		reflect : false,
+		topspeed : options.topspeed,   //控制最高速度
+		acceleration : options.acceleration,
+		velocity : options.velocity
+	})
 	this.strength = 0.1;
-	this.reflect = false;
-	this.topspeed = options.topspeed || Math.random() * 3 + 2;  //控制最高速度
 	this.vortex = true;
-	//this.attractPtL = null;
-	
-	//加速度
-	if(!this.acceleration){
-		this.acceleration = new p5.Vector(0,0);  
-	}
 }
+util.inheritPrototype(ButtonParticle, Particle);
 
 //粒子作用力
 ButtonParticle.prototype.applyForce = function(force){
@@ -21,22 +21,7 @@ ButtonParticle.prototype.applyForce = function(force){
 }
 
 //更新粒子状态
-ButtonParticle.prototype.update = function(){
-	//速度
-	if(!this.velocity){
-		var random1 = Math.random()*((Math.random()>0.5)?-0.5:0.5);
-		var random2 = Math.random()-((Math.random()>0.5)?0.5:1);
-		this.velocity = new p5.Vector(random1,random2);
-	}
-	
-	/*if(this.b.anchor){
-		//console.log(this.b.anchor);
-		var force = p5.Vector.sub(this.b.anchor,this.b.position);
-		var dist = force.mag();
-		force.normalize();
-		force.mult(this.strength);
-		this.acceleration.add(force);
-	}*/
+ButtonParticle.prototype.update = function(){	
 	if(this.attractPtL){
 		if(this.vortex){
 			var force = this.attractPtL.vortexAttract(this,300);
@@ -51,30 +36,25 @@ ButtonParticle.prototype.update = function(){
 	this.acceleration.mult(0);  //加速度清零
 	
 	if(this.reflect){
-		if(this.b.position.x < this.b.width/2 || this.b.position.x > this.p.width - this.b.width/2){
+		if(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){
 			this.velocity.x *= -1;
 		}
-		if(this.b.position.y < this.b.height/2 || this.b.position.y > this.p.height - this.b.height/2){
+		if(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){
 			this.velocity.y *= -1;
 		}
 	}
 	
 	this.velocity.limit(this.topspeed);
 	
-	/*var dist = p5.Vector.sub(this.position,this.attractPtL).mag();
-	if(this.fixed && dist <= 1){
-		this.velocity.mult(0.5);
-	}*/
-	
-	this.b.position.add(this.velocity);
+	this.visualObject.position.add(this.velocity);
 }
 
 //绘制粒子
 ButtonParticle.prototype.display = function(){
-	if(this.b.pState != "click" && this.b.pState != "hover" && this.b.pState != "press"){
+	if(this.visualObject.pState != "click" && this.visualObject.pState != "hover" && this.visualObject.pState != "press"){
 		this.update();
 	}
-	this.b.display();
+	this.visualObject.display();
 }
 
 module.exports = ButtonParticle;

@@ -3,9 +3,7 @@
  */
 
 var GlobalVar = {
-    displayArray : null,
-    mainButton : null,
-    button : null,
+    displayArray : [],
     SOUNDFILE : null,
     pp : null,
     attractPtL : null,

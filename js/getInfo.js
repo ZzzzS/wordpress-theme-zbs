@@ -6,10 +6,7 @@ var ButtonParticle = require("./ButtonParticle.js");
 var ButtonPlus = require("./ButtonPlus.js");
 
 var getInfo = function (type,arg){
-	
-	globalVar.displayArray = [];
-	globalVar.mainButton = [];
-	globalVar.button = [];
+	globalVar.displayArray.ButtonParticle = [];
 	
 	if(window.XMLHttpRequest){
 		XMLHTTP=new XMLHttpRequest();
@@ -24,7 +21,7 @@ var getInfo = function (type,arg){
 				var posts = JSON.parse(XMLHTTP.responseText);
 				//alert(XMLHTTP.responseText);
 				console.log(XMLHTTP.responseText);
-				globalVar.displayArray.ButtonParticle = [];
+				
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
 					var options = {
@@ -34,15 +31,20 @@ var getInfo = function (type,arg){
 						r : 25,
 						p : globalVar.pp
 					}
-					var newObj = new ButtonParticle(options);
+					var optionsBP = {
+						visualObject : new ButtonPlus(options),
+						p : globalVar.pp
+					}
+					
+					var newObj = new ButtonParticle(optionsBP);
 					newObj.attractPtL = globalVar.attractPtL;
 					newObj.reflect = true;
 
-					newObj.b.addHandler("click",eventHandleFunc.clicked_animation);
+					newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
 					
-					newObj.b.sound = globalVar.SOUNDFILE;
-					newObj.b.info = posts[item];
-					newObj.b.buttonCol = newObj.b.info["color"];
+					newObj.visualObject.sound = globalVar.SOUNDFILE;
+					newObj.visualObject.info = posts[item];
+					newObj.visualObject.buttonCol = newObj.visualObject.info["color"];
 					globalVar.displayArray.ButtonParticle.push(newObj);
 				}
 				
@@ -64,7 +66,6 @@ var getInfo = function (type,arg){
 					var i = 0;
 					var count = util.getJsonObjLength(users);
 					for(var item in users){
-						globalVar.displayArray.ButtonParticle = [];
 						var size = Math.random()*20 + 20;
 						var options = {
 							position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
@@ -73,24 +74,28 @@ var getInfo = function (type,arg){
 							r : 25,
 							p : globalVar.pp
 						}
-						var newObj = new ButtonParticle(options);
+						var optionsBP = {
+							visualObject : new ButtonPlus(options),
+							p : globalVar.pp
+						}
+						var newObj = new ButtonParticle(optionsBP);
 						if(i < count/2){
 							newObj.attractPtL = globalVar.attractPtL;
 						}else{
 							newObj.attractPtL = globalVar.attractPtR;
 						}
 
-						newObj.b.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
+						newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 						newObj.reflect = true;
-						newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
-						newObj.b.addHandler("click",eventHandleFunc.clicked_animation);
-						newObj.b.addHandler("turnOn",eventHandleFunc.delUserInfo);
-						newObj.b.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
-						newObj.b.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
-						newObj.b.addHandler("hover",eventHandleFunc.showUserInfo);
-						newObj.b.addHandler("mouseOut",eventHandleFunc.delUserInfo);
-						newObj.b.sound = globalVar.SOUNDFILE;
-						newObj.b.info = users[item];
+						newObj.visualObject.addHandler("turnOff",eventHandleFunc.turnOff);
+						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.delUserInfo);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
+						newObj.visualObject.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
+						newObj.visualObject.addHandler("hover",eventHandleFunc.showUserInfo);
+						newObj.visualObject.addHandler("mouseOut",eventHandleFunc.delUserInfo);
+						newObj.visualObject.sound = globalVar.SOUNDFILE;
+						newObj.visualObject.info = users[item];
 						
 						globalVar.displayArray.ButtonParticle.push(newObj);
 						i++;

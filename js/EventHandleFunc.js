@@ -22,10 +22,10 @@ var eventHandleFunc = {
         vect.rotate(-0.68 * (count - 1) / 2);
         for(var i = 0; i < count; i++){
             if(i > 0) vect.rotate(0.68);
-            var b = new Button(new p5.Vector(event.target.position.x + vect.x,event.target.position.y + vect.y),30,30,10,event.target.p);
-            b.fillCol = event.target.p.color(Math.random()*100, Math.random()*50, Math.random()*200,200);
-            b.switchEffect = false;
-            displayArray[1].push(b);
+            var visualObject = new Button(new p5.Vector(event.target.position.x + vect.x,event.target.position.y + vect.y),30,30,10,event.target.p);
+            visualObject.fillCol = event.target.p.color(Math.random()*100, Math.random()*50, Math.random()*200,200);
+            visualObject.switchEffect = false;
+            displayArray[1].push(visualObject);
         }*/
         
         /*var post = event.target.info['posts'];

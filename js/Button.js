@@ -5,25 +5,33 @@
  */
 
 var util = require("./util.js");
+var VisualObject = require("./VisualObject.js");
 
 var Button = function (options) {
-	this.position = options.position.copy();  //位置
-	this.width = options.width;  //宽度
-	this.height = options.height;  //高度
-	this.p = options.p;  //p5实例
+	VisualObject.call(this,{
+		position : options.position,  //位置
+		width : options.width,   //宽度
+		height : options.height,  //高度
+		p : options.p,  //p5实例
+		fillCol : options.fillCol
+	});
 	this.pState = "mouseOut";  //Button初始状态
 	this.pSwitch = "off";   //Button初始状态
 	this.hoverCol = options.hoverCol || this.p.color("#06799F");  //鼠标悬浮时Button的颜色
 	this.pressCol = options.pressCol || this.p.color("#216278");  //鼠标按下时Button的颜色
 	this.clickCol = options.clickCol || this.p.color("#024E68");  //Button处于on状态时的颜色
-	this.fillCol = null;
 	this.positions = [];  //储存位置
 	this.handlers = {};  //事件处理程序
 }
+util.inheritPrototype(Button, VisualObject);
 
 //判断Button是否被选中
 Button.prototype.isSelected = function () {
-	
+	if (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 //判断Button的状态
@@ -134,15 +142,6 @@ Button.prototype.display = function () {
 			}
 			this.drawGeometry();
 	}
-}
-
-// 绘制几何图形
-Button.prototype.drawGeometry = function () {
-	this.p.fill(this.fillCol);
-	this.p.push();
-	this.p.translate(this.position.x, this.position.y);
-	this.p.ellipse(0, 0, this.width, this.height);
-	this.p.pop();
 }
 
 
