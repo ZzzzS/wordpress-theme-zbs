@@ -42,6 +42,7 @@ AttractPoint.prototype.vortexAttract = function (b,threshold){
 }
 
 AttractPoint.prototype.display = function(){
+	this.p.fill(200);
 	this.p.ellipse(this.position.x,this.position.y,50,50);
 }
 

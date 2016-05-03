@@ -14,6 +14,7 @@ function ButtonPlus(options) {
 	this.h = options.height;  //原始高度数据备份
 	this.clickTimeline = 0;   //On状态的时间轴
 	this.geometryType = "circle";
+	this.maxWidth = 100;
 }
 util.inheritPrototype(ButtonPlus, Button);
 
@@ -22,14 +23,16 @@ ButtonPlus.prototype.hoverObjCount = 0;
 
 //判断ButtonPlus是否被选中（加强版）
 ButtonPlus.prototype.isSelected = function () {
+	var width = this.width > 40 ? this.width : 40;
+	var height = this.width > 40 ? this.width : 40;
 	if (this.width === this.height && this.geometryType === "circle") {
-		if (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(this.width / 2, 2)) {
+		if (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
 			return true;
 		} else {
 			return false;
 		}
 	} else {
-		if (this.p.mouseX >= this.position.x - this.width / 2 && this.p.mouseX <= this.position.x + this.width / 2 && this.p.mouseY >= this.position.y - this.height / 2 && this.p.mouseY <= this.position.y + this.height / 2) {
+		if (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {
 			return true;
 		} else {
 			return false;
@@ -63,8 +66,13 @@ ButtonPlus.prototype.state = function () {
 				if (this.p.mouseIsPressed) {
 					if (this.pState == "mouseOut") {
 						return "mouseOut";
-					} else {
-						return "press";
+					} else {	
+						//如果button的大小小于90,则不出现press状态
+						if(this.width >= this.maxWidth - 10){
+							return "press";
+						}else{
+							return "hover"
+						}
 					}
 				} else {
 					if (this.pState == "press") {
@@ -128,20 +136,20 @@ ButtonPlus.prototype.display = function () {
 			this.fillCol = this.buttonCol;
 			//this.p.fill(this.fillCol);
 			this.drawGeometry();
-			if (this.width > 100) {
+			if (this.width > this.maxWidth) {
 				this.breath = true;
 			}
 
 			var s = 1.1;
 			if (this.breath) {
 				//呼吸效果
-				if (!this.breathState && this.width <= 100) {
+				if (!this.breathState && this.width <= this.maxWidth) {
 					this.width *= 1.002;
 					this.height *= 1.002;
 				} else {
 					this.breathState = true;
 				}
-				if (this.breathState && this.width > 90) {
+				if (this.breathState && this.width > this.maxWidth - 10) {
 					this.width *= 0.995;
 					this.height *= 0.995;
 				} else {
@@ -149,7 +157,7 @@ ButtonPlus.prototype.display = function () {
 				}
 			} else {
 				//放大
-				if (this.width <= 100) {
+				if (this.width <= this.maxWidth) {
 					this.width *= s;
 					this.height *= s;
 				} else {

@@ -78,44 +78,67 @@
 		
 		p.draw = function(){
 			p.background(255);
-			//attractPtL.display();
-			//attractPtR.display();
+			//globalVar.attractPtL.display();
+			//globalVar.attractPtR.display();
 			var buttonHoverCount = 0;
-			for(var i = 0;i < globalVar.displayArray.length;i++){
-				for(var j = 0;j < globalVar.displayArray[i].length;j++){
-					/*var force = attractPtL.vortexAttract(globalVar.displayArray[i][j],300);
-					globalVar.displayArray[i][j].applyForce(force);*/
-					globalVar.displayArray[i][j].display();
+			//console.log(globalVar.displayArray.ButtonParticle);
+			for(var objType in globalVar.displayArray){
+				if (objType === "ButtonParticle"){
+					//console.log("haha");
+					resortButtonParticle(globalVar.displayArray);
+				}
+				for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
+					/*var force = attractPtL.vortexAttract(globalVar.displayArray[objType][i],300);
+					globalVar.displayArray[objType][i].applyForce(force);*/
+					globalVar.displayArray[objType][i].display();
 					
-					var vect = p5.Vector.sub(globalVar.displayArray[i][j].b.position,globalVar.displayArray[i][j].attractPtL.position);
+					var vect = p5.Vector.sub(globalVar.displayArray[objType][i].b.position,globalVar.displayArray[objType][i].attractPtL.position);
 					var angle = vect.heading();
 					var len = vect.mag();
 					
-					if(!globalVar.displayArray[i][j].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
-						globalVar.displayArray[i][j].attractPtL = globalVar.attractPtR;
+					if(!globalVar.displayArray[objType][i].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
+						globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtR;
 					}else{
-						if(globalVar.displayArray[i][j].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
+						if(globalVar.displayArray[objType][i].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
 							//console.log(len);
-							globalVar.displayArray[i][j].attractPtL = globalVar.attractPtL;
+							globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtL;
 						}
 					}
 					
 					
-					if(i == 1 && globalVar.displayArray[i][j].isSelected()){
-						buttonHoverCount++;
-					}
+					// if(i === 1 && globalVar.displayArray[objType][i].b.isSelected()){
+					// 	buttonHoverCount++;
+					// }
 				}
 			}
-			if(buttonHoverCount > 0){
-				$(p.canvas).css("cursor","pointer");
-			}
+			// if(buttonHoverCount > 0){
+			// 	$(p.canvas).css("cursor","pointer");
+			// }
 		};	
 		
 	};
 
 	var myp5 = new p5(sketch,'sketch');
 
-
+	function resortButtonParticle(bp){
+		var newList = [],
+			selectObj = null;
+			//console.log(newList);
+		for(var i = 0, len = bp.ButtonParticle.length; i < len; i++){
+			//console.log(bp.ButtonParticle[i].b.pState);
+			if(bp.ButtonParticle[i].b.pState === "mouseOut"){
+				newList.push(bp.ButtonParticle[i]);
+			}else{
+				selectObj = bp.ButtonParticle[i];
+			}
+		}
+		if(selectObj !== null){
+			newList.push(selectObj);
+		}
+		//bp.ButtonParticle = [];
+		bp.ButtonParticle = newList;
+		
+	}
 
 	$(document).ready(function(){
 	    var getInfo = __webpack_require__(7);
@@ -213,6 +236,7 @@
 	}
 
 	AttractPoint.prototype.display = function(){
+		this.p.fill(200);
 		this.p.ellipse(this.position.x,this.position.y,50,50);
 	}
 
@@ -323,6 +347,7 @@
 		this.h = options.height;  //原始高度数据备份
 		this.clickTimeline = 0;   //On状态的时间轴
 		this.geometryType = "circle";
+		this.maxWidth = 100;
 	}
 	util.inheritPrototype(ButtonPlus, Button);
 
@@ -331,14 +356,16 @@
 
 	//判断ButtonPlus是否被选中（加强版）
 	ButtonPlus.prototype.isSelected = function () {
+		var width = this.width > 40 ? this.width : 40;
+		var height = this.width > 40 ? this.width : 40;
 		if (this.width === this.height && this.geometryType === "circle") {
-			if (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(this.width / 2, 2)) {
+			if (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			if (this.p.mouseX >= this.position.x - this.width / 2 && this.p.mouseX <= this.position.x + this.width / 2 && this.p.mouseY >= this.position.y - this.height / 2 && this.p.mouseY <= this.position.y + this.height / 2) {
+			if (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {
 				return true;
 			} else {
 				return false;
@@ -372,8 +399,13 @@
 					if (this.p.mouseIsPressed) {
 						if (this.pState == "mouseOut") {
 							return "mouseOut";
-						} else {
-							return "press";
+						} else {	
+							//如果button的大小小于90,则不出现press状态
+							if(this.width >= this.maxWidth - 10){
+								return "press";
+							}else{
+								return "hover"
+							}
 						}
 					} else {
 						if (this.pState == "press") {
@@ -437,20 +469,20 @@
 				this.fillCol = this.buttonCol;
 				//this.p.fill(this.fillCol);
 				this.drawGeometry();
-				if (this.width > 100) {
+				if (this.width > this.maxWidth) {
 					this.breath = true;
 				}
 
 				var s = 1.1;
 				if (this.breath) {
 					//呼吸效果
-					if (!this.breathState && this.width <= 100) {
+					if (!this.breathState && this.width <= this.maxWidth) {
 						this.width *= 1.002;
 						this.height *= 1.002;
 					} else {
 						this.breathState = true;
 					}
-					if (this.breathState && this.width > 90) {
+					if (this.breathState && this.width > this.maxWidth - 10) {
 						this.width *= 0.995;
 						this.height *= 0.995;
 					} else {
@@ -458,7 +490,7 @@
 					}
 				} else {
 					//放大
-					if (this.width <= 100) {
+					if (this.width <= this.maxWidth) {
 						this.width *= s;
 						this.height *= s;
 					} else {
@@ -824,6 +856,7 @@
 					var posts = JSON.parse(XMLHTTP.responseText);
 					//alert(XMLHTTP.responseText);
 					console.log(XMLHTTP.responseText);
+					globalVar.displayArray.ButtonParticle = [];
 					for(var item in posts){
 						var size = Math.random()*20 + 15;
 						var options = {
@@ -836,18 +869,17 @@
 						var newObj = new ButtonParticle(options);
 						newObj.attractPtL = globalVar.attractPtL;
 						newObj.reflect = true;
-						newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
-						newObj.b.addHandler("click",eventHandleFunc.clicked);
-						newObj.b.addHandler("turnOn",eventHandleFunc.turnOn);
+
+						newObj.b.addHandler("click",eventHandleFunc.clicked_animation);
+						
 						newObj.b.sound = globalVar.SOUNDFILE;
 						newObj.b.info = posts[item];
 						newObj.b.buttonCol = newObj.b.info["color"];
-						globalVar.mainButton.push(newObj);
+						globalVar.displayArray.ButtonParticle.push(newObj);
 					}
 					
-					globalVar.displayArray.push(globalVar.mainButton);
-					globalVar.displayArray.push(globalVar.button);
 					
+					console.log(globalVar.displayArray.ButtonParticle);
 				}
 			}
 			XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
@@ -864,7 +896,8 @@
 						var i = 0;
 						var count = util.getJsonObjLength(users);
 						for(var item in users){
-							var size = Math.random()*20 + 15;
+							globalVar.displayArray.ButtonParticle = [];
+							var size = Math.random()*20 + 20;
 							var options = {
 								position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
 								width : size,
@@ -882,7 +915,7 @@
 							newObj.b.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 							newObj.reflect = true;
 							newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
-							newObj.b.addHandler("click",eventHandleFunc.clicked_users);
+							newObj.b.addHandler("click",eventHandleFunc.clicked_animation);
 							newObj.b.addHandler("turnOn",eventHandleFunc.delUserInfo);
 							newObj.b.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
 							newObj.b.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
@@ -890,16 +923,15 @@
 							newObj.b.addHandler("mouseOut",eventHandleFunc.delUserInfo);
 							newObj.b.sound = globalVar.SOUNDFILE;
 							newObj.b.info = users[item];
-							//newObj.b.mask = MARK;
-							globalVar.mainButton.push(newObj);
+							
+							globalVar.displayArray.ButtonParticle.push(newObj);
 							i++;
 						}
 						i = null;
 						count = null;
 						
 						
-						globalVar.displayArray.push(globalVar.mainButton);
-						globalVar.displayArray.push(globalVar.button);
+						
 						
 				
 						
@@ -955,7 +987,7 @@
 	        }*/
 	    },
 
-	    clicked_users : function (event){
+	    clicked_animation : function (event){
 	        event.target.p.noStroke();
 	        event.target.p.fill(0);
 	        event.target.p.textAlign("center");

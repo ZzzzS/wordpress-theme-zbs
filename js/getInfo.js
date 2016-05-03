@@ -24,6 +24,7 @@ var getInfo = function (type,arg){
 				var posts = JSON.parse(XMLHTTP.responseText);
 				//alert(XMLHTTP.responseText);
 				console.log(XMLHTTP.responseText);
+				globalVar.displayArray.ButtonParticle = [];
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
 					var options = {
@@ -36,18 +37,17 @@ var getInfo = function (type,arg){
 					var newObj = new ButtonParticle(options);
 					newObj.attractPtL = globalVar.attractPtL;
 					newObj.reflect = true;
-					newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
-					newObj.b.addHandler("click",eventHandleFunc.clicked);
-					newObj.b.addHandler("turnOn",eventHandleFunc.turnOn);
+
+					newObj.b.addHandler("click",eventHandleFunc.clicked_animation);
+					
 					newObj.b.sound = globalVar.SOUNDFILE;
 					newObj.b.info = posts[item];
 					newObj.b.buttonCol = newObj.b.info["color"];
-					globalVar.mainButton.push(newObj);
+					globalVar.displayArray.ButtonParticle.push(newObj);
 				}
 				
-				globalVar.displayArray.push(globalVar.mainButton);
-				globalVar.displayArray.push(globalVar.button);
 				
+				console.log(globalVar.displayArray.ButtonParticle);
 			}
 		}
 		XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
@@ -64,7 +64,8 @@ var getInfo = function (type,arg){
 					var i = 0;
 					var count = util.getJsonObjLength(users);
 					for(var item in users){
-						var size = Math.random()*20 + 15;
+						globalVar.displayArray.ButtonParticle = [];
+						var size = Math.random()*20 + 20;
 						var options = {
 							position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
 							width : size,
@@ -82,7 +83,7 @@ var getInfo = function (type,arg){
 						newObj.b.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 						newObj.reflect = true;
 						newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
-						newObj.b.addHandler("click",eventHandleFunc.clicked_users);
+						newObj.b.addHandler("click",eventHandleFunc.clicked_animation);
 						newObj.b.addHandler("turnOn",eventHandleFunc.delUserInfo);
 						newObj.b.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
 						newObj.b.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
@@ -90,16 +91,15 @@ var getInfo = function (type,arg){
 						newObj.b.addHandler("mouseOut",eventHandleFunc.delUserInfo);
 						newObj.b.sound = globalVar.SOUNDFILE;
 						newObj.b.info = users[item];
-						//newObj.b.mask = MARK;
-						globalVar.mainButton.push(newObj);
+						
+						globalVar.displayArray.ButtonParticle.push(newObj);
 						i++;
 					}
 					i = null;
 					count = null;
 					
 					
-					globalVar.displayArray.push(globalVar.mainButton);
-					globalVar.displayArray.push(globalVar.button);
+					
 					
 			
 					

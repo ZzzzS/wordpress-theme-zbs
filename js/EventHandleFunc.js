@@ -34,7 +34,7 @@ var eventHandleFunc = {
         }*/
     },
 
-    clicked_users : function (event){
+    clicked_animation : function (event){
         event.target.p.noStroke();
         event.target.p.fill(0);
         event.target.p.textAlign("center");

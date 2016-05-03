@@ -32,44 +32,67 @@ var sketch = function(p){
 	
 	p.draw = function(){
 		p.background(255);
-		//attractPtL.display();
-		//attractPtR.display();
+		//globalVar.attractPtL.display();
+		//globalVar.attractPtR.display();
 		var buttonHoverCount = 0;
-		for(var i = 0;i < globalVar.displayArray.length;i++){
-			for(var j = 0;j < globalVar.displayArray[i].length;j++){
-				/*var force = attractPtL.vortexAttract(globalVar.displayArray[i][j],300);
-				globalVar.displayArray[i][j].applyForce(force);*/
-				globalVar.displayArray[i][j].display();
+		//console.log(globalVar.displayArray.ButtonParticle);
+		for(var objType in globalVar.displayArray){
+			if (objType === "ButtonParticle"){
+				//console.log("haha");
+				resortButtonParticle(globalVar.displayArray);
+			}
+			for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
+				/*var force = attractPtL.vortexAttract(globalVar.displayArray[objType][i],300);
+				globalVar.displayArray[objType][i].applyForce(force);*/
+				globalVar.displayArray[objType][i].display();
 				
-				var vect = p5.Vector.sub(globalVar.displayArray[i][j].b.position,globalVar.displayArray[i][j].attractPtL.position);
+				var vect = p5.Vector.sub(globalVar.displayArray[objType][i].b.position,globalVar.displayArray[objType][i].attractPtL.position);
 				var angle = vect.heading();
 				var len = vect.mag();
 				
-				if(!globalVar.displayArray[i][j].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
-					globalVar.displayArray[i][j].attractPtL = globalVar.attractPtR;
+				if(!globalVar.displayArray[objType][i].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
+					globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtR;
 				}else{
-					if(globalVar.displayArray[i][j].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
+					if(globalVar.displayArray[objType][i].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
 						//console.log(len);
-						globalVar.displayArray[i][j].attractPtL = globalVar.attractPtL;
+						globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtL;
 					}
 				}
 				
 				
-				if(i == 1 && globalVar.displayArray[i][j].isSelected()){
-					buttonHoverCount++;
-				}
+				// if(i === 1 && globalVar.displayArray[objType][i].b.isSelected()){
+				// 	buttonHoverCount++;
+				// }
 			}
 		}
-		if(buttonHoverCount > 0){
-			$(p.canvas).css("cursor","pointer");
-		}
+		// if(buttonHoverCount > 0){
+		// 	$(p.canvas).css("cursor","pointer");
+		// }
 	};	
 	
 };
 
 var myp5 = new p5(sketch,'sketch');
 
-
+function resortButtonParticle(bp){
+	var newList = [],
+		selectObj = null;
+		//console.log(newList);
+	for(var i = 0, len = bp.ButtonParticle.length; i < len; i++){
+		//console.log(bp.ButtonParticle[i].b.pState);
+		if(bp.ButtonParticle[i].b.pState === "mouseOut"){
+			newList.push(bp.ButtonParticle[i]);
+		}else{
+			selectObj = bp.ButtonParticle[i];
+		}
+	}
+	if(selectObj !== null){
+		newList.push(selectObj);
+	}
+	//bp.ButtonParticle = [];
+	bp.ButtonParticle = newList;
+	
+}
 
 $(document).ready(function(){
     var getInfo = require("./getInfo.js");
