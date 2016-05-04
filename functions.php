@@ -366,7 +366,7 @@ add_role('special_invitation', '特邀用户', array(
     'delete_posts' => false, // 使用 false 表示不包含这个权限
 ));
 //remove_role( 'special_invitation' );
-
+//basic_contributor  精英用户（备份）
 
 
 /***************************************************/

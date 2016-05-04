@@ -552,7 +552,7 @@
 						
 						newObj.visualObject.sound = globalVar.SOUNDFILE;
 						newObj.visualObject.info = posts[item];
-						newObj.visualObject.buttonCol = newObj.visualObject.info["color"];
+						newObj.visualObject.buttonCol = newObj.visualObject.info["color"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);
 						globalVar.displayArray.ButtonParticle.push(newObj);
 					}
 					

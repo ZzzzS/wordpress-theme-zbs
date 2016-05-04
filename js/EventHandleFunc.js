@@ -16,23 +16,6 @@ var eventHandleFunc = {
         }	
     },
 
-    turnOn : function (event){
-        /*var vect = new p5.Vector(event.target.width / 2 + 30,0);
-        var count = 5;
-        vect.rotate(-0.68 * (count - 1) / 2);
-        for(var i = 0; i < count; i++){
-            if(i > 0) vect.rotate(0.68);
-            var visualObject = new Button(new p5.Vector(event.target.position.x + vect.x,event.target.position.y + vect.y),30,30,10,event.target.p);
-            visualObject.fillCol = event.target.p.color(Math.random()*100, Math.random()*50, Math.random()*200,200);
-            visualObject.switchEffect = false;
-            displayArray[1].push(visualObject);
-        }*/
-        
-        /*var post = event.target.info['posts'];
-        if(post){ 
-            $("#userInfo").html(post);
-        }*/
-    },
 
     clicked_animation : function (event){
         event.target.p.noStroke();
@@ -58,10 +41,6 @@ var eventHandleFunc = {
     },
 
 
-    turnOff : function (event){/*
-        displayArray[1] = [];
-        $("#userInfo").html('');*/
-    },
 
     showUserInfo : function (event){
         var sketch = document.getElementById("sketch");
