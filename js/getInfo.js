@@ -33,11 +33,12 @@ var getInfo = function (type,arg){
 					}
 					var optionsBP = {
 						visualObject : new ButtonPlus(options),
-						p : globalVar.pp
+						p : globalVar.pp,
+						vortexAttract : true
 					}
 					
 					var newObj = new ButtonParticle(optionsBP);
-					newObj.attractPtL = globalVar.attractPtL;
+					newObj.attractPt = globalVar.attractPtL;
 					newObj.reflect = true;
 
 					newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
@@ -76,18 +77,18 @@ var getInfo = function (type,arg){
 						}
 						var optionsBP = {
 							visualObject : new ButtonPlus(options),
-							p : globalVar.pp
+							p : globalVar.pp,
+							vortexAttract : true
 						}
 						var newObj = new ButtonParticle(optionsBP);
 						if(i < count/2){
-							newObj.attractPtL = globalVar.attractPtL;
+							newObj.attractPt = globalVar.attractPtL;
 						}else{
-							newObj.attractPtL = globalVar.attractPtR;
+							newObj.attractPt = globalVar.attractPtR;
 						}
 
 						newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 						newObj.reflect = true;
-						newObj.visualObject.addHandler("turnOff",eventHandleFunc.turnOff);
 						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
 						newObj.visualObject.addHandler("turnOn",eventHandleFunc.delUserInfo);
 						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);

@@ -14,14 +14,15 @@ var sketch = function(p){
 		var optionL = {
 			"p":p,
 			"position" : new p5.Vector(250,300),
-			"strength" : 0.1
+			"strength" : 0.1,
+			"vortex" : true
 		};
-		
 		var optionR = {
 			"p":p,
 			"position" : new p5.Vector(650,300),
 			"strength" : 0.1,
-			"clockwise" : true
+			"clockwise" : true,
+			"vortex" : true
 		};
 		globalVar.attractPtL = new AttractPoint(optionL);
 		globalVar.attractPtR = new AttractPoint(optionR);
@@ -49,29 +50,15 @@ var sketch = function(p){
 	
 	p.draw = function(){
 		p.background(255);
-		//globalVar.attractPtL.display();
-		//globalVar.attractPtR.display();
+		//globalVar.attractPt.display();
+		//globalVar.attractPt.display();
 		var buttonHoverCount = 0;
 		for(var objType in globalVar.displayArray){
-			if (objType === "ButtonParticle"){
+			if (objType === "ButtonParticle"){     //重新排序控制绘图顺序
 				resortButtonParticle(globalVar.displayArray);
 			}
 			for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
 				globalVar.displayArray[objType][i].display();
-				
-				if (objType === "ButtonParticle"){
-					var vect = p5.Vector.sub(globalVar.displayArray[objType][i].visualObject.position,globalVar.displayArray[objType][i].attractPtL.position);
-					var angle = vect.heading();
-					var len = vect.mag();
-					
-					if(!globalVar.displayArray[objType][i].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
-						globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtR;
-					}else{
-						if(globalVar.displayArray[objType][i].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
-							globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtL;
-						}
-					}
-				}
 				// if(i === 1 && globalVar.displayArray[objType][i].visualObject.isSelected()){
 				// 	buttonHoverCount++;
 				// }
@@ -123,18 +110,20 @@ $(document).ready(function(){
 	
 	//排列
 	$("#align").click(function (){
-		var len = globalVar.mainButton.length;
-		for(var k=0; k<len; k++){
+		var len = globalVar.displayArray.ButtonParticle.length;
+		for(var k = 0; k < len; k++){
 			var i = Math.floor(k / 2) + 2;
 			var j = k % 2 + 2;
 			var options = {
 				"position" : new p5.Vector(i*70,j*70),
-				"strength" : 1.5
+				"strength" : 1.5,
+				"vortex" : false
 			}
-			var attractPtL = new AttractPoint(options);
-			globalVar.mainButton[k].attractPtL = globalVar.attractPtL;
+			var attractPt = new AttractPoint(options);
+			globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
+			globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
 			//globalVar.mainButton[k].strength = 1.5;
-			globalVar.mainButton[k].vortex = false;
+			//globalVar.displayArray.ButtonParticle[k].vortex = false;
 			//globalVar.mainButton[k].topspeed = 1;
 		}
 	});

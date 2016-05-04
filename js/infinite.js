@@ -60,14 +60,15 @@
 			var optionL = {
 				"p":p,
 				"position" : new p5.Vector(250,300),
-				"strength" : 0.1
+				"strength" : 0.1,
+				"vortex" : true
 			};
-			
 			var optionR = {
 				"p":p,
 				"position" : new p5.Vector(650,300),
 				"strength" : 0.1,
-				"clockwise" : true
+				"clockwise" : true,
+				"vortex" : true
 			};
 			globalVar.attractPtL = new AttractPoint(optionL);
 			globalVar.attractPtR = new AttractPoint(optionR);
@@ -95,29 +96,15 @@
 		
 		p.draw = function(){
 			p.background(255);
-			//globalVar.attractPtL.display();
-			//globalVar.attractPtR.display();
+			//globalVar.attractPt.display();
+			//globalVar.attractPt.display();
 			var buttonHoverCount = 0;
 			for(var objType in globalVar.displayArray){
-				if (objType === "ButtonParticle"){
+				if (objType === "ButtonParticle"){     //重新排序控制绘图顺序
 					resortButtonParticle(globalVar.displayArray);
 				}
 				for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
 					globalVar.displayArray[objType][i].display();
-					
-					if (objType === "ButtonParticle"){
-						var vect = p5.Vector.sub(globalVar.displayArray[objType][i].visualObject.position,globalVar.displayArray[objType][i].attractPtL.position);
-						var angle = vect.heading();
-						var len = vect.mag();
-						
-						if(!globalVar.displayArray[objType][i].attractPtL.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
-							globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtR;
-						}else{
-							if(globalVar.displayArray[objType][i].attractPtL.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
-								globalVar.displayArray[objType][i].attractPtL = globalVar.attractPtL;
-							}
-						}
-					}
 					// if(i === 1 && globalVar.displayArray[objType][i].visualObject.isSelected()){
 					// 	buttonHoverCount++;
 					// }
@@ -169,18 +156,20 @@
 		
 		//排列
 		$("#align").click(function (){
-			var len = globalVar.mainButton.length;
-			for(var k=0; k<len; k++){
+			var len = globalVar.displayArray.ButtonParticle.length;
+			for(var k = 0; k < len; k++){
 				var i = Math.floor(k / 2) + 2;
 				var j = k % 2 + 2;
 				var options = {
 					"position" : new p5.Vector(i*70,j*70),
-					"strength" : 1.5
+					"strength" : 1.5,
+					"vortex" : false
 				}
-				var attractPtL = new AttractPoint(options);
-				globalVar.mainButton[k].attractPtL = globalVar.attractPtL;
+				var attractPt = new AttractPoint(options);
+				globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
+				globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
 				//globalVar.mainButton[k].strength = 1.5;
-				globalVar.mainButton[k].vortex = false;
+				//globalVar.displayArray.ButtonParticle[k].vortex = false;
 				//globalVar.mainButton[k].topspeed = 1;
 			}
 		});
@@ -209,30 +198,36 @@
 	 */
 	var ButtonParticle = __webpack_require__(2);
 
-	var AttractPoint = function (option){
-		this.position = option.position.copy();
-		this.strength = option.strength;
-		this.p = option.p;
-		if(option.clockwise){
-			this.clockwise = option.clockwise;
-		}else{
-			this.clockwise = false;
-		}
+	var AttractPoint = function (options){
+		this.position = options.position.copy();
+		this.strength = options.strength;
+		this.p = options.p;
+		this.clockwise = options.clockwise || false;
+		this.vortex = options.vortex || false;
+		// if(options.clockwise){
+		// 	this.clockwise = options.clockwise;
+		// }else{
+		// 	this.clockwise = false;
+		// }
 	}
 
-	AttractPoint.prototype.attract = function(b){
-		if(b instanceof ButtonParticle){
-			var force = p5.Vector.sub(this.position,b.visualObject.position);
+	AttractPoint.prototype.attract = function (options){
+		var force = this.vortexAttract(options) ;
+		return force;
+	}
+
+	AttractPoint.prototype.linearAttract = function (options){
+		if(options.b instanceof ButtonParticle){
+			var force = p5.Vector.sub(this.position,options.b.visualObject.position);
 			var dist = force.mag();
 			force.normalize();
 			force.mult(this.strength);
 			return force;
 		}
 	}
-
-	AttractPoint.prototype.vortexAttract = function (b,threshold){
-		if(b instanceof ButtonParticle){
-			var force = p5.Vector.sub(this.position,b.visualObject.position);
+	AttractPoint.prototype.vortexAttract = function (options){
+		if(options.b instanceof ButtonParticle){
+			var force = p5.Vector.sub(this.position,options.b.visualObject.position);
 			
 			var ff = force.copy();
 			if(this.clockwise){
@@ -240,7 +235,7 @@
 			}else{
 				ff.rotate(Math.PI/2);
 			}
-			ff.setMag(threshold);
+			ff.setMag(options.threshold);
 			force.add(ff);
 			force.limit(1);
 			return force;
@@ -260,6 +255,7 @@
 
 	var util = __webpack_require__(3);
 	var Particle = __webpack_require__(4);
+	var globalVar = __webpack_require__(5);
 
 	var ButtonParticle = function (options){
 		Particle.call(this,{
@@ -271,7 +267,7 @@
 			velocity : options.velocity
 		})
 		this.strength = 0.1;
-		this.vortex = true;
+		this.vortexAttract = options.vortexAttract || true;   //vortexAttract确定button是被直线吸引还是漩涡吸引
 	}
 	util.inheritPrototype(ButtonParticle, Particle);
 
@@ -282,13 +278,12 @@
 
 	//更新粒子状态
 	ButtonParticle.prototype.update = function(){	
-		if(this.attractPtL){
-			if(this.vortex){
-				var force = this.attractPtL.vortexAttract(this,300);
-			}else{
-				var force = this.attractPtL.attract(this);
+		if(this.attractPt){
+			var options = {
+				b : this,
+				threshold : 300
 			}
-			
+			var force = this.attractPt.attract(options);   //引力与漩涡力
 			this.applyForce(force);
 		}
 		
@@ -304,9 +299,24 @@
 			}
 		}
 		
-		this.velocity.limit(this.topspeed);
+		this.velocity.limit(this.topspeed);    //更新速度
 		
-		this.visualObject.position.add(this.velocity);
+		this.visualObject.position.add(this.velocity);   //更新位置
+		
+		//无限符号（∞）运动路径的实现
+		if (this.vortexAttract){
+			var vect = p5.Vector.sub(this.visualObject.position,this.attractPt.position);
+			var angle = vect.heading();
+			var len = vect.mag();
+		
+			if(!this.attractPt.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
+				this.attractPt = globalVar.attractPtR;
+			}else{
+				if(this.attractPt.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
+					this.attractPt = globalVar.attractPtL;
+				}
+			}
+		}
 	}
 
 	//绘制粒子
@@ -541,11 +551,12 @@
 						}
 						var optionsBP = {
 							visualObject : new ButtonPlus(options),
-							p : globalVar.pp
+							p : globalVar.pp,
+							vortexAttract : true
 						}
 						
 						var newObj = new ButtonParticle(optionsBP);
-						newObj.attractPtL = globalVar.attractPtL;
+						newObj.attractPt = globalVar.attractPtL;
 						newObj.reflect = true;
 
 						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
@@ -584,18 +595,18 @@
 							}
 							var optionsBP = {
 								visualObject : new ButtonPlus(options),
-								p : globalVar.pp
+								p : globalVar.pp,
+								vortexAttract : true
 							}
 							var newObj = new ButtonParticle(optionsBP);
 							if(i < count/2){
-								newObj.attractPtL = globalVar.attractPtL;
+								newObj.attractPt = globalVar.attractPtL;
 							}else{
-								newObj.attractPtL = globalVar.attractPtR;
+								newObj.attractPt = globalVar.attractPtR;
 							}
 
 							newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 							newObj.reflect = true;
-							newObj.visualObject.addHandler("turnOff",eventHandleFunc.turnOff);
 							newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
 							newObj.visualObject.addHandler("turnOn",eventHandleFunc.delUserInfo);
 							newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
@@ -650,23 +661,6 @@
 	        }	
 	    },
 
-	    turnOn : function (event){
-	        /*var vect = new p5.Vector(event.target.width / 2 + 30,0);
-	        var count = 5;
-	        vect.rotate(-0.68 * (count - 1) / 2);
-	        for(var i = 0; i < count; i++){
-	            if(i > 0) vect.rotate(0.68);
-	            var visualObject = new Button(new p5.Vector(event.target.position.x + vect.x,event.target.position.y + vect.y),30,30,10,event.target.p);
-	            visualObject.fillCol = event.target.p.color(Math.random()*100, Math.random()*50, Math.random()*200,200);
-	            visualObject.switchEffect = false;
-	            displayArray[1].push(visualObject);
-	        }*/
-	        
-	        /*var post = event.target.info['posts'];
-	        if(post){ 
-	            $("#userInfo").html(post);
-	        }*/
-	    },
 
 	    clicked_animation : function (event){
 	        event.target.p.noStroke();
@@ -692,10 +686,6 @@
 	    },
 
 
-	    turnOff : function (event){/*
-	        displayArray[1] = [];
-	        $("#userInfo").html('');*/
-	    },
 
 	    showUserInfo : function (event){
 	        var sketch = document.getElementById("sketch");
