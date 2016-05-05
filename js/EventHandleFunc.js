@@ -5,17 +5,16 @@ var util = require("./util.js");
 var getPostContent = require("./getPostContent.js");
 
 var eventHandleFunc = {
-    clicked : function (event){
-        event.target.p.noStroke();
-        event.target.p.fill(0);
-        event.target.p.textAlign("center");
-        var text;
-        text = event.target.info['title'];
-        if(text){
-            event.target.p.text(text,event.target.position.x,event.target.position.y);
-        }	
-    },
-
+    // clicked : function (event){
+    //     event.target.p.noStroke();
+    //     event.target.p.fill(0);
+    //     event.target.p.textAlign("center");
+    //     var text;
+    //     text = event.target.info['title'];
+    //     if(text){
+    //         event.target.p.text(text,event.target.position.x,event.target.position.y);
+    //     }	
+    // },
 
     clicked_animation : function (event){
         event.target.p.noStroke();
@@ -33,14 +32,7 @@ var eventHandleFunc = {
         event.target.p.line(-12,0,12,0);
         event.target.p.line(0,-12,0,12);
         event.target.p.pop();
-        /*var text;
-        text = event.target.info['name'];
-        if(text){
-            event.target.p.text(text,event.target.position.x,event.target.position.y);
-        }*/
     },
-
-
 
     showUserInfo : function (event){
         var sketch = document.getElementById("sketch");

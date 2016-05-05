@@ -17,7 +17,6 @@ var getInfo = function (type,arg){
 	if(type === "posts"){
 		XMLHTTP.onreadystatechange=function(){
 			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
-				ButtonPlus.stateReset();
 				var posts = JSON.parse(XMLHTTP.responseText);
 				//alert(XMLHTTP.responseText);
 				console.log(XMLHTTP.responseText);
@@ -58,7 +57,6 @@ var getInfo = function (type,arg){
 	}else{
 		if(type === "users"){
 			XMLHTTP.onreadystatechange=function(){
-				ButtonPlus.stateReset();
 				if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 					var users = JSON.parse(XMLHTTP.responseText);
 					//alert(XMLHTTP.responseText);

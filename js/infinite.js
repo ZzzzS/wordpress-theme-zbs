@@ -50,6 +50,8 @@
 	var globalVar = __webpack_require__(5);
 	var VisualObject = __webpack_require__(6);
 	var Particle = __webpack_require__(4);
+	var ButtonPlus = __webpack_require__(7);
+	// var util = require("./util.js");
 
 	var sketch = function(p){
 		globalVar.pp = p;
@@ -59,13 +61,13 @@
 
 			var optionL = {
 				"p":p,
-				"position" : new p5.Vector(250,300),
+				"position" : new p5.Vector(200,300),
 				"strength" : 0.1,
 				"vortex" : true
 			};
 			var optionR = {
 				"p":p,
-				"position" : new p5.Vector(650,300),
+				"position" : new p5.Vector(700,300),
 				"strength" : 0.1,
 				"clockwise" : true,
 				"vortex" : true
@@ -110,6 +112,10 @@
 					// }
 				}
 			}
+			
+
+			// var num = new p5.Noise();
+			// console.log(num);
 			// if(buttonHoverCount > 0){
 			// 	$(p.canvas).css("cursor","pointer");
 			// }
@@ -140,38 +146,49 @@
 	}
 
 	$(document).ready(function(){
-	    var getInfo = __webpack_require__(7);
+	    var getInfo = __webpack_require__(9);
 		//默认获取用户
 		getInfo("users","special_invitation");
 		
 		//获取用户
-		$("#getUsers").click(function(){
+		$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置
+			ButtonPlus.stateReset();    //状态重置
+			globalVar.alignState = false;    //状态重置
 			getInfo("users","special_invitation");
 		});
 		
 		//获取文章
-		$("#getPosts").click(function(){
+		$("#getPosts").click(function(){   //相当于刷新，所有很多状态要重置
+			ButtonPlus.stateReset();    //状态重置
+			globalVar.alignState = false;    //状态重置
 			getInfo("posts");
 		});
 		
 		//排列
 		$("#align").click(function (){
+			globalVar.alignState = ~globalVar.alignState;
 			var len = globalVar.displayArray.ButtonParticle.length;
-			for(var k = 0; k < len; k++){
-				var i = Math.floor(k / 2) + 2;
-				var j = k % 2 + 2;
-				var options = {
-					"position" : new p5.Vector(i*70,j*70),
-					"strength" : 1.5,
-					"vortex" : false
+			if (globalVar.alignState){
+				for(var k = 0; k < len; k++){
+					var i = k % globalVar.countPerRow + 2;
+					var j = Math.floor(k / globalVar.countPerRow) + 2;
+					
+					var options = {
+						"position" : new p5.Vector(i*70,j*70),
+						"strength" : 1.5,
+						"vortex" : false
+					}
+					var attractPt = new AttractPoint(options);
+					globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
+					globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
 				}
-				var attractPt = new AttractPoint(options);
-				globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
-				globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
-				//globalVar.mainButton[k].strength = 1.5;
-				//globalVar.displayArray.ButtonParticle[k].vortex = false;
-				//globalVar.mainButton[k].topspeed = 1;
+			}else{
+				for(var k = 0; k < len; k++){
+					globalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;
+					globalVar.displayArray.ButtonParticle[k].vortexAttract = true;
+				}
 			}
+			
 		});
 		
 	});
@@ -200,19 +217,14 @@
 
 	var AttractPoint = function (options){
 		this.position = options.position.copy();
-		this.strength = options.strength;
+		//this.strength = options.strength;
 		this.p = options.p;
 		this.clockwise = options.clockwise || false;
 		this.vortex = options.vortex || false;
-		// if(options.clockwise){
-		// 	this.clockwise = options.clockwise;
-		// }else{
-		// 	this.clockwise = false;
-		// }
 	}
 
 	AttractPoint.prototype.attract = function (options){
-		var force = this.vortexAttract(options) ;
+		var force = this.vortex ? this.vortexAttract(options) : this.linearAttract(options);
 		return force;
 	}
 
@@ -221,7 +233,7 @@
 			var force = p5.Vector.sub(this.position,options.b.visualObject.position);
 			var dist = force.mag();
 			force.normalize();
-			force.mult(this.strength);
+			force.mult(dist * 0.618);
 			return force;
 		}
 	}
@@ -266,8 +278,9 @@
 			acceleration : options.acceleration,
 			velocity : options.velocity
 		})
-		this.strength = 0.1;
+		//this.strength = 0.1;
 		this.vortexAttract = options.vortexAttract || true;   //vortexAttract确定button是被直线吸引还是漩涡吸引
+		this.xoff = Math.random() * 10;    //用于生产noise随机数
 	}
 	util.inheritPrototype(ButtonParticle, Particle);
 
@@ -277,46 +290,54 @@
 	}
 
 	//更新粒子状态
-	ButtonParticle.prototype.update = function(){	
-		if(this.attractPt){
-			var options = {
-				b : this,
-				threshold : 300
-			}
-			var force = this.attractPt.attract(options);   //引力与漩涡力
-			this.applyForce(force);
-		}
-		
-		this.velocity.add(this.acceleration);
-		this.acceleration.mult(0);  //加速度清零
-		
-		if(this.reflect){
-			if(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){
-				this.velocity.x *= -1;
-			}
-			if(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){
-				this.velocity.y *= -1;
-			}
-		}
-		
-		this.velocity.limit(this.topspeed);    //更新速度
-		
-		this.visualObject.position.add(this.velocity);   //更新位置
-		
-		//无限符号（∞）运动路径的实现
-		if (this.vortexAttract){
+	ButtonParticle.prototype.update = function(){
+		if (this.attractPt){
 			var vect = p5.Vector.sub(this.visualObject.position,this.attractPt.position);
-			var angle = vect.heading();
 			var len = vect.mag();
-		
-			if(!this.attractPt.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
-				this.attractPt = globalVar.attractPtR;
-			}else{
-				if(this.attractPt.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
-					this.attractPt = globalVar.attractPtL;
+			if (this.vortexAttract){                  //两种吸引方式，两种运动模式
+				var options = {
+					b : this,
+					threshold : 400 
 				}
+				var force = this.attractPt.attract(options);   //引力与漩涡力
+				this.applyForce(force);
+				
+				var randomVect = this.velocity.copy();   //影响运行路径的随机向量防止所以的button都在运行一模一样的路径
+				randomVect.mult(0.1);    
+				
+				this.xoff += 0.01;    
+				var effectAngle = (this.p.noise(this.xoff) - 0.5) * 2    //-1 to 1
+				* (Math.PI / 2 * 0.1);  
+				randomVect.rotate(effectAngle);
+				this.velocity.add(randomVect);
+				
+				if (this.reflect){
+					if(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){
+						this.velocity.x *= -1;
+					}
+					if(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){
+						this.velocity.y *= -1;
+					}
+				}
+				//无限符号（∞）运动路径的实现
+				var angle = vect.heading();
+				
+				if(!this.attractPt.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
+					this.attractPt = globalVar.attractPtR;
+				}else{
+					if(this.attractPt.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
+						this.attractPt = globalVar.attractPtL;
+					}
+				}
+				this.velocity.add(this.acceleration);   //更新速度
+				this.velocity.limit(this.topspeed);    //限制最高速度
+				this.acceleration.mult(0);  //加速度清零
+			}else{       //align模式的吸引方式（easing）
+				vect.mult(-0.1);
+				this.velocity = vect;
 			}
 		}
+		this.visualObject.position.add(this.velocity);   //更新位置
 	}
 
 	//绘制粒子
@@ -376,10 +397,10 @@
 			}
 			return Length;
 		}
+		
 	}
 
 	module.exports = util;
-
 
 
 
@@ -467,8 +488,10 @@
 	    displayArray : [],
 	    SOUNDFILE : null,
 	    pp : null,
+	    alignState : false,
 	    attractPtL : null,
-	    attractPtR : null
+	    attractPtR : null,
+	    countPerRow : 8   //align模式时，每行的button数量
 	}
 
 	module.exports = GlobalVar;
@@ -516,402 +539,12 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
-	var eventHandleFunc = __webpack_require__(8);
-	var util = __webpack_require__(3);
-	var globalVar = __webpack_require__(5);
-	var ButtonParticle = __webpack_require__(2);
-	var ButtonPlus = __webpack_require__(10);
-
-	var getInfo = function (type,arg){
-		globalVar.displayArray.ButtonParticle = [];
-		
-		if(window.XMLHttpRequest){
-			XMLHTTP=new XMLHttpRequest();
-		}else{
-			XMLHTTP=new ActiveXObject("Microsoft.XMLHTTP");
-		}
-
-		if(type === "posts"){
-			XMLHTTP.onreadystatechange=function(){
-				if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
-					ButtonPlus.stateReset();
-					var posts = JSON.parse(XMLHTTP.responseText);
-					//alert(XMLHTTP.responseText);
-					console.log(XMLHTTP.responseText);
-					
-					for(var item in posts){
-						var size = Math.random()*20 + 15;
-						var options = {
-							position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
-							width : size,
-							height : size,
-							r : 25,
-							p : globalVar.pp
-						}
-						var optionsBP = {
-							visualObject : new ButtonPlus(options),
-							p : globalVar.pp,
-							vortexAttract : true
-						}
-						
-						var newObj = new ButtonParticle(optionsBP);
-						newObj.attractPt = globalVar.attractPtL;
-						newObj.reflect = true;
-
-						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
-						
-						newObj.visualObject.sound = globalVar.SOUNDFILE;
-						newObj.visualObject.info = posts[item];
-						newObj.visualObject.buttonCol = newObj.visualObject.info["color"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);
-						globalVar.displayArray.ButtonParticle.push(newObj);
-					}
-					
-					
-					console.log(globalVar.displayArray.ButtonParticle);
-				}
-			}
-			XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
-			XMLHTTP.send();
-		}else{
-			if(type === "users"){
-				XMLHTTP.onreadystatechange=function(){
-					ButtonPlus.stateReset();
-					if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
-						var users = JSON.parse(XMLHTTP.responseText);
-						//alert(XMLHTTP.responseText);
-						//console.log(XMLHTTP.responseText);
-						
-						var i = 0;
-						var count = util.getJsonObjLength(users);
-						for(var item in users){
-							var size = Math.random()*20 + 20;
-							var options = {
-								position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
-								width : size,
-								height : size,
-								r : 25,
-								p : globalVar.pp
-							}
-							var optionsBP = {
-								visualObject : new ButtonPlus(options),
-								p : globalVar.pp,
-								vortexAttract : true
-							}
-							var newObj = new ButtonParticle(optionsBP);
-							if(i < count/2){
-								newObj.attractPt = globalVar.attractPtL;
-							}else{
-								newObj.attractPt = globalVar.attractPtR;
-							}
-
-							newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
-							newObj.reflect = true;
-							newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
-							newObj.visualObject.addHandler("turnOn",eventHandleFunc.delUserInfo);
-							newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
-							newObj.visualObject.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
-							newObj.visualObject.addHandler("hover",eventHandleFunc.showUserInfo);
-							newObj.visualObject.addHandler("mouseOut",eventHandleFunc.delUserInfo);
-							newObj.visualObject.sound = globalVar.SOUNDFILE;
-							newObj.visualObject.info = users[item];
-							
-							globalVar.displayArray.ButtonParticle.push(newObj);
-							i++;
-						}
-						i = null;
-						count = null;
-						
-						
-						
-						
-				
-						
-					}
-				}
-				XMLHTTP.open("GET","wp-content/themes/zbs/getUserInfo.php" + "?userRole=" + arg);
-				XMLHTTP.send();
-			}
-		}
-		
-	}
-
-
-	module.exports = getInfo;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * 定义与Button绑定的事件处理程序
-	 */
-	var util = __webpack_require__(3);
-	var getPostContent = __webpack_require__(9);
-
-	var eventHandleFunc = {
-	    clicked : function (event){
-	        event.target.p.noStroke();
-	        event.target.p.fill(0);
-	        event.target.p.textAlign("center");
-	        var text;
-	        text = event.target.info['title'];
-	        if(text){
-	            event.target.p.text(text,event.target.position.x,event.target.position.y);
-	        }	
-	    },
-
-
-	    clicked_animation : function (event){
-	        event.target.p.noStroke();
-	        event.target.p.fill(0);
-	        event.target.p.textAlign("center");
-	        event.target.p.stroke(255);
-	        event.target.p.strokeWeight(5);
-	        event.target.p.push();
-	        event.target.p.translate(event.target.position.x,event.target.position.y);
-	        if(event.target.clickTimeline < 40){
-	            event.target.p.rotate(event.target.p.map(event.target.clickTimeline,0,40,0,Math.PI/4));
-	        }else{
-	            event.target.p.rotate(Math.PI/4);
-	        }
-	        event.target.p.line(-12,0,12,0);
-	        event.target.p.line(0,-12,0,12);
-	        event.target.p.pop();
-	        /*var text;
-	        text = event.target.info['name'];
-	        if(text){
-	            event.target.p.text(text,event.target.position.x,event.target.position.y);
-	        }*/
-	    },
-
-
-
-	    showUserInfo : function (event){
-	        var sketch = document.getElementById("sketch");
-	        var top = util.getElementTop(sketch);
-	        var left = util.getElementLeft(sketch);
-	        //console.log(left);
-	        var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
-	        if(!infoFrame){
-	            var infoFrame = document.createElement("div");
-	            infoFrame.id = "infoFrame"+event.target.info['id'];
-	            infoFrame.style.cssText = "background:#fff;position:absolute;top:"+(top+event.target.position.y-50)+"px;left:"+(left+event.target.position.x+50)+"px;width:130px;height:180px;padding:15px;border:solid gray 1px;border-radius:5px;";
-	            
-	            var img = document.createElement("img");
-	            img.src = event.target.info['avatar'];
-	            img.style.cssText = "width:100px;height:100px;border-radius:5px;-moz-border-radius:5px;"
-	            infoFrame.appendChild(img);
-	            
-	            var name = document.createElement("div");
-	            name.innerHTML = "<b>名字：</b>" + event.target.info['name'];
-	            name.style.cssText = "margin-top:20px";
-	            infoFrame.appendChild(name);
-	            
-	            /*var posts = document.createElement("div");
-	            posts.innerHTML = event.target.info['posts'];
-	            infoFrame.appendChild(posts);*/
-	            
-	            document.body.appendChild(infoFrame);
-	        }
-	    },
-
-	    delUserInfo : function (event){
-	        var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
-	        if(infoFrame){
-	            document.body.removeChild(infoFrame);
-	        }
-	    },
-
-	    showUserInfo_fixed : function (event){
-	        var sketch = document.getElementById("sketch");
-	        var top = util.getElementTop(sketch);
-	        var left = util.getElementLeft(sketch);
-	        var infoFrame_fixed = document.getElementById("infoFrame_fixed");
-	        if(!infoFrame_fixed){
-	            var infoFrame_fixed = document.createElement("div");
-	            infoFrame_fixed.id = "infoFrame_fixed";
-	            
-	            var infoFrame_xx = document.createElement("div");
-	            infoFrame_xx.id = "infoFrame_xx";
-	            infoFrame_xx.style.cssText = "height:"+(document.documentElement.clientHeight-80)+"px";
-	            infoFrame_fixed.appendChild(infoFrame_xx);
-	            
-	            var imgBlock = document.createElement("div");
-	            imgBlock.id = "imgBlock";
-	            infoFrame_xx.appendChild(imgBlock);
-	            
-	                var img = document.createElement("img");
-	                img.src = event.target.info['avatar'];
-	                imgBlock.appendChild(img);
-	            
-	            var infoBlock = document.createElement("div");
-	            infoBlock.id = "infoBlock";
-	            infoFrame_xx.appendChild(infoBlock);
-	            
-	                var name = document.createElement("div");
-	                name.innerHTML = "<b>名字：</b>" + event.target.info['name'];
-	                infoBlock.appendChild(name);
-	                
-	                var posts = document.createElement("div");
-	                var ps = event.target.info['posts'];
-	                var ul = document.createElement("ul");
-	                ul.innerHTML = '<b>作品：</b>';
-
-	                for(var i=0;i<ps.length;i++){
-	                    var li = document.createElement("li");
-	                    var a = document.createElement("a");
-	                    a.id = "getPostContentButton" + ps[i].id;
-	                    a.className = 'getPostContentButton';
-	                    a.innerHTML = ps[i].title;
-	                    a.data_id = ps[i].id;
-	                    li.appendChild(a);
-	                    a.onclick = function (){
-	                        getPostContent(this.data_id);
-	                    };
-	                    ul.appendChild(li);
-	                }
-
-	                posts.appendChild(ul);
-	                infoBlock.appendChild(posts);
-	            
-	            var info = document.getElementById("info");
-	            info.appendChild(infoFrame_fixed);
-	            $("#infoFrame_fixed").fadeIn();
-	        }
-	    },
-
-	    delUserInfo_fixed : function (event){
-	        var info = document.getElementById("info");
-	        var infoFrame_fixed = document.getElementById("infoFrame_fixed");
-	        if(infoFrame_fixed){
-	            $("#infoFrame_fixed").fadeOut();
-	            setTimeout("info.removeChild(infoFrame_fixed)",200);
-	            //info.removeChild(infoFrame_fixed);
-	        }
-	    }
-
-	}
-
-	module.exports = eventHandleFunc;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	var getPostContent = function (id){
-		if(window.XMLHttpRequest){
-			XMLHTTP=new XMLHttpRequest();
-		}else{
-			XMLHTTP=new ActiveXObject("Microsoft.XMLHTTP");
-		}
-
-		XMLHTTP.onreadystatechange=function(){
-			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
-				//alert(XMLHTTP.responseText);
-				var postContent = document.getElementById("postContent");
-				if(!postContent){
-					var postContent = document.createElement("div");
-					postContent.id = "postContent";
-				}
-				postContent.innerHTML = XMLHTTP.responseText;
-				//$("#infoFrame_fixed").append(XMLHTTP.responseText);
-				
-				var infoFrame_xx = document.getElementById("infoFrame_xx");
-				infoFrame_xx.appendChild(postContent);
-				
-				var height = document.documentElement.clientHeight - 60 ;
-				$("#infoFrame_fixed").animate({height:height});
-				
-				//将sketch隐藏并移出显示范围，否则即使被遮盖也会有交互效果
-				$("#sketch").fadeOut();
-				setTimeout("$('#sketch').css('position','fixed')",200);
-				$("#sketch").css("bottom","-900px");
-				
-				
-				//返回按钮（关闭）
-				var cancel = document.getElementById("postContent_delete");
-				if(!cancel){
-					var cancel = document.createElement("button");
-					cancel.id = "postContent_delete";
-					cancel.className = "btn btn-danger btn-sm";
-					//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
-					cancel.onclick = function (){
-						$("#infoFrame_fixed").animate({height:"120px"});
-						//$("#infoFrame_xx").scrollTop(0);
-						$("#infoFrame_xx").animate({ scrollTop: 0 }, 400);
-						$("#postContent").fadeOut();
-						setTimeout("infoFrame_xx.removeChild(postContent);",300);
-						this.remove();
-						
-
-						$("#sketch").css("position","static"); //将sketch移回
-						$("#sketch").fadeIn();
-					}
-					infoFrame_fixed.appendChild(cancel);
-				}
-				
-				//滚到顶部
-				var toTop = document.getElementById("toTop");
-				if(!toTop){
-					var toTop = document.createElement("button");
-					toTop.id = "toTop";
-					toTop.className = "btn btn-default btn-sm";
-					toTop.onclick = function (){
-						//$("#infoFrame_xx").scrollTop(0);
-						$("#infoFrame_xx").animate({ scrollTop: 0 }, 400);
-					}
-					
-					infoFrame_fixed.appendChild(toTop);
-				}
-				
-				$("#postContent").css("display","none");
-				$("#postContent").fadeIn();
-				
-				
-				/*检查滚动*/
-				var sTop;
-				sTop = document.getElementById("infoFrame_xx").scrollTop; 
-
-				$("#infoFrame_xx").scroll(function(){    
-					sTop = document.getElementById("infoFrame_xx").scrollTop; 
-				});
-				
-				if(sTop == 0)
-					{
-						$("#toTop").css("display","none");
-					}else{
-						$("#toTop").css("display","block");
-					}
-				$("#infoFrame_xx").scroll(function(){     
-					if(sTop == 0)
-					{
-						$("#toTop").fadeOut();
-					}else{
-						$("#toTop").fadeIn();
-					}
-				});
-			}
-		}
-		XMLHTTP.open("GET","wp-content/themes/zbs/getPostContent.php?id="+id);
-		XMLHTTP.send();
-	}
-
-
-
-
-	module.exports = getPostContent;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/*
 	基于p5.js,Button
 	by:Zzzz
 	date:2016-03-03
 	*/
-	var Button = __webpack_require__(11);
+	var Button = __webpack_require__(8);
 	var util = __webpack_require__(3);
 
 	function ButtonPlus(options) {
@@ -1139,7 +772,7 @@
 
 
 /***/ },
-/* 11 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1321,6 +954,387 @@
 
 
 	module.exports = Button;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var eventHandleFunc = __webpack_require__(10);
+	var util = __webpack_require__(3);
+	var globalVar = __webpack_require__(5);
+	var ButtonParticle = __webpack_require__(2);
+	var ButtonPlus = __webpack_require__(7);
+
+	var getInfo = function (type,arg){
+		globalVar.displayArray.ButtonParticle = [];
+		
+		if(window.XMLHttpRequest){
+			XMLHTTP=new XMLHttpRequest();
+		}else{
+			XMLHTTP=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		if(type === "posts"){
+			XMLHTTP.onreadystatechange=function(){
+				if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+					var posts = JSON.parse(XMLHTTP.responseText);
+					//alert(XMLHTTP.responseText);
+					console.log(XMLHTTP.responseText);
+					
+					for(var item in posts){
+						var size = Math.random()*20 + 15;
+						var options = {
+							position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+							width : size,
+							height : size,
+							r : 25,
+							p : globalVar.pp
+						}
+						var optionsBP = {
+							visualObject : new ButtonPlus(options),
+							p : globalVar.pp,
+							vortexAttract : true
+						}
+						
+						var newObj = new ButtonParticle(optionsBP);
+						newObj.attractPt = globalVar.attractPtL;
+						newObj.reflect = true;
+
+						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
+						
+						newObj.visualObject.sound = globalVar.SOUNDFILE;
+						newObj.visualObject.info = posts[item];
+						newObj.visualObject.buttonCol = newObj.visualObject.info["color"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);
+						globalVar.displayArray.ButtonParticle.push(newObj);
+					}
+					
+					
+					console.log(globalVar.displayArray.ButtonParticle);
+				}
+			}
+			XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
+			XMLHTTP.send();
+		}else{
+			if(type === "users"){
+				XMLHTTP.onreadystatechange=function(){
+					if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+						var users = JSON.parse(XMLHTTP.responseText);
+						//alert(XMLHTTP.responseText);
+						//console.log(XMLHTTP.responseText);
+						
+						var i = 0;
+						var count = util.getJsonObjLength(users);
+						for(var item in users){
+							var size = Math.random()*20 + 20;
+							var options = {
+								position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
+								width : size,
+								height : size,
+								r : 25,
+								p : globalVar.pp
+							}
+							var optionsBP = {
+								visualObject : new ButtonPlus(options),
+								p : globalVar.pp,
+								vortexAttract : true
+							}
+							var newObj = new ButtonParticle(optionsBP);
+							if(i < count/2){
+								newObj.attractPt = globalVar.attractPtL;
+							}else{
+								newObj.attractPt = globalVar.attractPtR;
+							}
+
+							newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
+							newObj.reflect = true;
+							newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
+							newObj.visualObject.addHandler("turnOn",eventHandleFunc.delUserInfo);
+							newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
+							newObj.visualObject.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
+							newObj.visualObject.addHandler("hover",eventHandleFunc.showUserInfo);
+							newObj.visualObject.addHandler("mouseOut",eventHandleFunc.delUserInfo);
+							newObj.visualObject.sound = globalVar.SOUNDFILE;
+							newObj.visualObject.info = users[item];
+							
+							globalVar.displayArray.ButtonParticle.push(newObj);
+							i++;
+						}
+						i = null;
+						count = null;
+						
+						
+						
+						
+				
+						
+					}
+				}
+				XMLHTTP.open("GET","wp-content/themes/zbs/getUserInfo.php" + "?userRole=" + arg);
+				XMLHTTP.send();
+			}
+		}
+		
+	}
+
+
+	module.exports = getInfo;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * 定义与Button绑定的事件处理程序
+	 */
+	var util = __webpack_require__(3);
+	var getPostContent = __webpack_require__(11);
+
+	var eventHandleFunc = {
+	    // clicked : function (event){
+	    //     event.target.p.noStroke();
+	    //     event.target.p.fill(0);
+	    //     event.target.p.textAlign("center");
+	    //     var text;
+	    //     text = event.target.info['title'];
+	    //     if(text){
+	    //         event.target.p.text(text,event.target.position.x,event.target.position.y);
+	    //     }	
+	    // },
+
+	    clicked_animation : function (event){
+	        event.target.p.noStroke();
+	        event.target.p.fill(0);
+	        event.target.p.textAlign("center");
+	        event.target.p.stroke(255);
+	        event.target.p.strokeWeight(5);
+	        event.target.p.push();
+	        event.target.p.translate(event.target.position.x,event.target.position.y);
+	        if(event.target.clickTimeline < 40){
+	            event.target.p.rotate(event.target.p.map(event.target.clickTimeline,0,40,0,Math.PI/4));
+	        }else{
+	            event.target.p.rotate(Math.PI/4);
+	        }
+	        event.target.p.line(-12,0,12,0);
+	        event.target.p.line(0,-12,0,12);
+	        event.target.p.pop();
+	    },
+
+	    showUserInfo : function (event){
+	        var sketch = document.getElementById("sketch");
+	        var top = util.getElementTop(sketch);
+	        var left = util.getElementLeft(sketch);
+	        //console.log(left);
+	        var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
+	        if(!infoFrame){
+	            var infoFrame = document.createElement("div");
+	            infoFrame.id = "infoFrame"+event.target.info['id'];
+	            infoFrame.style.cssText = "background:#fff;position:absolute;top:"+(top+event.target.position.y-50)+"px;left:"+(left+event.target.position.x+50)+"px;width:130px;height:180px;padding:15px;border:solid gray 1px;border-radius:5px;";
+	            
+	            var img = document.createElement("img");
+	            img.src = event.target.info['avatar'];
+	            img.style.cssText = "width:100px;height:100px;border-radius:5px;-moz-border-radius:5px;"
+	            infoFrame.appendChild(img);
+	            
+	            var name = document.createElement("div");
+	            name.innerHTML = "<b>名字：</b>" + event.target.info['name'];
+	            name.style.cssText = "margin-top:20px";
+	            infoFrame.appendChild(name);
+	            
+	            /*var posts = document.createElement("div");
+	            posts.innerHTML = event.target.info['posts'];
+	            infoFrame.appendChild(posts);*/
+	            
+	            document.body.appendChild(infoFrame);
+	        }
+	    },
+
+	    delUserInfo : function (event){
+	        var infoFrame = document.getElementById("infoFrame"+event.target.info['id']);
+	        if(infoFrame){
+	            document.body.removeChild(infoFrame);
+	        }
+	    },
+
+	    showUserInfo_fixed : function (event){
+	        var sketch = document.getElementById("sketch");
+	        var top = util.getElementTop(sketch);
+	        var left = util.getElementLeft(sketch);
+	        var infoFrame_fixed = document.getElementById("infoFrame_fixed");
+	        if(!infoFrame_fixed){
+	            var infoFrame_fixed = document.createElement("div");
+	            infoFrame_fixed.id = "infoFrame_fixed";
+	            
+	            var infoFrame_xx = document.createElement("div");
+	            infoFrame_xx.id = "infoFrame_xx";
+	            infoFrame_xx.style.cssText = "height:"+(document.documentElement.clientHeight-80)+"px";
+	            infoFrame_fixed.appendChild(infoFrame_xx);
+	            
+	            var imgBlock = document.createElement("div");
+	            imgBlock.id = "imgBlock";
+	            infoFrame_xx.appendChild(imgBlock);
+	            
+	                var img = document.createElement("img");
+	                img.src = event.target.info['avatar'];
+	                imgBlock.appendChild(img);
+	            
+	            var infoBlock = document.createElement("div");
+	            infoBlock.id = "infoBlock";
+	            infoFrame_xx.appendChild(infoBlock);
+	            
+	                var name = document.createElement("div");
+	                name.innerHTML = "<b>名字：</b>" + event.target.info['name'];
+	                infoBlock.appendChild(name);
+	                
+	                var posts = document.createElement("div");
+	                var ps = event.target.info['posts'];
+	                var ul = document.createElement("ul");
+	                ul.innerHTML = '<b>作品：</b>';
+
+	                for(var i=0;i<ps.length;i++){
+	                    var li = document.createElement("li");
+	                    var a = document.createElement("a");
+	                    a.id = "getPostContentButton" + ps[i].id;
+	                    a.className = 'getPostContentButton';
+	                    a.innerHTML = ps[i].title;
+	                    a.data_id = ps[i].id;
+	                    li.appendChild(a);
+	                    a.onclick = function (){
+	                        getPostContent(this.data_id);
+	                    };
+	                    ul.appendChild(li);
+	                }
+
+	                posts.appendChild(ul);
+	                infoBlock.appendChild(posts);
+	            
+	            var info = document.getElementById("info");
+	            info.appendChild(infoFrame_fixed);
+	            $("#infoFrame_fixed").fadeIn();
+	        }
+	    },
+
+	    delUserInfo_fixed : function (event){
+	        var info = document.getElementById("info");
+	        var infoFrame_fixed = document.getElementById("infoFrame_fixed");
+	        if(infoFrame_fixed){
+	            $("#infoFrame_fixed").fadeOut();
+	            setTimeout("info.removeChild(infoFrame_fixed)",200);
+	            //info.removeChild(infoFrame_fixed);
+	        }
+	    }
+
+	}
+
+	module.exports = eventHandleFunc;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	var getPostContent = function (id){
+		if(window.XMLHttpRequest){
+			XMLHTTP=new XMLHttpRequest();
+		}else{
+			XMLHTTP=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		XMLHTTP.onreadystatechange=function(){
+			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+				//alert(XMLHTTP.responseText);
+				var postContent = document.getElementById("postContent");
+				if(!postContent){
+					var postContent = document.createElement("div");
+					postContent.id = "postContent";
+				}
+				postContent.innerHTML = XMLHTTP.responseText;
+				//$("#infoFrame_fixed").append(XMLHTTP.responseText);
+				
+				var infoFrame_xx = document.getElementById("infoFrame_xx");
+				infoFrame_xx.appendChild(postContent);
+				
+				var height = document.documentElement.clientHeight - 60 ;
+				$("#infoFrame_fixed").animate({height:height});
+				
+				//将sketch隐藏并移出显示范围，否则即使被遮盖也会有交互效果
+				$("#sketch").fadeOut();
+				setTimeout("$('#sketch').css('position','fixed')",200);
+				$("#sketch").css("bottom","-900px");
+				
+				
+				//返回按钮（关闭）
+				var cancel = document.getElementById("postContent_delete");
+				if(!cancel){
+					var cancel = document.createElement("button");
+					cancel.id = "postContent_delete";
+					cancel.className = "btn btn-danger btn-sm";
+					//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
+					cancel.onclick = function (){
+						$("#infoFrame_fixed").animate({height:"120px"});
+						//$("#infoFrame_xx").scrollTop(0);
+						$("#infoFrame_xx").animate({ scrollTop: 0 }, 400);
+						$("#postContent").fadeOut();
+						setTimeout("infoFrame_xx.removeChild(postContent);",300);
+						this.remove();
+						
+
+						$("#sketch").css("position","static"); //将sketch移回
+						$("#sketch").fadeIn();
+					}
+					infoFrame_fixed.appendChild(cancel);
+				}
+				
+				//滚到顶部
+				var toTop = document.getElementById("toTop");
+				if(!toTop){
+					var toTop = document.createElement("button");
+					toTop.id = "toTop";
+					toTop.className = "btn btn-default btn-sm";
+					toTop.onclick = function (){
+						//$("#infoFrame_xx").scrollTop(0);
+						$("#infoFrame_xx").animate({ scrollTop: 0 }, 400);
+					}
+					
+					infoFrame_fixed.appendChild(toTop);
+				}
+				
+				$("#postContent").css("display","none");
+				$("#postContent").fadeIn();
+				
+				
+				/*检查滚动*/
+				var sTop;
+				sTop = document.getElementById("infoFrame_xx").scrollTop; 
+
+				$("#infoFrame_xx").scroll(function(){    
+					sTop = document.getElementById("infoFrame_xx").scrollTop; 
+				});
+				
+				if(sTop == 0)
+					{
+						$("#toTop").css("display","none");
+					}else{
+						$("#toTop").css("display","block");
+					}
+				$("#infoFrame_xx").scroll(function(){     
+					if(sTop == 0)
+					{
+						$("#toTop").fadeOut();
+					}else{
+						$("#toTop").fadeIn();
+					}
+				});
+			}
+		}
+		XMLHTTP.open("GET","wp-content/themes/zbs/getPostContent.php?id="+id);
+		XMLHTTP.send();
+	}
+
+
+
+
+	module.exports = getPostContent;
 
 /***/ }
 /******/ ]);

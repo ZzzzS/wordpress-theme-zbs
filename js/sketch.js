@@ -4,6 +4,8 @@ var AttractPoint = require("./AttractPoint.js");
 var globalVar = require("./GlobalVar.js");
 var VisualObject = require("./VisualObject.js");
 var Particle = require("./Particle.js");
+var ButtonPlus = require("./ButtonPlus.js");
+// var util = require("./util.js");
 
 var sketch = function(p){
 	globalVar.pp = p;
@@ -13,13 +15,13 @@ var sketch = function(p){
 
 		var optionL = {
 			"p":p,
-			"position" : new p5.Vector(250,300),
+			"position" : new p5.Vector(200,300),
 			"strength" : 0.1,
 			"vortex" : true
 		};
 		var optionR = {
 			"p":p,
-			"position" : new p5.Vector(650,300),
+			"position" : new p5.Vector(700,300),
 			"strength" : 0.1,
 			"clockwise" : true,
 			"vortex" : true
@@ -64,6 +66,10 @@ var sketch = function(p){
 				// }
 			}
 		}
+		
+
+		// var num = new p5.Noise();
+		// console.log(num);
 		// if(buttonHoverCount > 0){
 		// 	$(p.canvas).css("cursor","pointer");
 		// }
@@ -99,33 +105,44 @@ $(document).ready(function(){
 	getInfo("users","special_invitation");
 	
 	//获取用户
-	$("#getUsers").click(function(){
+	$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置
+		ButtonPlus.stateReset();    //状态重置
+		globalVar.alignState = false;    //状态重置
 		getInfo("users","special_invitation");
 	});
 	
 	//获取文章
-	$("#getPosts").click(function(){
+	$("#getPosts").click(function(){   //相当于刷新，所有很多状态要重置
+		ButtonPlus.stateReset();    //状态重置
+		globalVar.alignState = false;    //状态重置
 		getInfo("posts");
 	});
 	
 	//排列
 	$("#align").click(function (){
+		globalVar.alignState = ~globalVar.alignState;
 		var len = globalVar.displayArray.ButtonParticle.length;
-		for(var k = 0; k < len; k++){
-			var i = Math.floor(k / 2) + 2;
-			var j = k % 2 + 2;
-			var options = {
-				"position" : new p5.Vector(i*70,j*70),
-				"strength" : 1.5,
-				"vortex" : false
+		if (globalVar.alignState){
+			for(var k = 0; k < len; k++){
+				var i = k % globalVar.countPerRow + 2;
+				var j = Math.floor(k / globalVar.countPerRow) + 2;
+				
+				var options = {
+					"position" : new p5.Vector(i*70,j*70),
+					"strength" : 1.5,
+					"vortex" : false
+				}
+				var attractPt = new AttractPoint(options);
+				globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
+				globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
 			}
-			var attractPt = new AttractPoint(options);
-			globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
-			globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
-			//globalVar.mainButton[k].strength = 1.5;
-			//globalVar.displayArray.ButtonParticle[k].vortex = false;
-			//globalVar.mainButton[k].topspeed = 1;
+		}else{
+			for(var k = 0; k < len; k++){
+				globalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;
+				globalVar.displayArray.ButtonParticle[k].vortexAttract = true;
+			}
 		}
+		
 	});
 	
 });

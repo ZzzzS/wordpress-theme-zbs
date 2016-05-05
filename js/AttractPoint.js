@@ -5,19 +5,14 @@ var ButtonParticle = require("./ButtonParticle.js");
 
 var AttractPoint = function (options){
 	this.position = options.position.copy();
-	this.strength = options.strength;
+	//this.strength = options.strength;
 	this.p = options.p;
 	this.clockwise = options.clockwise || false;
 	this.vortex = options.vortex || false;
-	// if(options.clockwise){
-	// 	this.clockwise = options.clockwise;
-	// }else{
-	// 	this.clockwise = false;
-	// }
 }
 
 AttractPoint.prototype.attract = function (options){
-	var force = this.vortexAttract(options) ;
+	var force = this.vortex ? this.vortexAttract(options) : this.linearAttract(options);
 	return force;
 }
 
@@ -26,7 +21,7 @@ AttractPoint.prototype.linearAttract = function (options){
 		var force = p5.Vector.sub(this.position,options.b.visualObject.position);
 		var dist = force.mag();
 		force.normalize();
-		force.mult(this.strength);
+		force.mult(dist * 0.618);
 		return force;
 	}
 }
