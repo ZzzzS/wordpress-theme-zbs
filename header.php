@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
     <meta charset="utf-8">
     <title><?php
@@ -49,3 +49,5 @@
     <![endif]-->
 	</head>
 <body>
+	<div id="navigation_bar"><img id="logo" src="<?php bloginfo('template_directory'); ?>/weblogo-06.png" width="200"/></div>
+	

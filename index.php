@@ -1,8 +1,7 @@
     <?php get_header();?>
-	<div id="logo"><img src="<?php bloginfo('template_directory'); ?>/weblogo-06.png" width="200"/></div>
 	<div id="sketch"></div>
-	<div id="sketch1"></div>
-	<div id="sketch2"></div>
+	<!--<div id="sketch1"></div>
+	<div id="sketch2"></div>-->
 	<div id="info"></div>
 
 	<div class="btn-group-vertical" role="group" aria-label="..." id="buttonGroup">

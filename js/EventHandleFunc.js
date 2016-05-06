@@ -136,8 +136,66 @@ var eventHandleFunc = {
             setTimeout("info.removeChild(infoFrame_fixed)",200);
             //info.removeChild(infoFrame_fixed);
         }
+    },
+
+    getPostInfo : function (event){
+        var doc = document;
+        var postInfoFrame = doc.getElementById("postInfoFrame");    //postInfoFrame
+        if(postInfoFrame){
+            postInfoFrame.style.display = "block";
+            postInfoFrame.innerHTML = "";    //清空
+        }else{
+            var postInfoFrame = doc.createElement("div");
+            postInfoFrame.id = "postInfoFrame";
+        }
+
+        var thumbnail = doc.createElement("img");      //thumbnail
+        thumbnail.src = event.target.info['thumbnail'];
+        thumbnail.width = 80;
+        thumbnail.height = 80;
+        thumbnail.alt = event.target.info['title'];
+
+        var title = doc.createElement("div");     //title
+        title.id += "title";
+        title.innerHTML = "<h2>" + event.target.info['title'] + "</h2>";
+
+        var author = doc.createElement("div");     //author
+        author.className += "postMeta";
+        author.title = "author";
+        author.innerHTML = "作者：" + event.target.info['author'];
+
+        var productType = doc.createElement("div");
+        productType.className += "postMeta";
+        productType.title = "productType";
+        productType.innerHTML = "作品类型：" + event.target.info['productType'] || "其他";
+
+        var major = doc.createElement("div");
+        major.className += "postMeta";
+        major.title = "major";
+        major.innerHTML = "专业：" + event.target.info['major'] + "-" + event.target.info['subMajor'];
+
+        var creationDate = doc.createElement("div");
+        creationDate.className += "postMeta";
+        creationDate.title = "creationDate";
+        creationDate.innerHTML = "创作年份：" + event.target.info['creationDate'] + "年";
+
+        postInfoFrame.appendChild(thumbnail);
+        postInfoFrame.appendChild(title);
+        postInfoFrame.appendChild(author);
+        postInfoFrame.appendChild(productType);
+        postInfoFrame.appendChild(major);
+        postInfoFrame.appendChild(creationDate);
+        doc.body.appendChild(postInfoFrame);
+    },
+
+    hidePostInfoFrame : function (event){
+        var doc = document;
+        var postInfoFrame = doc.getElementById("postInfoFrame");
+        if(postInfoFrame){
+            postInfoFrame.style.display = "none";
+        }
     }
 
-}
+};
 
 module.exports = eventHandleFunc;

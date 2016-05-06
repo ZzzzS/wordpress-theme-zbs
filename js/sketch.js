@@ -5,7 +5,6 @@ var globalVar = require("./GlobalVar.js");
 var VisualObject = require("./VisualObject.js");
 var Particle = require("./Particle.js");
 var ButtonPlus = require("./ButtonPlus.js");
-// var util = require("./util.js");
 
 var sketch = function(p){
 	globalVar.pp = p;
@@ -102,7 +101,7 @@ function resortButtonParticle(bp){
 $(document).ready(function(){
     var getInfo = require("./getInfo.js");
 	//默认获取用户
-	getInfo("users","special_invitation");
+	getInfo("posts","special_invitation");
 	
 	//获取用户
 	$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置

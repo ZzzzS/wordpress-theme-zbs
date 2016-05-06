@@ -16,8 +16,22 @@
 		while($query->have_posts()){
 			$query->the_post();
 			$postInfo = array();
+			$author_id = $post->post_author;
+			$postInfo["author"] = get_the_author_meta("display_name",$author_id);
+			$postInfo["creationDate"] = get_post_meta( $post->ID, '_product_creation_date', true );
+			$postInfo["major"] = get_post_meta( $post->ID, '_product_major', true );
+			$postInfo["subMajor"] = get_post_meta( $post->ID, '_product_subMajor', true );
+			$postInfo["productType"] = get_post_meta( $post->ID, '_product_type', true );
 			$postInfo["title"] = $post->post_title;
 			$postInfo["link"] = $post->guid;
+			
+			$thumbnail_id = get_post_thumbnail_id();
+			if($thumbnail_id ){
+				$thumb = wp_get_attachment_image_src($thumbnail_id, 'thumbnail')[0];
+				$postInfo["thumbnail"] = $thumb;
+			}else{
+				$postInfo["thumbnail"] = false;
+			}
 			$cat = get_the_terms( $post->ID, 'product_category' ,  ' ' );
 			$postInfo["color"] = get_option('product_category_color'.$cat[0]->term_id);
 			$posts[$i] = $postInfo;

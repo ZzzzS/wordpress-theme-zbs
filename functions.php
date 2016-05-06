@@ -694,7 +694,7 @@ function product_info_meta_box($post) {
     wp_nonce_field( 'product_info_meta_box', 'product_info_meta_box_nonce' );
     // 获取之前存储的值
     //$value = get_the_author_meta( 'display_name', $post->post_author );
-	$valueAttribute = get_post_meta( $post->ID, '_product_attribute', true );
+	$valueType = get_post_meta( $post->ID, '_product_type', true );
 	$valueDate = get_post_meta( $post->ID, '_product_creation_date', true );
 	$valueMajor = get_post_meta( $post->ID, '_product_major', true );
 	$valueSubMajor = get_post_meta( $post->ID, '_product_subMajor', true );
@@ -713,9 +713,9 @@ function product_info_meta_box($post) {
     <div class="product_info_box">
 	<label for="product_attribute">作品属性:</label>
 	<select id="product_attribute" name="product_attribute">
-		<option value='homework' <?php echo $valueAttribute == 'homework'?  "selected" : ''?>>作业</option>
-		<option value='graduation_project' <?php echo $valueAttribute == 'graduation_project'?  "selected" : ''?>>毕业设计</option>
-		<option value='others' <?php echo $valueAttribute == 'others'?  "selected" : ''?>>其他</option>
+		<option value='作业' <?php echo $valueType == '作业'?  "selected" : ''?>>作业</option>
+		<option value='毕业设计' <?php echo $valueType == '毕业设计'?  "selected" : ''?>>毕业设计</option>
+		<option value='其他' <?php echo $valueType == '其他'?  "selected" : ''?>>其他</option>
 	</select>
 	</div>
 	
@@ -787,7 +787,7 @@ function product_info_save_meta_box($post_id){
     }
 
     $product_attribute = sanitize_text_field( $_POST['product_attribute'] );
-    update_post_meta( $post_id, '_product_attribute', $product_attribute );
+    update_post_meta( $post_id, '_product_type', $product_attribute );
 	
 	
 	// 判断 product_creation_date 是否为空

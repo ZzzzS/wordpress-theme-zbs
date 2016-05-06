@@ -19,7 +19,7 @@ var getInfo = function (type,arg){
 			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 				var posts = JSON.parse(XMLHTTP.responseText);
 				//alert(XMLHTTP.responseText);
-				console.log(XMLHTTP.responseText);
+				//console.log(XMLHTTP.responseText);
 				
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
@@ -29,19 +29,21 @@ var getInfo = function (type,arg){
 						height : size,
 						r : 25,
 						p : globalVar.pp
-					}
+					};
 					var optionsBP = {
 						visualObject : new ButtonPlus(options),
 						p : globalVar.pp,
 						vortexAttract : true
-					}
+					};
 					
 					var newObj = new ButtonParticle(optionsBP);
 					newObj.attractPt = globalVar.attractPtL;
 					newObj.reflect = true;
 
 					newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
-					
+					newObj.visualObject.addHandler("turnOn",eventHandleFunc.getPostInfo);
+					newObj.visualObject.addHandler("turnOff",eventHandleFunc.hidePostInfoFrame);
+
 					newObj.visualObject.sound = globalVar.SOUNDFILE;
 					newObj.visualObject.info = posts[item];
 					newObj.visualObject.buttonCol = newObj.visualObject.info["color"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);
@@ -49,7 +51,7 @@ var getInfo = function (type,arg){
 				}
 				
 				
-				console.log(globalVar.displayArray.ButtonParticle);
+				//console.log(globalVar.displayArray.ButtonParticle);
 			}
 		}
 		XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
