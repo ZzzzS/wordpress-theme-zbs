@@ -10,12 +10,14 @@ Tags: responsive, white, bootstrap
 License: Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 License URI: http://creativecommons.org/licenses/by-sa/3.0/
 */
+@import url("bootstrap/css/bootstrap.min.css");
 @import url("font-awesome/css/font-awesome.min.css");
 #sketch {
   width: 962px;
   height: 602px;
   margin: 60px auto;
-  border: 1px solid gray; }
+  outline: 1px solid red;
+  outline-offset: 0px; }
 
 body {
   padding-top: 0;
@@ -25,124 +27,119 @@ body {
 #logo {
   position: fixed;
   left: 0;
-  top: 0; }
+  top: 0;
+  outline: 1px solid red;
+  outline-offset: 0px; }
 
-#postInfoFrame {
+#infoFrame {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 100px;
-  border: solid gray 1px;
-  white-space: nowrap; }
-  #postInfoFrame img {
-    width: 80px;
-    float: left;
-    margin: 10px 20px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px; }
-  #postInfoFrame #title {
-    border: solid gray 1px;
-    overflow: hidden; }
-  #postInfoFrame h2 {
-    margin-top: 15px;
-    white-space: nowrap; }
-  #postInfoFrame .postMeta {
-    display: inline-block;
-    margin-right: 20px;
-    color: gray; }
-    #postInfoFrame .postMeta[title=author]:before {
-      content: "\f007";
-      font-family: FontAwesome;
-      margin-right: 5px;
-      color: #555; }
-    #postInfoFrame .postMeta[title=productType]:before {
-      content: "\f02e";
-      font-family: FontAwesome;
-      margin-right: 5px;
-      color: #555; }
-    #postInfoFrame .postMeta[title=major]:before {
-      content: "\f19d";
-      font-family: FontAwesome;
-      margin-right: 5px;
-      color: #555; }
-    #postInfoFrame .postMeta[title=creationDate]:before {
-      content: "\f073";
-      font-family: FontAwesome;
-      margin-right: 5px;
-      color: #555; }
-
-#buttonGroup {
-  position: absolute;
-  top: 100px;
-  right: 50px; }
-
-#infoFrame_fixed {
-  background-color: white;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 120px;
-  padding: 10px 0;
-  border: solid gray 1px;
-  display: none;
-  z-index: 9999; }
-
-#infoFrame_fixed #infoFrame_xx {
-  position: relative;
-  overflow-y: auto; }
-
-#infoFrame_fixed #postContent {
-  /*position:absolute;
-  top:120px;*/
-  border: solid gray 1px;
-  width: 960px;
-  margin: 120px auto;
+  overflow-y: auto;
   overflow-x: hidden;
-  padding: 20px; }
+  outline: 1px solid red;
+  outline-offset: 0px; }
+  #infoFrame #introduction {
+    max-width: 850px;
+    padding: 0px 20px;
+    outline: 1px solid red;
+    outline-offset: 0px;
+    margin: 0 auto;
+    height: 100px;
+    padding-left: calc((100vw - 100%) / 2 + 5px);
+    padding-right: calc(12px - (100vw - 100%) / 2); }
+    #infoFrame #introduction img {
+      width: 80px;
+      margin: 10px 20px;
+      float: left;
+      border-radius: 10px;
+      -moz-border-radius: 10px;
+      -webkit-border-radius: 10px;
+      outline: 1px solid red;
+      outline-offset: 0px; }
+    #infoFrame #introduction #infoContainer {
+      outline: 1px solid red;
+      outline-offset: 0px;
+      height: 100px;
+      white-space: nowrap; }
+      #infoFrame #introduction #infoContainer #title, #infoFrame #introduction #infoContainer #name {
+        padding: 1px 0;
+        outline: 1px solid red;
+        outline-offset: 0px; }
+      #infoFrame #introduction #infoContainer .postMeta {
+        display: inline-block;
+        margin-right: 20px;
+        margin-top: 5px;
+        color: gray;
+        outline: 1px solid red;
+        outline-offset: 0px; }
+        #infoFrame #introduction #infoContainer .postMeta[title=author]:before {
+          content: "\f007";
+          font-family: FontAwesome;
+          margin-right: 5px;
+          color: #555; }
+        #infoFrame #introduction #infoContainer .postMeta[title=productType]:before {
+          content: "\f02e";
+          font-family: FontAwesome;
+          margin-right: 5px;
+          color: #555; }
+        #infoFrame #introduction #infoContainer .postMeta[title=major]:before {
+          content: "\f19d";
+          font-family: FontAwesome;
+          margin-right: 5px;
+          color: #555; }
+        #infoFrame #introduction #infoContainer .postMeta[title=creationDate]:before {
+          content: "\f073";
+          font-family: FontAwesome;
+          margin-right: 5px;
+          color: #555; }
+  #infoFrame #postContent {
+    white-space: normal;
+    max-width: 850px;
+    padding: 0px 20px;
+    outline: 1px solid red;
+    outline-offset: 0px;
+    padding-left: calc((100vw - 100%) / 2 + 5px);
+    padding-right: calc(12px - (100vw - 100%) / 2);
+    margin: 10px auto; }
 
-#infoFrame_fixed #postContent_delete {
+#postContent_delete {
   position: absolute;
-  top: 20px;
+  top: 15px;
   right: 50px;
   width: 30px;
   height: 30px;
   border-radius: 15px;
   -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-  /*overflow-y:scroll;*/ }
+  -webkit-border-radius: 15px; }
 
-#infoFrame_fixed #toTop {
+#toTop {
   position: absolute;
-  top: 20px;
+  top: 15px;
   right: 90px;
   width: 30px;
   height: 30px;
   display: none;
   border-radius: 15px;
   -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-  /*overflow-y:scroll;*/ }
+  -webkit-border-radius: 15px; }
 
-#imgBlock {
+#sortInfoFrame {
+  background: #fff;
   position: absolute;
-  left: 30px;
-  width: 100px;
-  height: 100px;
-  overflow: hidden;
-  border: solid 1px gray;
+  width: 130px;
+  height: 180px;
+  padding: 15px;
+  border: solid gray 1px;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px; }
 
-#imgBlock img {
-  width: 100px;
-  height: 100px; }
-
-#infoBlock {
+#buttonGroup {
   position: absolute;
-  left: 160px; }
+  top: 100px;
+  right: 50px; }
 
 /*# sourceMappingURL=style.css.map */

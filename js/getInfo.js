@@ -41,8 +41,8 @@ var getInfo = function (type,arg){
 					newObj.reflect = true;
 
 					newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
-					newObj.visualObject.addHandler("turnOn",eventHandleFunc.getPostInfo);
-					newObj.visualObject.addHandler("turnOff",eventHandleFunc.hidePostInfoFrame);
+					newObj.visualObject.addHandler("turnOn",eventHandleFunc.showPostInfo);
+					newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
 
 					newObj.visualObject.sound = globalVar.SOUNDFILE;
 					newObj.visualObject.info = posts[item];
@@ -90,11 +90,11 @@ var getInfo = function (type,arg){
 						newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 						newObj.reflect = true;
 						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
-						newObj.visualObject.addHandler("turnOn",eventHandleFunc.delUserInfo);
-						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
-						newObj.visualObject.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
-						newObj.visualObject.addHandler("hover",eventHandleFunc.showUserInfo);
-						newObj.visualObject.addHandler("mouseOut",eventHandleFunc.delUserInfo);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideSortUserInfo);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo);
+						newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
+						newObj.visualObject.addHandler("hover",eventHandleFunc.showSortUserInfo);
+						newObj.visualObject.addHandler("mouseOut",eventHandleFunc.hideSortUserInfo);
 						newObj.visualObject.sound = globalVar.SOUNDFILE;
 						newObj.visualObject.info = users[item];
 						

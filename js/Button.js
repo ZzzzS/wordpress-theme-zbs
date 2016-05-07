@@ -16,6 +16,7 @@ var Button = function (options) {
 		fillCol : options.fillCol
 	});
 	this.pState = "mouseOut";  //Button初始状态
+	this.state;
 	this.pSwitch = "off";   //Button初始状态
 	this.hoverCol = options.hoverCol || this.p.color("#06799F");  //鼠标悬浮时Button的颜色
 	this.pressCol = options.pressCol || this.p.color("#216278");  //鼠标按下时Button的颜色
@@ -35,7 +36,7 @@ Button.prototype.isSelected = function () {
 }
 
 //判断Button的状态
-Button.prototype.state = function () {
+Button.prototype.getState = function () {
 	/**
 	 * hover (pState) ： 鼠标悬浮（被选中）
 	 * press (pState) ： 鼠标按下
@@ -104,8 +105,8 @@ Button.prototype.display = function () {
 		this.p.noStroke();
 	}
 	this.p.rectMode('center');
-	var state = this.state();
-	switch (state) {
+	this.tate = this.getState();
+	switch (this.tate) {
 		case "hover":
 			this.fillCol = this.hoverCol;
 			this.drawGeometry();

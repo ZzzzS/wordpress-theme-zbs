@@ -41,7 +41,7 @@ ButtonPlus.prototype.isSelected = function () {
 };
 
 //判断ButtonPlus的状态（加强版）
-ButtonPlus.prototype.state = function () {
+ButtonPlus.prototype.getState = function () {
 	/**
 	 * hover (pState) ： 鼠标悬浮（被选中）
 	 * press (pState) ： 鼠标按下
@@ -125,9 +125,9 @@ ButtonPlus.prototype.display = function () {
 	}
 
 	this.p.rectMode('center');
-	var state = this.state();
-	this.cursorState(state);  //鼠标状态
-	switch (state) {
+	this.state = this.getState();
+	this.cursorState(this.state);  //鼠标状态
+	switch (this.state) {
 		case "hover":
 			//音效
 			if (this.pState == "mouseOut") {         //首次hover

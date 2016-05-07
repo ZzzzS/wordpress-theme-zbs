@@ -23,7 +23,8 @@
 			$postInfo["subMajor"] = get_post_meta( $post->ID, '_product_subMajor', true );
 			$postInfo["productType"] = get_post_meta( $post->ID, '_product_type', true );
 			$postInfo["title"] = $post->post_title;
-			$postInfo["link"] = $post->guid;
+			$postInfo["link"] = get_permalink();
+			$postInfo["id"] = $post->ID;
 			
 			$thumbnail_id = get_post_thumbnail_id();
 			if($thumbnail_id ){

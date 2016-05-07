@@ -99,6 +99,7 @@ function resortButtonParticle(bp){
 }
 
 $(document).ready(function(){
+	document.body.style.overflow = 'hidden';
     var getInfo = require("./getInfo.js");
 	//默认获取用户
 	getInfo("posts","special_invitation");
@@ -107,6 +108,13 @@ $(document).ready(function(){
 	$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置
 		ButtonPlus.stateReset();    //状态重置
 		globalVar.alignState = false;    //状态重置
+
+		var doc = document;                             ////重置infoFrame
+		var infoFrame = doc.getElementById("infoFrame");
+		if(infoFrame){
+			infoFrame.style.visibility = "hidden";
+		}
+
 		getInfo("users","special_invitation");
 	});
 	
@@ -114,6 +122,13 @@ $(document).ready(function(){
 	$("#getPosts").click(function(){   //相当于刷新，所有很多状态要重置
 		ButtonPlus.stateReset();    //状态重置
 		globalVar.alignState = false;    //状态重置
+
+		var doc = document;            //重置infoFrame
+		var infoFrame = doc.getElementById("infoFrame");
+		if(infoFrame){
+			infoFrame.style.visibility = "hidden";
+		}
+
 		getInfo("posts");
 	});
 	

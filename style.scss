@@ -10,10 +10,11 @@ Tags: responsive, white, bootstrap
 License: Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 License URI: http://creativecommons.org/licenses/by-sa/3.0/
 */
-// @import url('bootstrap/css/bootstrap.min.css');
+@import url('bootstrap/css/bootstrap.min.css');
 @import url('font-awesome/css/font-awesome.min.css');
 $sketchWidth: 962px;
 $sketchHeight: 602px;
+$postInfoWith: 850px;
 
 @mixin borderRadius($rad: 10px){
 	border-radius: $rad;
@@ -21,11 +22,29 @@ $sketchHeight: 602px;
 	-webkit-border-radius: $rad;
 }
 
+@mixin showBoxBorder(){
+	//border:1px solid gray;
+	outline:1px solid red;
+	outline-offset:0px;
+}
+
+@mixin postInfo(){
+	max-width: $postInfoWith;
+	padding: 0px 20px;
+	@include showBoxBorder();
+}
+
+@mixin box-sizing($type: inherit){
+	box-sizing:$type;
+	-moz-box-sizing:$type;
+	-webkit-box-sizing:$type;
+}
+
 #sketch{
 	width:$sketchWidth;
 	height:$sketchHeight;
 	margin:60px auto;
-	border:1px solid gray;
+	@include showBoxBorder();
 }
 
 body {
@@ -34,64 +53,121 @@ body {
 	 font-family:微软雅黑,宋体,Arial,Verdana,arial,serif;
  }
 #logo{
-	 position:fixed;
-	 left:0;
-	 top:0;
+	position:fixed;
+	left:0;
+	top:0;
+	@include showBoxBorder();
  }
 
-#postInfoFrame{
+#infoFrame{
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	width:100%;
 	height: 100px;
-	border: solid gray 1px;
-	white-space:nowrap;
-	img{
-		width: 80px;
-		float: left;
-		margin: 10px 20px;
-		@include borderRadius();
-	 }
-	#title{
-		//display: inline-block;
-		border: solid gray 1px;
-		//width:300px;
-		//height: 55px;
-		overflow: hidden;
-		//font-size: 24px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	@include showBoxBorder();
+	//@include box-sizing(content-box);
+
+	#introduction{
+		@include postInfo();
+		margin: 0 auto;
+		height: 100px;
+		padding-left: calc((100vw - 100%) / 2 + 5px);
+		padding-right: calc(12px - (100vw - 100%) / 2);
+		img{
+			width: 80px;
+			margin: 10px 20px;
+			float: left;
+			@include borderRadius();
+			@include showBoxBorder();
+		}
+
+		#infoContainer{
+			@include showBoxBorder();
+			height:100px;
+			white-space:nowrap;
+			#title{
+				padding: 1px 0;
+				@include showBoxBorder();
+			}
+			#name{
+				@extend #title;
+			}
+
+			.postMeta{
+				display:inline-block;
+				margin-right: 20px;
+				margin-top: 5px;
+				color: gray;
+				@include showBoxBorder();
+				@mixin icon(){
+					font-family: FontAwesome;
+					margin-right: 5px;
+					color: #555;
+				}
+				&[title=author]:before{
+					content: "\f007";
+					@include icon();
+				}
+				&[title=productType]:before{
+					content: "\f02e";
+					@include icon();
+				}
+				&[title=major]:before{
+					content: "\f19d";
+					@include icon();
+				}
+				&[title=creationDate]:before{
+					content: "\f073";
+					@include icon();
+				}
+			}
+
+
+		}
 	}
-	h2{
-		margin-top: 15px;
-		white-space:nowrap;
+
+	#postContent{
+		white-space: normal;
+		@include postInfo();
+		padding-left: calc((100vw - 100%) / 2 + 5px);
+		padding-right: calc(12px - (100vw - 100%) / 2);
+		margin: 10px auto;
 	}
-	.postMeta{
-		display: inline-block;
-		margin-right: 20px;
-		color: gray;
-		@mixin icon(){
-			font-family: FontAwesome;
-			margin-right: 5px;
-			color: #555;
-		}
-		&[title=author]:before{
-			content: "\f007";
-			@include icon();
-		}
-		&[title=productType]:before{
-			content: "\f02e";
-			@include icon();
-		}
-		&[title=major]:before{
-			content: "\f19d";
-			@include icon();
-		}
-		&[title=creationDate]:before{
-			content: "\f073";
-			@include icon();
-		}
-	}
+
 }
+$buttonWidth : 30px;
+#postContent_delete{
+	position:absolute;
+	top:$buttonWidth / 2;
+	right:50px;
+	width:$buttonWidth;
+	height:$buttonWidth;
+	@include borderRadius($buttonWidth / 2);
+}
+
+#toTop{
+	position:absolute;
+	top:$buttonWidth / 2;
+	right:90px;
+	width:$buttonWidth;
+	height:$buttonWidth;
+	display:none;
+	@include borderRadius($buttonWidth / 2);
+}
+
+#sortInfoFrame{
+	background:#fff;
+	position:absolute;
+	width:130px;
+	height:180px;
+	padding:15px;
+	border:solid gray 1px;
+	@include borderRadius(5px);
+}
+
 
 #buttonGroup{
 	position:absolute;
@@ -100,86 +176,4 @@ body {
 }
 
 
-#infoFrame_fixed{
-	background-color:white;
-	position:fixed;
-	bottom:0;
-	left:0;
-	width:100%;
-	height:120px;
-	padding:10px 0;
-	border:solid gray 1px;
-	display:none;
-	z-index:9999;
-}
-#infoFrame_fixed #infoFrame_xx{
-	position:relative;
-	overflow-y:auto;
-}
-#infoFrame_fixed #postContent{
-	/*position:absolute;
-	top:120px;*/
-	border:solid gray 1px;
-	width:960px;
-	margin:120px auto;
-	overflow-x:hidden;
-	padding:20px;
-}
 
-#infoFrame_fixed #postContent_delete{
-	position:absolute;
-	top:20px;
-	right:50px;
-	width:30px;
-	height:30px;
-	border-radius:15px;
-	-moz-border-radius:15px;
-	-webkit-border-radius:15px;
-	/*overflow-y:scroll;*/
-}
-
-#infoFrame_fixed #toTop{
-	position:absolute;
-	top:20px;
-	right:90px;
-	width:30px;
-	height:30px;
-	display:none;
-	border-radius:15px;
-	-moz-border-radius:15px;
-	-webkit-border-radius:15px;
-	/*overflow-y:scroll;*/
-}
-
-#imgBlock{
-	position:absolute;
-	left:30px;
-	width:100px;
-	height:100px;
-	overflow:hidden;
-	border:solid 1px gray;
-	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-}
-#imgBlock img{
-	width:100px;
-	height:100px;
-}
-
-#infoBlock{
-	position:absolute;
-	left:160px;
-}
-//
-//
-//$col: #3bbfce;
-//$col2: #aa4488;
-//$w: 10px;
-//.abc{
-//    color: $col;
-//    width : $w;
-//    .def{
-//        color: $col2;
-//    }
-//}
