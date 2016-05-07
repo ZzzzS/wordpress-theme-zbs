@@ -15,6 +15,8 @@ License URI: http://creativecommons.org/licenses/by-sa/3.0/
 $sketchWidth: 962px;
 $sketchHeight: 602px;
 $postInfoWith: 850px;
+$navigation_bar_height : 50px;
+$filterBarBtnWidth: 80px;
 
 @mixin borderRadius($rad: 10px){
 	border-radius: $rad;
@@ -40,24 +42,82 @@ $postInfoWith: 850px;
 	-webkit-box-sizing:$type;
 }
 
-#sketch{
-	width:$sketchWidth;
-	height:$sketchHeight;
-	margin:60px auto;
-	@include showBoxBorder();
-}
-
 body {
 	 padding-top: 0;
 	 padding-bottom: 0;
 	 font-family:微软雅黑,宋体,Arial,Verdana,arial,serif;
  }
-#logo{
-	position:fixed;
-	left:0;
-	top:0;
+
+#navigation_bar{
+	width:100%;
+	height:$navigation_bar_height;
 	@include showBoxBorder();
- }
+	#logo{
+		width:auto;
+		height:$navigation_bar_height;
+		position:fixed;
+		left:0;
+		top:0;
+		@include showBoxBorder();
+	}
+}
+
+#filterBar{
+	position: absolute;
+	width: 100%;
+	top: $navigation_bar_height;
+	left: 0;
+	#filter{
+		display: none;
+		#filterT{
+			border:1px gray solid;
+			border-collapse:collapse;
+			margin: 0 auto;
+			th{
+				padding: 2px 5px;
+			}
+			td{
+				@extend th;
+			}
+		}
+		#btnGroup{
+			//border: 1px solid gray;
+			width:100%;
+			display: -webkit-flex; /* Safari */
+			display: flex;
+			justify-content:center;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			button{
+				margin: 5px 20px;
+				padding: 3px;
+			}
+		}
+	}
+
+	#filterBarBtn{
+		display: block;
+		width: $filterBarBtnWidth;
+		height: 30px;
+		margin :0 auto;
+		//position: absolute;
+		//top: $navigation_bar_height;
+		//top: 0;bottom: 0;
+		left: 0;rigth: 0;
+		span:before{
+			font-family: FontAwesome;
+			content: "\f078";
+		}
+	}
+}
+
+#sketch{
+	width:$sketchWidth;
+	height:$sketchHeight;
+	padding:1px;
+	margin:10px auto;
+	@include showBoxBorder();
+}
 
 #infoFrame{
 	position: fixed;
@@ -170,6 +230,7 @@ $buttonWidth : 30px;
 
 
 #buttonGroup{
+	z-index: 1000;
 	position:absolute;
 	top:100px;
 	right:50px;

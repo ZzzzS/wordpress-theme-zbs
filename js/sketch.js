@@ -158,10 +158,17 @@ $(document).ready(function(){
 		}
 		
 	});
-	
+
+	setSketch();   //设置sketch的位置。
 });
 
-//获取文章信息
+function setSketch(){      //设置sketch的位置。
+	var clientHeight = document.documentElement.clientHeight;
+	var sketch = $("#sketch");
+	var height = sketch.css("height");
+	sketch.css("margin-top", ((parseInt(clientHeight) - parseInt(height)) / 2 - 50) + "px");
+}
+
 
 
 //窗口尺寸改变
@@ -172,4 +179,10 @@ $(window).resize(function() {
 	
 	$("#infoFrame_xx").css("height",document.documentElement.clientHeight-80);
 	//alert($("#infoFrame_fixed").css("height"));
+
+	setSketch(); //设置sketch的位置。
+});
+
+$("#filterBarBtn").click(function (){
+	$("#filter").slideToggle("slow");
 });

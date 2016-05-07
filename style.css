@@ -12,22 +12,65 @@ License URI: http://creativecommons.org/licenses/by-sa/3.0/
 */
 @import url("bootstrap/css/bootstrap.min.css");
 @import url("font-awesome/css/font-awesome.min.css");
-#sketch {
-  width: 962px;
-  height: 602px;
-  margin: 60px auto;
-  outline: 1px solid red;
-  outline-offset: 0px; }
-
 body {
   padding-top: 0;
   padding-bottom: 0;
   font-family: 微软雅黑,宋体,Arial,Verdana,arial,serif; }
 
-#logo {
-  position: fixed;
-  left: 0;
-  top: 0;
+#navigation_bar {
+  width: 100%;
+  height: 50px;
+  outline: 1px solid red;
+  outline-offset: 0px; }
+  #navigation_bar #logo {
+    width: auto;
+    height: 50px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    outline: 1px solid red;
+    outline-offset: 0px; }
+
+#filterBar {
+  position: absolute;
+  width: 100%;
+  top: 50px;
+  left: 0; }
+  #filterBar #filter {
+    display: none; }
+    #filterBar #filter #filterT {
+      border: 1px gray solid;
+      border-collapse: collapse;
+      margin: 0 auto; }
+      #filterBar #filter #filterT th, #filterBar #filter #filterT td {
+        padding: 2px 5px; }
+    #filterBar #filter #btnGroup {
+      width: 100%;
+      display: -webkit-flex;
+      /* Safari */
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      flex-wrap: nowrap; }
+      #filterBar #filter #btnGroup button {
+        margin: 5px 20px;
+        padding: 3px; }
+  #filterBar #filterBarBtn {
+    display: block;
+    width: 80px;
+    height: 30px;
+    margin: 0 auto;
+    left: 0;
+    rigth: 0; }
+    #filterBar #filterBarBtn span:before {
+      font-family: FontAwesome;
+      content: "\f078"; }
+
+#sketch {
+  width: 962px;
+  height: 602px;
+  padding: 1px;
+  margin: 10px auto;
   outline: 1px solid red;
   outline-offset: 0px; }
 
@@ -138,6 +181,7 @@ body {
   -webkit-border-radius: 5px; }
 
 #buttonGroup {
+  z-index: 1000;
   position: absolute;
   top: 100px;
   right: 50px; }
