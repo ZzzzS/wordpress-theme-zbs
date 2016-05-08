@@ -5,6 +5,7 @@ var globalVar = require("./GlobalVar.js");
 var VisualObject = require("./VisualObject.js");
 var Particle = require("./Particle.js");
 var ButtonPlus = require("./ButtonPlus.js");
+var FilterButton = require("./FilterButton.js");
 
 var sketch = function(p){
 	globalVar.pp = p;
@@ -38,7 +39,8 @@ var sketch = function(p){
 				position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
 				width : size,
 				height : size,
-				p : globalVar.pp
+				p : globalVar.pp,
+				fillCol : globalVar.pp.color(200,200,200,50)
 			}
 			var options = {
 				visualObject : new VisualObject(optionsVO),
@@ -160,6 +162,17 @@ $(document).ready(function(){
 	});
 
 	setSketch();   //设置sketch的位置。
+
+	//var $f2010 = $("#2010");
+	//$f2010.click(function (){
+	//	alert("2010");
+	//	for(var i = 0, len = globalVar.displayArray.ButtonParticle.length; i < len; i++){
+	//		if (globalVar.displayArray.ButtonParticle[i].visualObject.info["creationDate"] !== "2010"){
+	//			console.log(globalVar.displayArray.ButtonParticle[i].visualObject.info["creationDate"]);
+	//			globalVar.displayArray.ButtonParticle[i].visualObject.filtered = true;
+	//		}
+	//	}
+	//});
 });
 
 function setSketch(){      //设置sketch的位置。
@@ -169,20 +182,53 @@ function setSketch(){      //设置sketch的位置。
 	sketch.css("margin-top", ((parseInt(clientHeight) - parseInt(height)) / 2 - 50) + "px");
 }
 
-
-
 //窗口尺寸改变
 $(window).resize(function() {
-	if($("#infoFrame_fixed").css("height") != "120px"){ //若高度大于停靠在下方是的高度时
-		$("#infoFrame_fixed").css("height",document.documentElement.clientHeight - 60);
-	}
-	
-	$("#infoFrame_xx").css("height",document.documentElement.clientHeight-80);
-	//alert($("#infoFrame_fixed").css("height"));
-
 	setSketch(); //设置sketch的位置。
 });
 
 $("#filterBarBtn").click(function (){
 	$("#filter").slideToggle("slow");
 });
+
+var options = {
+	node : document.getElementById("2010"),
+	keyword : "creationDate",
+	value : "2010"
+};
+
+var options2 = {
+	node : document.getElementById("2015"),
+	keyword : "creationDate",
+	value : "2015"
+};
+
+var options3 = {
+	node : document.getElementById("grqg"),
+	keyword : "cat",
+	value : "个人情感"
+};
+var options4 = {
+	node : document.getElementById("gnyh"),
+	keyword : "cat",
+	value : "功能优化"
+};
+var options5 = {
+	node : document.getElementById("shht"),
+	keyword : "cat",
+	value : "社会话题"
+};
+var options6 = {
+	node : document.getElementById("clyyycx"),
+	keyword : "cat",
+	value : "材料应用与创新"
+};
+
+globalVar.filterButton.push(new FilterButton(options));
+globalVar.filterButton.push(new FilterButton(options2));
+globalVar.filterButton.push(new FilterButton(options3));
+globalVar.filterButton.push(new FilterButton(options4));
+globalVar.filterButton.push(new FilterButton(options5));
+globalVar.filterButton.push(new FilterButton(options6));
+
+

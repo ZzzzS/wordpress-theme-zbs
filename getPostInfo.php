@@ -34,6 +34,7 @@
 				$postInfo["thumbnail"] = false;
 			}
 			$cat = get_the_terms( $post->ID, 'product_category' ,  ' ' );
+			$postInfo["cat"] = $cat[0]->name;
 			$postInfo["color"] = get_option('product_category_color'.$cat[0]->term_id);
 			$posts[$i] = $postInfo;
 			$i++;

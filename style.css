@@ -42,8 +42,17 @@ body {
       border: 1px gray solid;
       border-collapse: collapse;
       margin: 0 auto; }
-      #filterBar #filter #filterT th, #filterBar #filter #filterT td {
+      #filterBar #filter #filterT th, #filterBar #filter #filterT td, #filterBar #filter #filterT .active {
         padding: 2px 5px; }
+      #filterBar #filter #filterT td, #filterBar #filter #filterT .active {
+        text-align: center; }
+        #filterBar #filter #filterT td a, #filterBar #filter #filterT .active a {
+          color: #3868ae;
+          text-decoration: none; }
+      #filterBar #filter #filterT .active {
+        background-color: #3868ae; }
+        #filterBar #filter #filterT .active a {
+          color: white; }
     #filterBar #filter #btnGroup {
       width: 100%;
       display: -webkit-flex;
@@ -148,26 +157,36 @@ body {
     padding-right: calc(12px - (100vw - 100%) / 2);
     margin: 10px auto; }
 
-#postContent_delete {
+#postContent_delete, #toTop {
   position: absolute;
   top: 15px;
   right: 50px;
   width: 30px;
   height: 30px;
-  border-radius: 15px;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px; }
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%; }
+  #postContent_delete:before, #toTop:before {
+    font-family: FontAwesome;
+    margin-right: 5px;
+    color: #555;
+    color: white;
+    content: "\f00d";
+    font-size: 16px;
+    position: absolute;
+    width: 16px;
+    line-height: 16px;
+    top: 6px;
+    left: 6px;
+    text-align: center;
+    padding-bottom: 1px; }
 
 #toTop {
-  position: absolute;
-  top: 15px;
   right: 90px;
-  width: 30px;
-  height: 30px;
-  display: none;
-  border-radius: 15px;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px; }
+  display: none; }
+  #toTop:before {
+    content: "\f077";
+    color: gray; }
 
 #sortInfoFrame {
   background: #fff;
@@ -179,11 +198,5 @@ body {
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px; }
-
-#buttonGroup {
-  z-index: 1000;
-  position: absolute;
-  top: 100px;
-  right: 50px; }
 
 /*# sourceMappingURL=style.css.map */

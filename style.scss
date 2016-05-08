@@ -17,6 +17,7 @@ $sketchHeight: 602px;
 $postInfoWith: 850px;
 $navigation_bar_height : 50px;
 $filterBarBtnWidth: 80px;
+$themeMajorCol : #3868ae;
 
 @mixin borderRadius($rad: 10px){
 	border-radius: $rad;
@@ -40,6 +41,12 @@ $filterBarBtnWidth: 80px;
 	box-sizing:$type;
 	-moz-box-sizing:$type;
 	-webkit-box-sizing:$type;
+}
+
+@mixin icon(){
+	font-family: FontAwesome;
+	margin-right: 5px;
+	color: #555;
 }
 
 body {
@@ -78,6 +85,18 @@ body {
 			}
 			td{
 				@extend th;
+				text-align: center;
+				a{
+					color : $themeMajorCol;
+					text-decoration:none
+				}
+			}
+			.active{
+				@extend td;
+				background-color: $themeMajorCol;
+				a{
+					color: white;
+				}
 			}
 		}
 		#btnGroup{
@@ -162,11 +181,6 @@ body {
 				margin-top: 5px;
 				color: gray;
 				@include showBoxBorder();
-				@mixin icon(){
-					font-family: FontAwesome;
-					margin-right: 5px;
-					color: #555;
-				}
 				&[title=author]:before{
 					content: "\f007";
 					@include icon();
@@ -198,24 +212,41 @@ body {
 	}
 
 }
-$buttonWidth : 30px;
+
+$buttonSize : 30px;
+$iconSize: 16px;
 #postContent_delete{
+	&:before{
+		@include icon();
+		color: white;
+		content: "\f00d";
+		font-size: $iconSize;
+		position: absolute;
+		width: $iconSize;
+		line-height: $iconSize;
+		top: ($buttonSize - $iconSize) / 2 - 1;
+		left: ($buttonSize - $iconSize) / 2 - 1;
+		text-align: center;
+		padding-bottom: 1px;
+		//@include showBoxBorder();
+	}
 	position:absolute;
-	top:$buttonWidth / 2;
+	top:$buttonSize / 2;
 	right:50px;
-	width:$buttonWidth;
-	height:$buttonWidth;
-	@include borderRadius($buttonWidth / 2);
+	width:$buttonSize;
+	height:$buttonSize;
+	@include borderRadius(50%);
+	//@include showBoxBorder();
 }
 
 #toTop{
-	position:absolute;
-	top:$buttonWidth / 2;
+	@extend #postContent_delete;
+	&:before{
+		content: "\f077";
+		color: gray;
+	}
 	right:90px;
-	width:$buttonWidth;
-	height:$buttonWidth;
 	display:none;
-	@include borderRadius($buttonWidth / 2);
 }
 
 #sortInfoFrame{
@@ -229,12 +260,12 @@ $buttonWidth : 30px;
 }
 
 
-#buttonGroup{
-	z-index: 1000;
-	position:absolute;
-	top:100px;
-	right:50px;
-}
+//#buttonGroup{
+//	z-index: 1000;
+//	position:absolute;
+//	top:100px;
+//	right:50px;
+//}
 
 
 

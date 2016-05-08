@@ -4,6 +4,7 @@
 
 var GlobalVar = {
     displayArray : [],
+    filterButton : [],
     SOUNDFILE : null,
     pp : null,
     alignState : false,

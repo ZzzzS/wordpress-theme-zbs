@@ -44,73 +44,1547 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("\"use strict\"; //严格模式\r\n\r\nvar AttractPoint = __webpack_require__(1);\r\nvar globalVar = __webpack_require__(5);\r\nvar VisualObject = __webpack_require__(6);\r\nvar Particle = __webpack_require__(4);\r\nvar ButtonPlus = __webpack_require__(7);\r\n\r\nvar sketch = function(p){\r\n\tglobalVar.pp = p;\r\n\tp.preload = function() {\r\n\t\tp.soundFormats('wav', 'ogg');\r\n\t\tglobalVar.SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');\r\n\r\n\t\tvar optionL = {\r\n\t\t\t\"p\":p,\r\n\t\t\t\"position\" : new p5.Vector(200,300),\r\n\t\t\t\"strength\" : 0.1,\r\n\t\t\t\"vortex\" : true\r\n\t\t};\r\n\t\tvar optionR = {\r\n\t\t\t\"p\":p,\r\n\t\t\t\"position\" : new p5.Vector(700,300),\r\n\t\t\t\"strength\" : 0.1,\r\n\t\t\t\"clockwise\" : true,\r\n\t\t\t\"vortex\" : true\r\n\t\t};\r\n\t\tglobalVar.attractPtL = new AttractPoint(optionL);\r\n\t\tglobalVar.attractPtR = new AttractPoint(optionR);\r\n\t};\r\n\tp.setup = function(){\r\n\t\tp.createCanvas(960,600);\r\n\t\tp.canvas.id = \"sketch_1\";\r\n\t\tglobalVar.displayArray.backgroundBall = [];\r\n\t\tfor(var i = 0; i < 50; i++){\r\n\t\t\tvar size = Math.random()*20 + 15;\r\n\t\t\tvar optionsVO = {\r\n\t\t\t\tposition : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),\r\n\t\t\t\twidth : size,\r\n\t\t\t\theight : size,\r\n\t\t\t\tp : globalVar.pp\r\n\t\t\t}\r\n\t\t\tvar options = {\r\n\t\t\t\tvisualObject : new VisualObject(optionsVO),\r\n\t\t\t\tp : globalVar.pp\r\n\t\t\t}\r\n\t\t\tglobalVar.displayArray.backgroundBall.push(new Particle(options));\r\n\t\t}\r\n\t\t\r\n\t};\r\n\t\r\n\tp.draw = function(){\r\n\t\tp.background(255);\r\n\t\t//globalVar.attractPt.display();\r\n\t\t//globalVar.attractPt.display();\r\n\t\tvar buttonHoverCount = 0;\r\n\t\tfor(var objType in globalVar.displayArray){\r\n\t\t\tif (objType === \"ButtonParticle\"){     //重新排序控制绘图顺序\r\n\t\t\t\tresortButtonParticle(globalVar.displayArray);\r\n\t\t\t}\r\n\t\t\tfor(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){\r\n\t\t\t\tglobalVar.displayArray[objType][i].display();\r\n\t\t\t\t// if(i === 1 && globalVar.displayArray[objType][i].visualObject.isSelected()){\r\n\t\t\t\t// \tbuttonHoverCount++;\r\n\t\t\t\t// }\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\r\n\t\t// var num = new p5.Noise();\r\n\t\t// console.log(num);\r\n\t\t// if(buttonHoverCount > 0){\r\n\t\t// \t$(p.canvas).css(\"cursor\",\"pointer\");\r\n\t\t// }\r\n\t};\t\r\n\t\r\n};\r\n\r\nvar myp5 = new p5(sketch,'sketch');\r\n\r\nfunction resortButtonParticle(bp){\r\n\t/**\r\n\t * 为displayArray.ButtonParticle\r\n\t */\r\n\tvar newList = [],\r\n\t\tselectObj = null;\r\n\tfor(var i = 0, len = bp.ButtonParticle.length; i < len; i++){\r\n\t\tif(bp.ButtonParticle[i].visualObject.pState === \"mouseOut\"){\r\n\t\t\tnewList.push(bp.ButtonParticle[i]);\r\n\t\t}else{\r\n\t\t\tselectObj = bp.ButtonParticle[i];\r\n\t\t}\r\n\t}\r\n\tif(selectObj !== null){\r\n\t\tnewList.push(selectObj);\r\n\t}\r\n\tbp.ButtonParticle = newList;\r\n\t\r\n}\r\n\r\n$(document).ready(function(){\r\n\tdocument.body.style.overflow = 'hidden';\r\n    var getInfo = __webpack_require__(9);\r\n\t//默认获取用户\r\n\tgetInfo(\"posts\",\"special_invitation\");\r\n\t\r\n\t//获取用户\r\n\t$(\"#getUsers\").click(function(){    //相当于刷新，所有很多状态要重置\r\n\t\tButtonPlus.stateReset();    //状态重置\r\n\t\tglobalVar.alignState = false;    //状态重置\r\n\r\n\t\tvar doc = document;                             ////重置infoFrame\r\n\t\tvar infoFrame = doc.getElementById(\"infoFrame\");\r\n\t\tif(infoFrame){\r\n\t\t\tinfoFrame.style.visibility = \"hidden\";\r\n\t\t}\r\n\r\n\t\tgetInfo(\"users\",\"special_invitation\");\r\n\t});\r\n\t\r\n\t//获取文章\r\n\t$(\"#getPosts\").click(function(){   //相当于刷新，所有很多状态要重置\r\n\t\tButtonPlus.stateReset();    //状态重置\r\n\t\tglobalVar.alignState = false;    //状态重置\r\n\r\n\t\tvar doc = document;            //重置infoFrame\r\n\t\tvar infoFrame = doc.getElementById(\"infoFrame\");\r\n\t\tif(infoFrame){\r\n\t\t\tinfoFrame.style.visibility = \"hidden\";\r\n\t\t}\r\n\r\n\t\tgetInfo(\"posts\");\r\n\t});\r\n\t\r\n\t//排列\r\n\t$(\"#align\").click(function (){\r\n\t\tglobalVar.alignState = ~globalVar.alignState;\r\n\t\tvar len = globalVar.displayArray.ButtonParticle.length;\r\n\t\tif (globalVar.alignState){\r\n\t\t\tfor(var k = 0; k < len; k++){\r\n\t\t\t\tvar i = k % globalVar.countPerRow + 2;\r\n\t\t\t\tvar j = Math.floor(k / globalVar.countPerRow) + 2;\r\n\t\t\t\t\r\n\t\t\t\tvar options = {\r\n\t\t\t\t\t\"position\" : new p5.Vector(i*70,j*70),\r\n\t\t\t\t\t\"strength\" : 1.5,\r\n\t\t\t\t\t\"vortex\" : false\r\n\t\t\t\t}\r\n\t\t\t\tvar attractPt = new AttractPoint(options);\r\n\t\t\t\tglobalVar.displayArray.ButtonParticle[k].attractPt = attractPt;\r\n\t\t\t\tglobalVar.displayArray.ButtonParticle[k].vortexAttract = false;\r\n\t\t\t}\r\n\t\t}else{\r\n\t\t\tfor(var k = 0; k < len; k++){\r\n\t\t\t\tglobalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;\r\n\t\t\t\tglobalVar.displayArray.ButtonParticle[k].vortexAttract = true;\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n\t});\r\n\r\n\tsetSketch();   //设置sketch的位置。\r\n});\r\n\r\nfunction setSketch(){      //设置sketch的位置。\r\n\tvar clientHeight = document.documentElement.clientHeight;\r\n\tvar sketch = $(\"#sketch\");\r\n\tvar height = sketch.css(\"height\");\r\n\tsketch.css(\"margin-top\", ((parseInt(clientHeight) - parseInt(height)) / 2 - 50) + \"px\");\r\n}\r\n\r\n\r\n\r\n//窗口尺寸改变\r\n$(window).resize(function() {\r\n\tif($(\"#infoFrame_fixed\").css(\"height\") != \"120px\"){ //若高度大于停靠在下方是的高度时\r\n\t\t$(\"#infoFrame_fixed\").css(\"height\",document.documentElement.clientHeight - 60);\r\n\t}\r\n\t\r\n\t$(\"#infoFrame_xx\").css(\"height\",document.documentElement.clientHeight-80);\r\n\t//alert($(\"#infoFrame_fixed\").css(\"height\"));\r\n\r\n\tsetSketch(); //设置sketch的位置。\r\n});\r\n\r\n$(\"#filterBarBtn\").click(function (){\r\n\t$(\"#filter\").slideToggle(\"slow\");\r\n});//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9za2V0Y2guanM/NTg0ZiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxhQUFhOztBQUViO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZ0JBQWdCLFFBQVE7QUFDeEI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EscUNBQXFDO0FBQ3JDO0FBQ0E7QUFDQSxrRUFBa0UsV0FBVztBQUM3RTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7OztBQUdBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxHOztBQUVBOztBQUVBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLCtDQUErQyxTQUFTO0FBQ3hEO0FBQ0E7QUFDQSxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBLGlDQUFpQztBQUNqQywwQkFBMEI7QUFDMUIsK0JBQStCOztBQUUvQixxQkFBcUI7QUFDckI7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxFQUFFOztBQUVGO0FBQ0EsaUNBQWlDO0FBQ2pDLDBCQUEwQjtBQUMxQiwrQkFBK0I7O0FBRS9CLHFCQUFxQjtBQUNyQjtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBLEVBQUU7O0FBRUY7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGlCQUFpQixTQUFTO0FBQzFCO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNILGlCQUFpQixTQUFTO0FBQzFCO0FBQ0E7QUFDQTtBQUNBOztBQUVBLEVBQUU7O0FBRUYsYUFBYTtBQUNiLENBQUM7O0FBRUQscUJBQXFCO0FBQ3JCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Ozs7QUFJQTtBQUNBO0FBQ0Esb0RBQW9EO0FBQ3BEO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQSxhQUFhO0FBQ2IsQ0FBQzs7QUFFRDtBQUNBO0FBQ0EsQ0FBQyIsImZpbGUiOiIwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2Ugc3RyaWN0XCI7IC8v5Lil5qC85qih5byPXHJcblxyXG52YXIgQXR0cmFjdFBvaW50ID0gcmVxdWlyZShcIi4vQXR0cmFjdFBvaW50LmpzXCIpO1xyXG52YXIgZ2xvYmFsVmFyID0gcmVxdWlyZShcIi4vR2xvYmFsVmFyLmpzXCIpO1xyXG52YXIgVmlzdWFsT2JqZWN0ID0gcmVxdWlyZShcIi4vVmlzdWFsT2JqZWN0LmpzXCIpO1xyXG52YXIgUGFydGljbGUgPSByZXF1aXJlKFwiLi9QYXJ0aWNsZS5qc1wiKTtcclxudmFyIEJ1dHRvblBsdXMgPSByZXF1aXJlKFwiLi9CdXR0b25QbHVzLmpzXCIpO1xyXG5cclxudmFyIHNrZXRjaCA9IGZ1bmN0aW9uKHApe1xyXG5cdGdsb2JhbFZhci5wcCA9IHA7XHJcblx0cC5wcmVsb2FkID0gZnVuY3Rpb24oKSB7XHJcblx0XHRwLnNvdW5kRm9ybWF0cygnd2F2JywgJ29nZycpO1xyXG5cdFx0Z2xvYmFsVmFyLlNPVU5ERklMRSA9IHAubG9hZFNvdW5kKCd3cC1jb250ZW50L3RoZW1lcy96YnMvc291bmQvd2F0ZXIyLndhdicpO1xyXG5cclxuXHRcdHZhciBvcHRpb25MID0ge1xyXG5cdFx0XHRcInBcIjpwLFxyXG5cdFx0XHRcInBvc2l0aW9uXCIgOiBuZXcgcDUuVmVjdG9yKDIwMCwzMDApLFxyXG5cdFx0XHRcInN0cmVuZ3RoXCIgOiAwLjEsXHJcblx0XHRcdFwidm9ydGV4XCIgOiB0cnVlXHJcblx0XHR9O1xyXG5cdFx0dmFyIG9wdGlvblIgPSB7XHJcblx0XHRcdFwicFwiOnAsXHJcblx0XHRcdFwicG9zaXRpb25cIiA6IG5ldyBwNS5WZWN0b3IoNzAwLDMwMCksXHJcblx0XHRcdFwic3RyZW5ndGhcIiA6IDAuMSxcclxuXHRcdFx0XCJjbG9ja3dpc2VcIiA6IHRydWUsXHJcblx0XHRcdFwidm9ydGV4XCIgOiB0cnVlXHJcblx0XHR9O1xyXG5cdFx0Z2xvYmFsVmFyLmF0dHJhY3RQdEwgPSBuZXcgQXR0cmFjdFBvaW50KG9wdGlvbkwpO1xyXG5cdFx0Z2xvYmFsVmFyLmF0dHJhY3RQdFIgPSBuZXcgQXR0cmFjdFBvaW50KG9wdGlvblIpO1xyXG5cdH07XHJcblx0cC5zZXR1cCA9IGZ1bmN0aW9uKCl7XHJcblx0XHRwLmNyZWF0ZUNhbnZhcyg5NjAsNjAwKTtcclxuXHRcdHAuY2FudmFzLmlkID0gXCJza2V0Y2hfMVwiO1xyXG5cdFx0Z2xvYmFsVmFyLmRpc3BsYXlBcnJheS5iYWNrZ3JvdW5kQmFsbCA9IFtdO1xyXG5cdFx0Zm9yKHZhciBpID0gMDsgaSA8IDUwOyBpKyspe1xyXG5cdFx0XHR2YXIgc2l6ZSA9IE1hdGgucmFuZG9tKCkqMjAgKyAxNTtcclxuXHRcdFx0dmFyIG9wdGlvbnNWTyA9IHtcclxuXHRcdFx0XHRwb3NpdGlvbiA6IG5ldyBwNS5WZWN0b3IoTWF0aC5yYW5kb20oKSAqIDkwMCArIDEwLE1hdGgucmFuZG9tKCkgKiA1MDAgKyAxMCksXHJcblx0XHRcdFx0d2lkdGggOiBzaXplLFxyXG5cdFx0XHRcdGhlaWdodCA6IHNpemUsXHJcblx0XHRcdFx0cCA6IGdsb2JhbFZhci5wcFxyXG5cdFx0XHR9XHJcblx0XHRcdHZhciBvcHRpb25zID0ge1xyXG5cdFx0XHRcdHZpc3VhbE9iamVjdCA6IG5ldyBWaXN1YWxPYmplY3Qob3B0aW9uc1ZPKSxcclxuXHRcdFx0XHRwIDogZ2xvYmFsVmFyLnBwXHJcblx0XHRcdH1cclxuXHRcdFx0Z2xvYmFsVmFyLmRpc3BsYXlBcnJheS5iYWNrZ3JvdW5kQmFsbC5wdXNoKG5ldyBQYXJ0aWNsZShvcHRpb25zKSk7XHJcblx0XHR9XHJcblx0XHRcclxuXHR9O1xyXG5cdFxyXG5cdHAuZHJhdyA9IGZ1bmN0aW9uKCl7XHJcblx0XHRwLmJhY2tncm91bmQoMjU1KTtcclxuXHRcdC8vZ2xvYmFsVmFyLmF0dHJhY3RQdC5kaXNwbGF5KCk7XHJcblx0XHQvL2dsb2JhbFZhci5hdHRyYWN0UHQuZGlzcGxheSgpO1xyXG5cdFx0dmFyIGJ1dHRvbkhvdmVyQ291bnQgPSAwO1xyXG5cdFx0Zm9yKHZhciBvYmpUeXBlIGluIGdsb2JhbFZhci5kaXNwbGF5QXJyYXkpe1xyXG5cdFx0XHRpZiAob2JqVHlwZSA9PT0gXCJCdXR0b25QYXJ0aWNsZVwiKXsgICAgIC8v6YeN5paw5o6S5bqP5o6n5Yi257uY5Zu+6aG65bqPXHJcblx0XHRcdFx0cmVzb3J0QnV0dG9uUGFydGljbGUoZ2xvYmFsVmFyLmRpc3BsYXlBcnJheSk7XHJcblx0XHRcdH1cclxuXHRcdFx0Zm9yKHZhciBpID0gMCwgbGVuZ3RoID0gZ2xvYmFsVmFyLmRpc3BsYXlBcnJheVtvYmpUeXBlXS5sZW5ndGg7aSA8IGxlbmd0aDtpKyspe1xyXG5cdFx0XHRcdGdsb2JhbFZhci5kaXNwbGF5QXJyYXlbb2JqVHlwZV1baV0uZGlzcGxheSgpO1xyXG5cdFx0XHRcdC8vIGlmKGkgPT09IDEgJiYgZ2xvYmFsVmFyLmRpc3BsYXlBcnJheVtvYmpUeXBlXVtpXS52aXN1YWxPYmplY3QuaXNTZWxlY3RlZCgpKXtcclxuXHRcdFx0XHQvLyBcdGJ1dHRvbkhvdmVyQ291bnQrKztcclxuXHRcdFx0XHQvLyB9XHJcblx0XHRcdH1cclxuXHRcdH1cclxuXHRcdFxyXG5cclxuXHRcdC8vIHZhciBudW0gPSBuZXcgcDUuTm9pc2UoKTtcclxuXHRcdC8vIGNvbnNvbGUubG9nKG51bSk7XHJcblx0XHQvLyBpZihidXR0b25Ib3ZlckNvdW50ID4gMCl7XHJcblx0XHQvLyBcdCQocC5jYW52YXMpLmNzcyhcImN1cnNvclwiLFwicG9pbnRlclwiKTtcclxuXHRcdC8vIH1cclxuXHR9O1x0XHJcblx0XHJcbn07XHJcblxyXG52YXIgbXlwNSA9IG5ldyBwNShza2V0Y2gsJ3NrZXRjaCcpO1xyXG5cclxuZnVuY3Rpb24gcmVzb3J0QnV0dG9uUGFydGljbGUoYnApe1xyXG5cdC8qKlxyXG5cdCAqIOS4umRpc3BsYXlBcnJheS5CdXR0b25QYXJ0aWNsZVxyXG5cdCAqL1xyXG5cdHZhciBuZXdMaXN0ID0gW10sXHJcblx0XHRzZWxlY3RPYmogPSBudWxsO1xyXG5cdGZvcih2YXIgaSA9IDAsIGxlbiA9IGJwLkJ1dHRvblBhcnRpY2xlLmxlbmd0aDsgaSA8IGxlbjsgaSsrKXtcclxuXHRcdGlmKGJwLkJ1dHRvblBhcnRpY2xlW2ldLnZpc3VhbE9iamVjdC5wU3RhdGUgPT09IFwibW91c2VPdXRcIil7XHJcblx0XHRcdG5ld0xpc3QucHVzaChicC5CdXR0b25QYXJ0aWNsZVtpXSk7XHJcblx0XHR9ZWxzZXtcclxuXHRcdFx0c2VsZWN0T2JqID0gYnAuQnV0dG9uUGFydGljbGVbaV07XHJcblx0XHR9XHJcblx0fVxyXG5cdGlmKHNlbGVjdE9iaiAhPT0gbnVsbCl7XHJcblx0XHRuZXdMaXN0LnB1c2goc2VsZWN0T2JqKTtcclxuXHR9XHJcblx0YnAuQnV0dG9uUGFydGljbGUgPSBuZXdMaXN0O1xyXG5cdFxyXG59XHJcblxyXG4kKGRvY3VtZW50KS5yZWFkeShmdW5jdGlvbigpe1xyXG5cdGRvY3VtZW50LmJvZHkuc3R5bGUub3ZlcmZsb3cgPSAnaGlkZGVuJztcclxuICAgIHZhciBnZXRJbmZvID0gcmVxdWlyZShcIi4vZ2V0SW5mby5qc1wiKTtcclxuXHQvL+m7mOiupOiOt+WPlueUqOaIt1xyXG5cdGdldEluZm8oXCJwb3N0c1wiLFwic3BlY2lhbF9pbnZpdGF0aW9uXCIpO1xyXG5cdFxyXG5cdC8v6I635Y+W55So5oi3XHJcblx0JChcIiNnZXRVc2Vyc1wiKS5jbGljayhmdW5jdGlvbigpeyAgICAvL+ebuOW9k+S6juWIt+aWsO+8jOaJgOacieW+iOWkmueKtuaAgeimgemHjee9rlxyXG5cdFx0QnV0dG9uUGx1cy5zdGF0ZVJlc2V0KCk7ICAgIC8v54q25oCB6YeN572uXHJcblx0XHRnbG9iYWxWYXIuYWxpZ25TdGF0ZSA9IGZhbHNlOyAgICAvL+eKtuaAgemHjee9rlxyXG5cclxuXHRcdHZhciBkb2MgPSBkb2N1bWVudDsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8vLy/ph43nva5pbmZvRnJhbWVcclxuXHRcdHZhciBpbmZvRnJhbWUgPSBkb2MuZ2V0RWxlbWVudEJ5SWQoXCJpbmZvRnJhbWVcIik7XHJcblx0XHRpZihpbmZvRnJhbWUpe1xyXG5cdFx0XHRpbmZvRnJhbWUuc3R5bGUudmlzaWJpbGl0eSA9IFwiaGlkZGVuXCI7XHJcblx0XHR9XHJcblxyXG5cdFx0Z2V0SW5mbyhcInVzZXJzXCIsXCJzcGVjaWFsX2ludml0YXRpb25cIik7XHJcblx0fSk7XHJcblx0XHJcblx0Ly/ojrflj5bmlofnq6BcclxuXHQkKFwiI2dldFBvc3RzXCIpLmNsaWNrKGZ1bmN0aW9uKCl7ICAgLy/nm7jlvZPkuo7liLfmlrDvvIzmiYDmnInlvojlpJrnirbmgIHopoHph43nva5cclxuXHRcdEJ1dHRvblBsdXMuc3RhdGVSZXNldCgpOyAgICAvL+eKtuaAgemHjee9rlxyXG5cdFx0Z2xvYmFsVmFyLmFsaWduU3RhdGUgPSBmYWxzZTsgICAgLy/nirbmgIHph43nva5cclxuXHJcblx0XHR2YXIgZG9jID0gZG9jdW1lbnQ7ICAgICAgICAgICAgLy/ph43nva5pbmZvRnJhbWVcclxuXHRcdHZhciBpbmZvRnJhbWUgPSBkb2MuZ2V0RWxlbWVudEJ5SWQoXCJpbmZvRnJhbWVcIik7XHJcblx0XHRpZihpbmZvRnJhbWUpe1xyXG5cdFx0XHRpbmZvRnJhbWUuc3R5bGUudmlzaWJpbGl0eSA9IFwiaGlkZGVuXCI7XHJcblx0XHR9XHJcblxyXG5cdFx0Z2V0SW5mbyhcInBvc3RzXCIpO1xyXG5cdH0pO1xyXG5cdFxyXG5cdC8v5o6S5YiXXHJcblx0JChcIiNhbGlnblwiKS5jbGljayhmdW5jdGlvbiAoKXtcclxuXHRcdGdsb2JhbFZhci5hbGlnblN0YXRlID0gfmdsb2JhbFZhci5hbGlnblN0YXRlO1xyXG5cdFx0dmFyIGxlbiA9IGdsb2JhbFZhci5kaXNwbGF5QXJyYXkuQnV0dG9uUGFydGljbGUubGVuZ3RoO1xyXG5cdFx0aWYgKGdsb2JhbFZhci5hbGlnblN0YXRlKXtcclxuXHRcdFx0Zm9yKHZhciBrID0gMDsgayA8IGxlbjsgaysrKXtcclxuXHRcdFx0XHR2YXIgaSA9IGsgJSBnbG9iYWxWYXIuY291bnRQZXJSb3cgKyAyO1xyXG5cdFx0XHRcdHZhciBqID0gTWF0aC5mbG9vcihrIC8gZ2xvYmFsVmFyLmNvdW50UGVyUm93KSArIDI7XHJcblx0XHRcdFx0XHJcblx0XHRcdFx0dmFyIG9wdGlvbnMgPSB7XHJcblx0XHRcdFx0XHRcInBvc2l0aW9uXCIgOiBuZXcgcDUuVmVjdG9yKGkqNzAsaio3MCksXHJcblx0XHRcdFx0XHRcInN0cmVuZ3RoXCIgOiAxLjUsXHJcblx0XHRcdFx0XHRcInZvcnRleFwiIDogZmFsc2VcclxuXHRcdFx0XHR9XHJcblx0XHRcdFx0dmFyIGF0dHJhY3RQdCA9IG5ldyBBdHRyYWN0UG9pbnQob3B0aW9ucyk7XHJcblx0XHRcdFx0Z2xvYmFsVmFyLmRpc3BsYXlBcnJheS5CdXR0b25QYXJ0aWNsZVtrXS5hdHRyYWN0UHQgPSBhdHRyYWN0UHQ7XHJcblx0XHRcdFx0Z2xvYmFsVmFyLmRpc3BsYXlBcnJheS5CdXR0b25QYXJ0aWNsZVtrXS52b3J0ZXhBdHRyYWN0ID0gZmFsc2U7XHJcblx0XHRcdH1cclxuXHRcdH1lbHNle1xyXG5cdFx0XHRmb3IodmFyIGsgPSAwOyBrIDwgbGVuOyBrKyspe1xyXG5cdFx0XHRcdGdsb2JhbFZhci5kaXNwbGF5QXJyYXkuQnV0dG9uUGFydGljbGVba10uYXR0cmFjdFB0ID0gZ2xvYmFsVmFyLmF0dHJhY3RQdEw7XHJcblx0XHRcdFx0Z2xvYmFsVmFyLmRpc3BsYXlBcnJheS5CdXR0b25QYXJ0aWNsZVtrXS52b3J0ZXhBdHRyYWN0ID0gdHJ1ZTtcclxuXHRcdFx0fVxyXG5cdFx0fVxyXG5cdFx0XHJcblx0fSk7XHJcblxyXG5cdHNldFNrZXRjaCgpOyAgIC8v6K6+572uc2tldGNo55qE5L2N572u44CCXHJcbn0pO1xyXG5cclxuZnVuY3Rpb24gc2V0U2tldGNoKCl7ICAgICAgLy/orr7nva5za2V0Y2jnmoTkvY3nva7jgIJcclxuXHR2YXIgY2xpZW50SGVpZ2h0ID0gZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmNsaWVudEhlaWdodDtcclxuXHR2YXIgc2tldGNoID0gJChcIiNza2V0Y2hcIik7XHJcblx0dmFyIGhlaWdodCA9IHNrZXRjaC5jc3MoXCJoZWlnaHRcIik7XHJcblx0c2tldGNoLmNzcyhcIm1hcmdpbi10b3BcIiwgKChwYXJzZUludChjbGllbnRIZWlnaHQpIC0gcGFyc2VJbnQoaGVpZ2h0KSkgLyAyIC0gNTApICsgXCJweFwiKTtcclxufVxyXG5cclxuXHJcblxyXG4vL+eql+WPo+WwuuWvuOaUueWPmFxyXG4kKHdpbmRvdykucmVzaXplKGZ1bmN0aW9uKCkge1xyXG5cdGlmKCQoXCIjaW5mb0ZyYW1lX2ZpeGVkXCIpLmNzcyhcImhlaWdodFwiKSAhPSBcIjEyMHB4XCIpeyAvL+iLpemrmOW6puWkp+S6juWBnOmdoOWcqOS4i+aWueaYr+eahOmrmOW6puaXtlxyXG5cdFx0JChcIiNpbmZvRnJhbWVfZml4ZWRcIikuY3NzKFwiaGVpZ2h0XCIsZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmNsaWVudEhlaWdodCAtIDYwKTtcclxuXHR9XHJcblx0XHJcblx0JChcIiNpbmZvRnJhbWVfeHhcIikuY3NzKFwiaGVpZ2h0XCIsZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmNsaWVudEhlaWdodC04MCk7XHJcblx0Ly9hbGVydCgkKFwiI2luZm9GcmFtZV9maXhlZFwiKS5jc3MoXCJoZWlnaHRcIikpO1xyXG5cclxuXHRzZXRTa2V0Y2goKTsgLy/orr7nva5za2V0Y2jnmoTkvY3nva7jgIJcclxufSk7XHJcblxyXG4kKFwiI2ZpbHRlckJhckJ0blwiKS5jbGljayhmdW5jdGlvbiAoKXtcclxuXHQkKFwiI2ZpbHRlclwiKS5zbGlkZVRvZ2dsZShcInNsb3dcIik7XHJcbn0pO1xuXG5cbi8qKioqKioqKioqKioqKioqKlxuICoqIFdFQlBBQ0sgRk9PVEVSXG4gKiogLi9qcy9za2V0Y2guanNcbiAqKiBtb2R1bGUgaWQgPSAwXG4gKiogbW9kdWxlIGNodW5rcyA9IDBcbiAqKi8iXSwic291cmNlUm9vdCI6IiJ9");
+	"use strict"; //严格模式
+
+	var AttractPoint = __webpack_require__(1);
+	var globalVar = __webpack_require__(5);
+	var VisualObject = __webpack_require__(6);
+	var Particle = __webpack_require__(4);
+	var ButtonPlus = __webpack_require__(7);
+	var FilterButton = __webpack_require__(9);
+
+	var sketch = function(p){
+		globalVar.pp = p;
+		p.preload = function() {
+			p.soundFormats('wav', 'ogg');
+			globalVar.SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
+
+			var optionL = {
+				"p":p,
+				"position" : new p5.Vector(200,300),
+				"strength" : 0.1,
+				"vortex" : true
+			};
+			var optionR = {
+				"p":p,
+				"position" : new p5.Vector(700,300),
+				"strength" : 0.1,
+				"clockwise" : true,
+				"vortex" : true
+			};
+			globalVar.attractPtL = new AttractPoint(optionL);
+			globalVar.attractPtR = new AttractPoint(optionR);
+		};
+		p.setup = function(){
+			p.createCanvas(960,600);
+			p.canvas.id = "sketch_1";
+			globalVar.displayArray.backgroundBall = [];
+			for(var i = 0; i < 50; i++){
+				var size = Math.random()*20 + 15;
+				var optionsVO = {
+					position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+					width : size,
+					height : size,
+					p : globalVar.pp,
+					fillCol : globalVar.pp.color(200,200,200,50)
+				}
+				var options = {
+					visualObject : new VisualObject(optionsVO),
+					p : globalVar.pp
+				}
+				globalVar.displayArray.backgroundBall.push(new Particle(options));
+			}
+			
+		};
+		
+		p.draw = function(){
+			p.background(255);
+			//globalVar.attractPt.display();
+			//globalVar.attractPt.display();
+			var buttonHoverCount = 0;
+			for(var objType in globalVar.displayArray){
+				if (objType === "ButtonParticle"){     //重新排序控制绘图顺序
+					resortButtonParticle(globalVar.displayArray);
+				}
+				for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
+					globalVar.displayArray[objType][i].display();
+					// if(i === 1 && globalVar.displayArray[objType][i].visualObject.isSelected()){
+					// 	buttonHoverCount++;
+					// }
+				}
+			}
+			
+
+			// var num = new p5.Noise();
+			// console.log(num);
+			// if(buttonHoverCount > 0){
+			// 	$(p.canvas).css("cursor","pointer");
+			// }
+		};	
+		
+	};
+
+	var myp5 = new p5(sketch,'sketch');
+
+	function resortButtonParticle(bp){
+		/**
+		 * 为displayArray.ButtonParticle
+		 */
+		var newList = [],
+			selectObj = null;
+		for(var i = 0, len = bp.ButtonParticle.length; i < len; i++){
+			if(bp.ButtonParticle[i].visualObject.pState === "mouseOut"){
+				newList.push(bp.ButtonParticle[i]);
+			}else{
+				selectObj = bp.ButtonParticle[i];
+			}
+		}
+		if(selectObj !== null){
+			newList.push(selectObj);
+		}
+		bp.ButtonParticle = newList;
+		
+	}
+
+	$(document).ready(function(){
+		document.body.style.overflow = 'hidden';
+	    var getInfo = __webpack_require__(10);
+		//默认获取用户
+		getInfo("posts","special_invitation");
+		
+		//获取用户
+		$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置
+			ButtonPlus.stateReset();    //状态重置
+			globalVar.alignState = false;    //状态重置
+
+			var doc = document;                             ////重置infoFrame
+			var infoFrame = doc.getElementById("infoFrame");
+			if(infoFrame){
+				infoFrame.style.visibility = "hidden";
+			}
+
+			getInfo("users","special_invitation");
+		});
+		
+		//获取文章
+		$("#getPosts").click(function(){   //相当于刷新，所有很多状态要重置
+			ButtonPlus.stateReset();    //状态重置
+			globalVar.alignState = false;    //状态重置
+
+			var doc = document;            //重置infoFrame
+			var infoFrame = doc.getElementById("infoFrame");
+			if(infoFrame){
+				infoFrame.style.visibility = "hidden";
+			}
+
+			getInfo("posts");
+		});
+		
+		//排列
+		$("#align").click(function (){
+			globalVar.alignState = ~globalVar.alignState;
+			var len = globalVar.displayArray.ButtonParticle.length;
+			if (globalVar.alignState){
+				for(var k = 0; k < len; k++){
+					var i = k % globalVar.countPerRow + 2;
+					var j = Math.floor(k / globalVar.countPerRow) + 2;
+					
+					var options = {
+						"position" : new p5.Vector(i*70,j*70),
+						"strength" : 1.5,
+						"vortex" : false
+					}
+					var attractPt = new AttractPoint(options);
+					globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
+					globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
+				}
+			}else{
+				for(var k = 0; k < len; k++){
+					globalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;
+					globalVar.displayArray.ButtonParticle[k].vortexAttract = true;
+				}
+			}
+			
+		});
+
+		setSketch();   //设置sketch的位置。
+
+		//var $f2010 = $("#2010");
+		//$f2010.click(function (){
+		//	alert("2010");
+		//	for(var i = 0, len = globalVar.displayArray.ButtonParticle.length; i < len; i++){
+		//		if (globalVar.displayArray.ButtonParticle[i].visualObject.info["creationDate"] !== "2010"){
+		//			console.log(globalVar.displayArray.ButtonParticle[i].visualObject.info["creationDate"]);
+		//			globalVar.displayArray.ButtonParticle[i].visualObject.filtered = true;
+		//		}
+		//	}
+		//});
+	});
+
+	function setSketch(){      //设置sketch的位置。
+		var clientHeight = document.documentElement.clientHeight;
+		var sketch = $("#sketch");
+		var height = sketch.css("height");
+		sketch.css("margin-top", ((parseInt(clientHeight) - parseInt(height)) / 2 - 50) + "px");
+	}
+
+	//窗口尺寸改变
+	$(window).resize(function() {
+		setSketch(); //设置sketch的位置。
+	});
+
+	$("#filterBarBtn").click(function (){
+		$("#filter").slideToggle("slow");
+	});
+
+	var options = {
+		node : document.getElementById("2010"),
+		keyword : "creationDate",
+		value : "2010"
+	};
+
+	var options2 = {
+		node : document.getElementById("2015"),
+		keyword : "creationDate",
+		value : "2015"
+	};
+
+	var options3 = {
+		node : document.getElementById("grqg"),
+		keyword : "cat",
+		value : "个人情感"
+	};
+	var options4 = {
+		node : document.getElementById("gnyh"),
+		keyword : "cat",
+		value : "功能优化"
+	};
+	var options5 = {
+		node : document.getElementById("shht"),
+		keyword : "cat",
+		value : "社会话题"
+	};
+	var options6 = {
+		node : document.getElementById("clyyycx"),
+		keyword : "cat",
+		value : "材料应用与创新"
+	};
+
+	globalVar.filterButton.push(new FilterButton(options));
+	globalVar.filterButton.push(new FilterButton(options2));
+	globalVar.filterButton.push(new FilterButton(options3));
+	globalVar.filterButton.push(new FilterButton(options4));
+	globalVar.filterButton.push(new FilterButton(options5));
+	globalVar.filterButton.push(new FilterButton(options6));
+
+
+
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("/**\r\n * 吸引点\r\n */\r\nvar ButtonParticle = __webpack_require__(2);\r\n\r\nvar AttractPoint = function (options){\r\n\tthis.position = options.position.copy();\r\n\t//this.strength = options.strength;\r\n\tthis.p = options.p;\r\n\tthis.clockwise = options.clockwise || false;\r\n\tthis.vortex = options.vortex || false;\r\n}\r\n\r\nAttractPoint.prototype.attract = function (options){\r\n\tvar force = this.vortex ? this.vortexAttract(options) : this.linearAttract(options);\r\n\treturn force;\r\n}\r\n\r\nAttractPoint.prototype.linearAttract = function (options){\r\n\tif(options.b instanceof ButtonParticle){\r\n\t\tvar force = p5.Vector.sub(this.position,options.b.visualObject.position);\r\n\t\tvar dist = force.mag();\r\n\t\tforce.normalize();\r\n\t\tforce.mult(dist * 0.618);\r\n\t\treturn force;\r\n\t}\r\n}\r\nAttractPoint.prototype.vortexAttract = function (options){\r\n\tif(options.b instanceof ButtonParticle){\r\n\t\tvar force = p5.Vector.sub(this.position,options.b.visualObject.position);\r\n\t\t\r\n\t\tvar ff = force.copy();\r\n\t\tif(this.clockwise){\r\n\t\t\tff.rotate(-Math.PI/2);\r\n\t\t}else{\r\n\t\t\tff.rotate(Math.PI/2);\r\n\t\t}\r\n\t\tff.setMag(options.threshold);\r\n\t\tforce.add(ff);\r\n\t\tforce.limit(1);\r\n\t\treturn force;\r\n\t}\r\n}\r\n\r\nAttractPoint.prototype.display = function(){\r\n\tthis.p.fill(200);\r\n\tthis.p.ellipse(this.position.x,this.position.y,50,50);\r\n}\r\n\r\nmodule.exports = AttractPoint;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9BdHRyYWN0UG9pbnQuanM/ZjM3MCJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUEiLCJmaWxlIjoiMS5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxyXG4gKiDlkLjlvJXngrlcclxuICovXHJcbnZhciBCdXR0b25QYXJ0aWNsZSA9IHJlcXVpcmUoXCIuL0J1dHRvblBhcnRpY2xlLmpzXCIpO1xyXG5cclxudmFyIEF0dHJhY3RQb2ludCA9IGZ1bmN0aW9uIChvcHRpb25zKXtcclxuXHR0aGlzLnBvc2l0aW9uID0gb3B0aW9ucy5wb3NpdGlvbi5jb3B5KCk7XHJcblx0Ly90aGlzLnN0cmVuZ3RoID0gb3B0aW9ucy5zdHJlbmd0aDtcclxuXHR0aGlzLnAgPSBvcHRpb25zLnA7XHJcblx0dGhpcy5jbG9ja3dpc2UgPSBvcHRpb25zLmNsb2Nrd2lzZSB8fCBmYWxzZTtcclxuXHR0aGlzLnZvcnRleCA9IG9wdGlvbnMudm9ydGV4IHx8IGZhbHNlO1xyXG59XHJcblxyXG5BdHRyYWN0UG9pbnQucHJvdG90eXBlLmF0dHJhY3QgPSBmdW5jdGlvbiAob3B0aW9ucyl7XHJcblx0dmFyIGZvcmNlID0gdGhpcy52b3J0ZXggPyB0aGlzLnZvcnRleEF0dHJhY3Qob3B0aW9ucykgOiB0aGlzLmxpbmVhckF0dHJhY3Qob3B0aW9ucyk7XHJcblx0cmV0dXJuIGZvcmNlO1xyXG59XHJcblxyXG5BdHRyYWN0UG9pbnQucHJvdG90eXBlLmxpbmVhckF0dHJhY3QgPSBmdW5jdGlvbiAob3B0aW9ucyl7XHJcblx0aWYob3B0aW9ucy5iIGluc3RhbmNlb2YgQnV0dG9uUGFydGljbGUpe1xyXG5cdFx0dmFyIGZvcmNlID0gcDUuVmVjdG9yLnN1Yih0aGlzLnBvc2l0aW9uLG9wdGlvbnMuYi52aXN1YWxPYmplY3QucG9zaXRpb24pO1xyXG5cdFx0dmFyIGRpc3QgPSBmb3JjZS5tYWcoKTtcclxuXHRcdGZvcmNlLm5vcm1hbGl6ZSgpO1xyXG5cdFx0Zm9yY2UubXVsdChkaXN0ICogMC42MTgpO1xyXG5cdFx0cmV0dXJuIGZvcmNlO1xyXG5cdH1cclxufVxyXG5BdHRyYWN0UG9pbnQucHJvdG90eXBlLnZvcnRleEF0dHJhY3QgPSBmdW5jdGlvbiAob3B0aW9ucyl7XHJcblx0aWYob3B0aW9ucy5iIGluc3RhbmNlb2YgQnV0dG9uUGFydGljbGUpe1xyXG5cdFx0dmFyIGZvcmNlID0gcDUuVmVjdG9yLnN1Yih0aGlzLnBvc2l0aW9uLG9wdGlvbnMuYi52aXN1YWxPYmplY3QucG9zaXRpb24pO1xyXG5cdFx0XHJcblx0XHR2YXIgZmYgPSBmb3JjZS5jb3B5KCk7XHJcblx0XHRpZih0aGlzLmNsb2Nrd2lzZSl7XHJcblx0XHRcdGZmLnJvdGF0ZSgtTWF0aC5QSS8yKTtcclxuXHRcdH1lbHNle1xyXG5cdFx0XHRmZi5yb3RhdGUoTWF0aC5QSS8yKTtcclxuXHRcdH1cclxuXHRcdGZmLnNldE1hZyhvcHRpb25zLnRocmVzaG9sZCk7XHJcblx0XHRmb3JjZS5hZGQoZmYpO1xyXG5cdFx0Zm9yY2UubGltaXQoMSk7XHJcblx0XHRyZXR1cm4gZm9yY2U7XHJcblx0fVxyXG59XHJcblxyXG5BdHRyYWN0UG9pbnQucHJvdG90eXBlLmRpc3BsYXkgPSBmdW5jdGlvbigpe1xyXG5cdHRoaXMucC5maWxsKDIwMCk7XHJcblx0dGhpcy5wLmVsbGlwc2UodGhpcy5wb3NpdGlvbi54LHRoaXMucG9zaXRpb24ueSw1MCw1MCk7XHJcbn1cclxuXHJcbm1vZHVsZS5leHBvcnRzID0gQXR0cmFjdFBvaW50O1xuXG5cbi8qKioqKioqKioqKioqKioqKlxuICoqIFdFQlBBQ0sgRk9PVEVSXG4gKiogLi9qcy9BdHRyYWN0UG9pbnQuanNcbiAqKiBtb2R1bGUgaWQgPSAxXG4gKiogbW9kdWxlIGNodW5rcyA9IDBcbiAqKi8iXSwic291cmNlUm9vdCI6IiJ9");
+	/**
+	 * 吸引点
+	 */
+	var ButtonParticle = __webpack_require__(2);
+
+	var AttractPoint = function (options){
+		this.position = options.position.copy();
+		//this.strength = options.strength;
+		this.p = options.p;
+		this.clockwise = options.clockwise || false;
+		this.vortex = options.vortex || false;
+	}
+
+	AttractPoint.prototype.attract = function (options){
+		var force = this.vortex ? this.vortexAttract(options) : this.linearAttract(options);
+		return force;
+	}
+
+	AttractPoint.prototype.linearAttract = function (options){
+		if(options.b instanceof ButtonParticle){
+			var force = p5.Vector.sub(this.position,options.b.visualObject.position);
+			var dist = force.mag();
+			force.normalize();
+			force.mult(dist * 0.618);
+			return force;
+		}
+	}
+	AttractPoint.prototype.vortexAttract = function (options){
+		if(options.b instanceof ButtonParticle){
+			var force = p5.Vector.sub(this.position,options.b.visualObject.position);
+			
+			var ff = force.copy();
+			if(this.clockwise){
+				ff.rotate(-Math.PI/2);
+			}else{
+				ff.rotate(Math.PI/2);
+			}
+			ff.setMag(options.threshold);
+			force.add(ff);
+			force.limit(1);
+			return force;
+		}
+	}
+
+	AttractPoint.prototype.display = function(){
+		this.p.fill(200);
+		this.p.ellipse(this.position.x,this.position.y,50,50);
+	}
+
+	module.exports = AttractPoint;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("var util = __webpack_require__(3);\r\nvar Particle = __webpack_require__(4);\r\nvar globalVar = __webpack_require__(5);\r\n\r\nvar ButtonParticle = function (options){\r\n\tParticle.call(this,{\r\n\t\tvisualObject : options.visualObject,   //visualObject为实现了display方法的对象\r\n\t\tp : options.p,\r\n\t\treflect : false,\r\n\t\ttopspeed : options.topspeed,   //控制最高速度\r\n\t\tacceleration : options.acceleration,\r\n\t\tvelocity : options.velocity\r\n\t})\r\n\t//this.strength = 0.1;\r\n\tthis.vortexAttract = options.vortexAttract || true;   //vortexAttract确定button是被直线吸引还是漩涡吸引\r\n\tthis.xoff = Math.random() * 10;    //用于生产noise随机数\r\n}\r\nutil.inheritPrototype(ButtonParticle, Particle);\r\n\r\n//粒子作用力\r\nButtonParticle.prototype.applyForce = function(force){\r\n\tthis.acceleration.add(force);\r\n}\r\n\r\n//更新粒子状态\r\nButtonParticle.prototype.update = function(){\r\n\tif (this.attractPt){\r\n\t\tvar vect = p5.Vector.sub(this.visualObject.position,this.attractPt.position);\r\n\t\tvar len = vect.mag();\r\n\t\tif (this.vortexAttract){                  //两种吸引方式，两种运动模式\r\n\t\t\tvar options = {\r\n\t\t\t\tb : this,\r\n\t\t\t\tthreshold : 400 \r\n\t\t\t}\r\n\t\t\tvar force = this.attractPt.attract(options);   //引力与漩涡力\r\n\t\t\tthis.applyForce(force);\r\n\t\t\t\r\n\t\t\tvar randomVect = this.velocity.copy();   //影响运行路径的随机向量防止所以的button都在运行一模一样的路径\r\n\t\t\trandomVect.mult(0.1);    \r\n\t\t\t\r\n\t\t\tthis.xoff += 0.01;    \r\n\t\t\tvar effectAngle = (this.p.noise(this.xoff) - 0.5) * 2    //-1 to 1\r\n\t\t\t* (Math.PI / 2 * 0.1);  \r\n\t\t\trandomVect.rotate(effectAngle);\r\n\t\t\tthis.velocity.add(randomVect);\r\n\t\t\t\r\n\t\t\tif (this.reflect){\r\n\t\t\t\tif(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){\r\n\t\t\t\t\tthis.velocity.x *= -1;\r\n\t\t\t\t}\r\n\t\t\t\tif(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){\r\n\t\t\t\t\tthis.velocity.y *= -1;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t//无限符号（∞）运动路径的实现\r\n\t\t\tvar angle = vect.heading();\r\n\t\t\t\r\n\t\t\tif(!this.attractPt.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){\r\n\t\t\t\tthis.attractPt = globalVar.attractPtR;\r\n\t\t\t}else{\r\n\t\t\t\tif(this.attractPt.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){\r\n\t\t\t\t\tthis.attractPt = globalVar.attractPtL;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\tthis.velocity.add(this.acceleration);   //更新速度\r\n\t\t\tthis.velocity.limit(this.topspeed);    //限制最高速度\r\n\t\t\tthis.acceleration.mult(0);  //加速度清零\r\n\t\t}else{       //align模式的吸引方式（easing）\r\n\t\t\tvect.mult(-0.1);\r\n\t\t\tthis.velocity = vect;\r\n\t\t}\r\n\t}\r\n\tthis.visualObject.position.add(this.velocity);   //更新位置\r\n}\r\n\r\n//绘制粒子\r\nButtonParticle.prototype.display = function(){\r\n\tif(this.visualObject.pState != \"click\" && this.visualObject.pState != \"hover\" && this.visualObject.pState != \"press\"){\r\n\t\tthis.update();\r\n\t}\r\n\tthis.visualObject.display();\r\n}\r\n\r\nmodule.exports = ButtonParticle;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9CdXR0b25QYXJ0aWNsZS5qcz9kZGYzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsRUFBRTtBQUNGO0FBQ0Esb0RBQW9EO0FBQ3BELGdDQUFnQztBQUNoQztBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwwQkFBMEI7QUFDMUI7QUFDQTtBQUNBO0FBQ0E7QUFDQSwrQ0FBK0M7QUFDL0M7O0FBRUEseUNBQXlDO0FBQ3pDLHdCOztBQUVBLHFCO0FBQ0E7QUFDQSx5QjtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBLElBQUk7QUFDSjtBQUNBO0FBQ0E7QUFDQTtBQUNBLHdDQUF3QztBQUN4QyxzQ0FBc0M7QUFDdEMsNkJBQTZCO0FBQzdCLEdBQUcsS0FBSztBQUNSO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsK0NBQStDO0FBQy9DOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBIiwiZmlsZSI6IjIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgdXRpbCA9IHJlcXVpcmUoXCIuL3V0aWwuanNcIik7XHJcbnZhciBQYXJ0aWNsZSA9IHJlcXVpcmUoXCIuL1BhcnRpY2xlLmpzXCIpO1xyXG52YXIgZ2xvYmFsVmFyID0gcmVxdWlyZShcIi4vR2xvYmFsVmFyLmpzXCIpO1xyXG5cclxudmFyIEJ1dHRvblBhcnRpY2xlID0gZnVuY3Rpb24gKG9wdGlvbnMpe1xyXG5cdFBhcnRpY2xlLmNhbGwodGhpcyx7XHJcblx0XHR2aXN1YWxPYmplY3QgOiBvcHRpb25zLnZpc3VhbE9iamVjdCwgICAvL3Zpc3VhbE9iamVjdOS4uuWunueOsOS6hmRpc3BsYXnmlrnms5XnmoTlr7nosaFcclxuXHRcdHAgOiBvcHRpb25zLnAsXHJcblx0XHRyZWZsZWN0IDogZmFsc2UsXHJcblx0XHR0b3BzcGVlZCA6IG9wdGlvbnMudG9wc3BlZWQsICAgLy/mjqfliLbmnIDpq5jpgJ/luqZcclxuXHRcdGFjY2VsZXJhdGlvbiA6IG9wdGlvbnMuYWNjZWxlcmF0aW9uLFxyXG5cdFx0dmVsb2NpdHkgOiBvcHRpb25zLnZlbG9jaXR5XHJcblx0fSlcclxuXHQvL3RoaXMuc3RyZW5ndGggPSAwLjE7XHJcblx0dGhpcy52b3J0ZXhBdHRyYWN0ID0gb3B0aW9ucy52b3J0ZXhBdHRyYWN0IHx8IHRydWU7ICAgLy92b3J0ZXhBdHRyYWN056Gu5a6aYnV0dG9u5piv6KKr55u057q/5ZC45byV6L+Y5piv5ryp5rah5ZC45byVXHJcblx0dGhpcy54b2ZmID0gTWF0aC5yYW5kb20oKSAqIDEwOyAgICAvL+eUqOS6jueUn+S6p25vaXNl6ZqP5py65pWwXHJcbn1cclxudXRpbC5pbmhlcml0UHJvdG90eXBlKEJ1dHRvblBhcnRpY2xlLCBQYXJ0aWNsZSk7XHJcblxyXG4vL+eykuWtkOS9nOeUqOWKm1xyXG5CdXR0b25QYXJ0aWNsZS5wcm90b3R5cGUuYXBwbHlGb3JjZSA9IGZ1bmN0aW9uKGZvcmNlKXtcclxuXHR0aGlzLmFjY2VsZXJhdGlvbi5hZGQoZm9yY2UpO1xyXG59XHJcblxyXG4vL+abtOaWsOeykuWtkOeKtuaAgVxyXG5CdXR0b25QYXJ0aWNsZS5wcm90b3R5cGUudXBkYXRlID0gZnVuY3Rpb24oKXtcclxuXHRpZiAodGhpcy5hdHRyYWN0UHQpe1xyXG5cdFx0dmFyIHZlY3QgPSBwNS5WZWN0b3Iuc3ViKHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLHRoaXMuYXR0cmFjdFB0LnBvc2l0aW9uKTtcclxuXHRcdHZhciBsZW4gPSB2ZWN0Lm1hZygpO1xyXG5cdFx0aWYgKHRoaXMudm9ydGV4QXR0cmFjdCl7ICAgICAgICAgICAgICAgICAgLy/kuKTnp43lkLjlvJXmlrnlvI/vvIzkuKTnp43ov5DliqjmqKHlvI9cclxuXHRcdFx0dmFyIG9wdGlvbnMgPSB7XHJcblx0XHRcdFx0YiA6IHRoaXMsXHJcblx0XHRcdFx0dGhyZXNob2xkIDogNDAwIFxyXG5cdFx0XHR9XHJcblx0XHRcdHZhciBmb3JjZSA9IHRoaXMuYXR0cmFjdFB0LmF0dHJhY3Qob3B0aW9ucyk7ICAgLy/lvJXlipvkuI7mvKnmtqHliptcclxuXHRcdFx0dGhpcy5hcHBseUZvcmNlKGZvcmNlKTtcclxuXHRcdFx0XHJcblx0XHRcdHZhciByYW5kb21WZWN0ID0gdGhpcy52ZWxvY2l0eS5jb3B5KCk7ICAgLy/lvbHlk43ov5DooYzot6/lvoTnmoTpmo/mnLrlkJHph4/pmLLmraLmiYDku6XnmoRidXR0b27pg73lnKjov5DooYzkuIDmqKHkuIDmoLfnmoTot6/lvoRcclxuXHRcdFx0cmFuZG9tVmVjdC5tdWx0KDAuMSk7ICAgIFxyXG5cdFx0XHRcclxuXHRcdFx0dGhpcy54b2ZmICs9IDAuMDE7ICAgIFxyXG5cdFx0XHR2YXIgZWZmZWN0QW5nbGUgPSAodGhpcy5wLm5vaXNlKHRoaXMueG9mZikgLSAwLjUpICogMiAgICAvLy0xIHRvIDFcclxuXHRcdFx0KiAoTWF0aC5QSSAvIDIgKiAwLjEpOyAgXHJcblx0XHRcdHJhbmRvbVZlY3Qucm90YXRlKGVmZmVjdEFuZ2xlKTtcclxuXHRcdFx0dGhpcy52ZWxvY2l0eS5hZGQocmFuZG9tVmVjdCk7XHJcblx0XHRcdFxyXG5cdFx0XHRpZiAodGhpcy5yZWZsZWN0KXtcclxuXHRcdFx0XHRpZih0aGlzLnZpc3VhbE9iamVjdC5wb3NpdGlvbi54IDwgdGhpcy52aXN1YWxPYmplY3Qud2lkdGgvMiB8fCB0aGlzLnZpc3VhbE9iamVjdC5wb3NpdGlvbi54ID4gdGhpcy5wLndpZHRoIC0gdGhpcy52aXN1YWxPYmplY3Qud2lkdGgvMil7XHJcblx0XHRcdFx0XHR0aGlzLnZlbG9jaXR5LnggKj0gLTE7XHJcblx0XHRcdFx0fVxyXG5cdFx0XHRcdGlmKHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLnkgPCB0aGlzLnZpc3VhbE9iamVjdC5oZWlnaHQvMiB8fCB0aGlzLnZpc3VhbE9iamVjdC5wb3NpdGlvbi55ID4gdGhpcy5wLmhlaWdodCAtIHRoaXMudmlzdWFsT2JqZWN0LmhlaWdodC8yKXtcclxuXHRcdFx0XHRcdHRoaXMudmVsb2NpdHkueSAqPSAtMTtcclxuXHRcdFx0XHR9XHJcblx0XHRcdH1cclxuXHRcdFx0Ly/ml6DpmZDnrKblj7fvvIjiiJ7vvInov5Dliqjot6/lvoTnmoTlrp7njrBcclxuXHRcdFx0dmFyIGFuZ2xlID0gdmVjdC5oZWFkaW5nKCk7XHJcblx0XHRcdFxyXG5cdFx0XHRpZighdGhpcy5hdHRyYWN0UHQuY2xvY2tsd2lzZSAmJiBsZW4gPCAxMDAgJiYgYW5nbGUgPCBNYXRoLlBJLzQgJiYgYW5nbGUgPiAwKXtcclxuXHRcdFx0XHR0aGlzLmF0dHJhY3RQdCA9IGdsb2JhbFZhci5hdHRyYWN0UHRSO1xyXG5cdFx0XHR9ZWxzZXtcclxuXHRcdFx0XHRpZih0aGlzLmF0dHJhY3RQdC5jbG9ja3dpc2UgJiYgbGVuIDwgMjAwICYmIGFuZ2xlIDwgMyAqIE1hdGguUEkvNCAmJiBhbmdsZSA+IE1hdGguUEkvMil7XHJcblx0XHRcdFx0XHR0aGlzLmF0dHJhY3RQdCA9IGdsb2JhbFZhci5hdHRyYWN0UHRMO1xyXG5cdFx0XHRcdH1cclxuXHRcdFx0fVxyXG5cdFx0XHR0aGlzLnZlbG9jaXR5LmFkZCh0aGlzLmFjY2VsZXJhdGlvbik7ICAgLy/mm7TmlrDpgJ/luqZcclxuXHRcdFx0dGhpcy52ZWxvY2l0eS5saW1pdCh0aGlzLnRvcHNwZWVkKTsgICAgLy/pmZDliLbmnIDpq5jpgJ/luqZcclxuXHRcdFx0dGhpcy5hY2NlbGVyYXRpb24ubXVsdCgwKTsgIC8v5Yqg6YCf5bqm5riF6Zu2XHJcblx0XHR9ZWxzZXsgICAgICAgLy9hbGlnbuaooeW8j+eahOWQuOW8leaWueW8j++8iGVhc2luZ++8iVxyXG5cdFx0XHR2ZWN0Lm11bHQoLTAuMSk7XHJcblx0XHRcdHRoaXMudmVsb2NpdHkgPSB2ZWN0O1xyXG5cdFx0fVxyXG5cdH1cclxuXHR0aGlzLnZpc3VhbE9iamVjdC5wb3NpdGlvbi5hZGQodGhpcy52ZWxvY2l0eSk7ICAgLy/mm7TmlrDkvY3nva5cclxufVxyXG5cclxuLy/nu5jliLbnspLlrZBcclxuQnV0dG9uUGFydGljbGUucHJvdG90eXBlLmRpc3BsYXkgPSBmdW5jdGlvbigpe1xyXG5cdGlmKHRoaXMudmlzdWFsT2JqZWN0LnBTdGF0ZSAhPSBcImNsaWNrXCIgJiYgdGhpcy52aXN1YWxPYmplY3QucFN0YXRlICE9IFwiaG92ZXJcIiAmJiB0aGlzLnZpc3VhbE9iamVjdC5wU3RhdGUgIT0gXCJwcmVzc1wiKXtcclxuXHRcdHRoaXMudXBkYXRlKCk7XHJcblx0fVxyXG5cdHRoaXMudmlzdWFsT2JqZWN0LmRpc3BsYXkoKTtcclxufVxyXG5cclxubW9kdWxlLmV4cG9ydHMgPSBCdXR0b25QYXJ0aWNsZTtcblxuXG4vKioqKioqKioqKioqKioqKipcbiAqKiBXRUJQQUNLIEZPT1RFUlxuICoqIC4vanMvQnV0dG9uUGFydGljbGUuanNcbiAqKiBtb2R1bGUgaWQgPSAyXG4gKiogbW9kdWxlIGNodW5rcyA9IDBcbiAqKi8iXSwic291cmNlUm9vdCI6IiJ9");
+	var util = __webpack_require__(3);
+	var Particle = __webpack_require__(4);
+	var globalVar = __webpack_require__(5);
+
+	var ButtonParticle = function (options){
+		Particle.call(this,{
+			visualObject : options.visualObject,   //visualObject为实现了display方法的对象
+			p : options.p,
+			reflect : false,
+			topspeed : options.topspeed,   //控制最高速度
+			acceleration : options.acceleration,
+			velocity : options.velocity
+		})
+		//this.strength = 0.1;
+		this.vortexAttract = options.vortexAttract || true;   //vortexAttract确定button是被直线吸引还是漩涡吸引
+		this.xoff = Math.random() * 10;    //用于生产noise随机数
+	}
+	util.inheritPrototype(ButtonParticle, Particle);
+
+	//粒子作用力
+	ButtonParticle.prototype.applyForce = function(force){
+		this.acceleration.add(force);
+	}
+
+	//更新粒子状态
+	ButtonParticle.prototype.update = function(){
+		if (this.attractPt){
+			var vect = p5.Vector.sub(this.visualObject.position,this.attractPt.position);
+			var len = vect.mag();
+			if (this.vortexAttract){                  //两种吸引方式，两种运动模式
+				var options = {
+					b : this,
+					threshold : 400 
+				}
+				var force = this.attractPt.attract(options);   //引力与漩涡力
+				this.applyForce(force);
+				
+				var randomVect = this.velocity.copy();   //影响运行路径的随机向量防止所以的button都在运行一模一样的路径
+				randomVect.mult(0.1);    
+				
+				this.xoff += 0.01;    
+				var effectAngle = (this.p.noise(this.xoff) - 0.5) * 2    //-1 to 1
+				* (Math.PI / 2 * 0.1);  
+				randomVect.rotate(effectAngle);
+				this.velocity.add(randomVect);
+				
+				if (this.reflect){
+					if(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){
+						this.velocity.x *= -1;
+					}
+					if(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){
+						this.velocity.y *= -1;
+					}
+				}
+				//无限符号（∞）运动路径的实现
+				var angle = vect.heading();
+				
+				if(!this.attractPt.clocklwise && len < 100 && angle < Math.PI/4 && angle > 0){
+					this.attractPt = globalVar.attractPtR;
+				}else{
+					if(this.attractPt.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
+						this.attractPt = globalVar.attractPtL;
+					}
+				}
+				this.velocity.add(this.acceleration);   //更新速度
+				this.velocity.limit(this.topspeed);    //限制最高速度
+				this.acceleration.mult(0);  //加速度清零
+			}else{       //align模式的吸引方式（easing）
+				vect.mult(-0.1);
+				this.velocity = vect;
+			}
+		}
+		this.visualObject.position.add(this.velocity);   //更新位置
+	}
+
+	//绘制粒子
+	ButtonParticle.prototype.display = function(){
+		if(this.visualObject.pState != "click" && this.visualObject.pState != "hover" && this.visualObject.pState != "press"){
+			this.update();
+		}
+		this.visualObject.display();
+	}
+
+	module.exports = ButtonParticle;
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
-	eval("/**\r\n * 工具包\r\n */\r\nvar util = {\r\n\t//用于继承\r\n\tinheritPrototype : function (subType,superType){\r\n\t\tvar prototype = this.object(superType.prototype);\r\n\t\tprototype.constructor = subType;\r\n\t\tsubType.prototype = prototype;\r\n\t},\r\n\tobject : function (o){\r\n\t\tfunction F(){}\r\n\t\tF.prototype = o;\r\n\t\treturn new F();\r\n\t},\r\n\t\r\n\t//用于获取元素的绝对位置\r\n\tgetElementLeft : function (element){\r\n\t\tvar actualLeft = element.offsetLeft;\r\n\t\tvar current = element.offsetParent;\r\n\t\twhile (current !== null){\r\n\t\t\tactualLeft += current.offsetLeft;\r\n\t\t\tcurrent = current.offsetParent;\r\n\t\t}\r\n\t\treturn actualLeft;\r\n\t},\r\n\tgetElementTop : function (element){\r\n\t\tvar actualTop = element.offsetTop;\r\n\t\tvar current = element.offsetParent;\r\n\t\twhile (current !== null){\r\n\t\t\tactualTop += current.offsetTop;\r\n\t\t\tcurrent = current.offsetParent;\r\n\t\t}\r\n\t\treturn actualTop;\r\n\t},\r\n\t\r\n\tgetJsonObjLength : function (jsonObj) {\r\n\t\tvar Length = 0;\r\n\t\tfor (var item in jsonObj) {\r\n\t\tLength++;\r\n\t\t}\r\n\t\treturn Length;\r\n\t}\r\n\t\r\n}\r\n\r\nmodule.exports = util;\r\n\r\n\r\n\r\n\r\n\r\n//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy91dGlsLmpzPzdkNDAiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsRUFBRTtBQUNGO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsRUFBRTs7QUFFRjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxFQUFFO0FBQ0Y7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEVBQUU7O0FBRUY7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUEiLCJmaWxlIjoiMy5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxyXG4gKiDlt6XlhbfljIVcclxuICovXHJcbnZhciB1dGlsID0ge1xyXG5cdC8v55So5LqO57un5om/XHJcblx0aW5oZXJpdFByb3RvdHlwZSA6IGZ1bmN0aW9uIChzdWJUeXBlLHN1cGVyVHlwZSl7XHJcblx0XHR2YXIgcHJvdG90eXBlID0gdGhpcy5vYmplY3Qoc3VwZXJUeXBlLnByb3RvdHlwZSk7XHJcblx0XHRwcm90b3R5cGUuY29uc3RydWN0b3IgPSBzdWJUeXBlO1xyXG5cdFx0c3ViVHlwZS5wcm90b3R5cGUgPSBwcm90b3R5cGU7XHJcblx0fSxcclxuXHRvYmplY3QgOiBmdW5jdGlvbiAobyl7XHJcblx0XHRmdW5jdGlvbiBGKCl7fVxyXG5cdFx0Ri5wcm90b3R5cGUgPSBvO1xyXG5cdFx0cmV0dXJuIG5ldyBGKCk7XHJcblx0fSxcclxuXHRcclxuXHQvL+eUqOS6juiOt+WPluWFg+e0oOeahOe7neWvueS9jee9rlxyXG5cdGdldEVsZW1lbnRMZWZ0IDogZnVuY3Rpb24gKGVsZW1lbnQpe1xyXG5cdFx0dmFyIGFjdHVhbExlZnQgPSBlbGVtZW50Lm9mZnNldExlZnQ7XHJcblx0XHR2YXIgY3VycmVudCA9IGVsZW1lbnQub2Zmc2V0UGFyZW50O1xyXG5cdFx0d2hpbGUgKGN1cnJlbnQgIT09IG51bGwpe1xyXG5cdFx0XHRhY3R1YWxMZWZ0ICs9IGN1cnJlbnQub2Zmc2V0TGVmdDtcclxuXHRcdFx0Y3VycmVudCA9IGN1cnJlbnQub2Zmc2V0UGFyZW50O1xyXG5cdFx0fVxyXG5cdFx0cmV0dXJuIGFjdHVhbExlZnQ7XHJcblx0fSxcclxuXHRnZXRFbGVtZW50VG9wIDogZnVuY3Rpb24gKGVsZW1lbnQpe1xyXG5cdFx0dmFyIGFjdHVhbFRvcCA9IGVsZW1lbnQub2Zmc2V0VG9wO1xyXG5cdFx0dmFyIGN1cnJlbnQgPSBlbGVtZW50Lm9mZnNldFBhcmVudDtcclxuXHRcdHdoaWxlIChjdXJyZW50ICE9PSBudWxsKXtcclxuXHRcdFx0YWN0dWFsVG9wICs9IGN1cnJlbnQub2Zmc2V0VG9wO1xyXG5cdFx0XHRjdXJyZW50ID0gY3VycmVudC5vZmZzZXRQYXJlbnQ7XHJcblx0XHR9XHJcblx0XHRyZXR1cm4gYWN0dWFsVG9wO1xyXG5cdH0sXHJcblx0XHJcblx0Z2V0SnNvbk9iakxlbmd0aCA6IGZ1bmN0aW9uIChqc29uT2JqKSB7XHJcblx0XHR2YXIgTGVuZ3RoID0gMDtcclxuXHRcdGZvciAodmFyIGl0ZW0gaW4ganNvbk9iaikge1xyXG5cdFx0TGVuZ3RoKys7XHJcblx0XHR9XHJcblx0XHRyZXR1cm4gTGVuZ3RoO1xyXG5cdH1cclxuXHRcclxufVxyXG5cclxubW9kdWxlLmV4cG9ydHMgPSB1dGlsO1xyXG5cclxuXHJcblxyXG5cclxuXHJcblxuXG5cbi8qKioqKioqKioqKioqKioqKlxuICoqIFdFQlBBQ0sgRk9PVEVSXG4gKiogLi9qcy91dGlsLmpzXG4gKiogbW9kdWxlIGlkID0gM1xuICoqIG1vZHVsZSBjaHVua3MgPSAwXG4gKiovIl0sInNvdXJjZVJvb3QiOiIifQ==");
+	/**
+	 * 工具包
+	 */
+	var util = {
+		//用于继承
+		inheritPrototype : function (subType,superType){
+			var prototype = this.object(superType.prototype);
+			prototype.constructor = subType;
+			subType.prototype = prototype;
+		},
+		object : function (o){
+			function F(){}
+			F.prototype = o;
+			return new F();
+		},
+		
+		//用于获取元素的绝对位置
+		getElementLeft : function (element){
+			var actualLeft = element.offsetLeft;
+			var current = element.offsetParent;
+			while (current !== null){
+				actualLeft += current.offsetLeft;
+				current = current.offsetParent;
+			}
+			return actualLeft;
+		},
+		getElementTop : function (element){
+			var actualTop = element.offsetTop;
+			var current = element.offsetParent;
+			while (current !== null){
+				actualTop += current.offsetTop;
+				current = current.offsetParent;
+			}
+			return actualTop;
+		},
+		
+		getJsonObjLength : function (jsonObj) {
+			var Length = 0;
+			for (var item in jsonObj) {
+			Length++;
+			}
+			return Length;
+		}
+		
+	}
+
+	module.exports = util;
+
+
+
+
+
+
 
 /***/ },
 /* 4 */
 /***/ function(module, exports) {
 
-	eval("var Particle = function (options){\r\n\tthis.visualObject = options.visualObject;   //visualObject为实现了position属性与display方法的对象\r\n\tthis.p = options.p;\r\n\tthis.reflect = false;\r\n\tthis.topspeed = options.topspeed || Math.random() * 3 + 2;  //控制最高速度\r\n    this.acceleration = options.acceleration ?  options.acceleration.copy() : new p5.Vector(0,0);  //加速度\r\n    this.velocity = options.velocity ?  options.velocity.copy() : new p5.Vector(    //速度\r\n        Math.random()*((Math.random()>0.5)?-0.5:0.5),\r\n        Math.random()-((Math.random()>0.5)?0.5:1)\r\n    );\r\n}\r\n\r\n//粒子作用力\r\nParticle.prototype.applyForce = function(force){\r\n\tthis.acceleration.add(force);\r\n}\r\n\r\n//更新粒子状态\r\nParticle.prototype.update = function(){\r\n\t//速度\r\n\tif(!this.velocity){\r\n\t\tvar random1 = Math.random()*((Math.random()>0.5)?-0.5:0.5);\r\n\t\tvar random2 = Math.random()-((Math.random()>0.5)?0.5:1);\r\n\t\tthis.velocity = new p5.Vector(random1,random2);\r\n\t}\r\n\t\r\n\tthis.velocity.add(this.acceleration);\r\n\tthis.acceleration.mult(0);  //加速度清零\r\n\t\r\n\tif(this.reflect){\r\n\t\tif(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){\r\n\t\t\tthis.velocity.x *= -1;\r\n\t\t}\r\n\t\tif(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){\r\n\t\t\tthis.velocity.y *= -1;\r\n\t\t}\r\n\t}else{\r\n        if(this.visualObject.position.x < -this.visualObject.width/2){\r\n            this.visualObject.position.x = this.p.width + this.visualObject.width - Math.abs(this.visualObject.position.x);\r\n        } \r\n        if(this.visualObject.position.x > this.p.width + this.visualObject.width/2){\r\n\t\t\tthis.visualObject.position.x = this.visualObject.position.x - this.p.width - this.visualObject.width;\r\n\t\t}\r\n        if(this.visualObject.position.y < -this.visualObject.height/2){\r\n            this.visualObject.position.y = this.p.height + this.visualObject.height - Math.abs(this.visualObject.position.y);\r\n        }\r\n        if(this.visualObject.position.y > this.p.height + this.visualObject.height/2){\r\n\t\t\tthis.visualObject.position.y = this.visualObject.position.y - this.p.height - this.visualObject.height;\r\n\t\t}\r\n    }\r\n\t\r\n\tthis.velocity.limit(this.topspeed);\r\n\r\n\tthis.visualObject.position.add(this.velocity);\r\n}\r\n\r\n//绘制粒子\r\nParticle.prototype.display = function(){\r\n\tthis.update();\r\n\tthis.visualObject.display();\r\n}\r\n\r\nmodule.exports = Particle;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9QYXJ0aWNsZS5qcz80ZGFmIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0EsMENBQTBDO0FBQzFDO0FBQ0E7QUFDQSwyREFBMkQ7QUFDM0QsaUdBQWlHO0FBQ2pHO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBLDJCQUEyQjs7QUFFM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxFQUFFO0FBQ0Y7QUFDQTtBQUNBLFM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUEiLCJmaWxlIjoiNC5qcyIsInNvdXJjZXNDb250ZW50IjpbInZhciBQYXJ0aWNsZSA9IGZ1bmN0aW9uIChvcHRpb25zKXtcclxuXHR0aGlzLnZpc3VhbE9iamVjdCA9IG9wdGlvbnMudmlzdWFsT2JqZWN0OyAgIC8vdmlzdWFsT2JqZWN05Li65a6e546w5LqGcG9zaXRpb27lsZ7mgKfkuI5kaXNwbGF55pa55rOV55qE5a+56LGhXHJcblx0dGhpcy5wID0gb3B0aW9ucy5wO1xyXG5cdHRoaXMucmVmbGVjdCA9IGZhbHNlO1xyXG5cdHRoaXMudG9wc3BlZWQgPSBvcHRpb25zLnRvcHNwZWVkIHx8IE1hdGgucmFuZG9tKCkgKiAzICsgMjsgIC8v5o6n5Yi25pyA6auY6YCf5bqmXHJcbiAgICB0aGlzLmFjY2VsZXJhdGlvbiA9IG9wdGlvbnMuYWNjZWxlcmF0aW9uID8gIG9wdGlvbnMuYWNjZWxlcmF0aW9uLmNvcHkoKSA6IG5ldyBwNS5WZWN0b3IoMCwwKTsgIC8v5Yqg6YCf5bqmXHJcbiAgICB0aGlzLnZlbG9jaXR5ID0gb3B0aW9ucy52ZWxvY2l0eSA/ICBvcHRpb25zLnZlbG9jaXR5LmNvcHkoKSA6IG5ldyBwNS5WZWN0b3IoICAgIC8v6YCf5bqmXHJcbiAgICAgICAgTWF0aC5yYW5kb20oKSooKE1hdGgucmFuZG9tKCk+MC41KT8tMC41OjAuNSksXHJcbiAgICAgICAgTWF0aC5yYW5kb20oKS0oKE1hdGgucmFuZG9tKCk+MC41KT8wLjU6MSlcclxuICAgICk7XHJcbn1cclxuXHJcbi8v57KS5a2Q5L2c55So5YqbXHJcblBhcnRpY2xlLnByb3RvdHlwZS5hcHBseUZvcmNlID0gZnVuY3Rpb24oZm9yY2Upe1xyXG5cdHRoaXMuYWNjZWxlcmF0aW9uLmFkZChmb3JjZSk7XHJcbn1cclxuXHJcbi8v5pu05paw57KS5a2Q54q25oCBXHJcblBhcnRpY2xlLnByb3RvdHlwZS51cGRhdGUgPSBmdW5jdGlvbigpe1xyXG5cdC8v6YCf5bqmXHJcblx0aWYoIXRoaXMudmVsb2NpdHkpe1xyXG5cdFx0dmFyIHJhbmRvbTEgPSBNYXRoLnJhbmRvbSgpKigoTWF0aC5yYW5kb20oKT4wLjUpPy0wLjU6MC41KTtcclxuXHRcdHZhciByYW5kb20yID0gTWF0aC5yYW5kb20oKS0oKE1hdGgucmFuZG9tKCk+MC41KT8wLjU6MSk7XHJcblx0XHR0aGlzLnZlbG9jaXR5ID0gbmV3IHA1LlZlY3RvcihyYW5kb20xLHJhbmRvbTIpO1xyXG5cdH1cclxuXHRcclxuXHR0aGlzLnZlbG9jaXR5LmFkZCh0aGlzLmFjY2VsZXJhdGlvbik7XHJcblx0dGhpcy5hY2NlbGVyYXRpb24ubXVsdCgwKTsgIC8v5Yqg6YCf5bqm5riF6Zu2XHJcblx0XHJcblx0aWYodGhpcy5yZWZsZWN0KXtcclxuXHRcdGlmKHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLnggPCB0aGlzLnZpc3VhbE9iamVjdC53aWR0aC8yIHx8IHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLnggPiB0aGlzLnAud2lkdGggLSB0aGlzLnZpc3VhbE9iamVjdC53aWR0aC8yKXtcclxuXHRcdFx0dGhpcy52ZWxvY2l0eS54ICo9IC0xO1xyXG5cdFx0fVxyXG5cdFx0aWYodGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24ueSA8IHRoaXMudmlzdWFsT2JqZWN0LmhlaWdodC8yIHx8IHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLnkgPiB0aGlzLnAuaGVpZ2h0IC0gdGhpcy52aXN1YWxPYmplY3QuaGVpZ2h0LzIpe1xyXG5cdFx0XHR0aGlzLnZlbG9jaXR5LnkgKj0gLTE7XHJcblx0XHR9XHJcblx0fWVsc2V7XHJcbiAgICAgICAgaWYodGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24ueCA8IC10aGlzLnZpc3VhbE9iamVjdC53aWR0aC8yKXtcclxuICAgICAgICAgICAgdGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24ueCA9IHRoaXMucC53aWR0aCArIHRoaXMudmlzdWFsT2JqZWN0LndpZHRoIC0gTWF0aC5hYnModGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24ueCk7XHJcbiAgICAgICAgfSBcclxuICAgICAgICBpZih0aGlzLnZpc3VhbE9iamVjdC5wb3NpdGlvbi54ID4gdGhpcy5wLndpZHRoICsgdGhpcy52aXN1YWxPYmplY3Qud2lkdGgvMil7XHJcblx0XHRcdHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLnggPSB0aGlzLnZpc3VhbE9iamVjdC5wb3NpdGlvbi54IC0gdGhpcy5wLndpZHRoIC0gdGhpcy52aXN1YWxPYmplY3Qud2lkdGg7XHJcblx0XHR9XHJcbiAgICAgICAgaWYodGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24ueSA8IC10aGlzLnZpc3VhbE9iamVjdC5oZWlnaHQvMil7XHJcbiAgICAgICAgICAgIHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLnkgPSB0aGlzLnAuaGVpZ2h0ICsgdGhpcy52aXN1YWxPYmplY3QuaGVpZ2h0IC0gTWF0aC5hYnModGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24ueSk7XHJcbiAgICAgICAgfVxyXG4gICAgICAgIGlmKHRoaXMudmlzdWFsT2JqZWN0LnBvc2l0aW9uLnkgPiB0aGlzLnAuaGVpZ2h0ICsgdGhpcy52aXN1YWxPYmplY3QuaGVpZ2h0LzIpe1xyXG5cdFx0XHR0aGlzLnZpc3VhbE9iamVjdC5wb3NpdGlvbi55ID0gdGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24ueSAtIHRoaXMucC5oZWlnaHQgLSB0aGlzLnZpc3VhbE9iamVjdC5oZWlnaHQ7XHJcblx0XHR9XHJcbiAgICB9XHJcblx0XHJcblx0dGhpcy52ZWxvY2l0eS5saW1pdCh0aGlzLnRvcHNwZWVkKTtcclxuXHJcblx0dGhpcy52aXN1YWxPYmplY3QucG9zaXRpb24uYWRkKHRoaXMudmVsb2NpdHkpO1xyXG59XHJcblxyXG4vL+e7mOWItueykuWtkFxyXG5QYXJ0aWNsZS5wcm90b3R5cGUuZGlzcGxheSA9IGZ1bmN0aW9uKCl7XHJcblx0dGhpcy51cGRhdGUoKTtcclxuXHR0aGlzLnZpc3VhbE9iamVjdC5kaXNwbGF5KCk7XHJcbn1cclxuXHJcbm1vZHVsZS5leHBvcnRzID0gUGFydGljbGU7XG5cblxuLyoqKioqKioqKioqKioqKioqXG4gKiogV0VCUEFDSyBGT09URVJcbiAqKiAuL2pzL1BhcnRpY2xlLmpzXG4gKiogbW9kdWxlIGlkID0gNFxuICoqIG1vZHVsZSBjaHVua3MgPSAwXG4gKiovIl0sInNvdXJjZVJvb3QiOiIifQ==");
+	var Particle = function (options){
+		this.visualObject = options.visualObject;   //visualObject为实现了position属性与display方法的对象
+		this.p = options.p;
+		this.reflect = false;
+		this.topspeed = options.topspeed || Math.random() * 3 + 2;  //控制最高速度
+	    this.acceleration = options.acceleration ?  options.acceleration.copy() : new p5.Vector(0,0);  //加速度
+	    this.velocity = options.velocity ?  options.velocity.copy() : new p5.Vector(    //速度
+	        Math.random()*((Math.random()>0.5)?-0.5:0.5),
+	        Math.random()-((Math.random()>0.5)?0.5:1)
+	    );
+	}
+
+	//粒子作用力
+	Particle.prototype.applyForce = function(force){
+		this.acceleration.add(force);
+	}
+
+	//更新粒子状态
+	Particle.prototype.update = function(){
+		//速度
+		if(!this.velocity){
+			var random1 = Math.random()*((Math.random()>0.5)?-0.5:0.5);
+			var random2 = Math.random()-((Math.random()>0.5)?0.5:1);
+			this.velocity = new p5.Vector(random1,random2);
+		}
+		
+		this.velocity.add(this.acceleration);
+		this.acceleration.mult(0);  //加速度清零
+		
+		if(this.reflect){
+			if(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){
+				this.velocity.x *= -1;
+			}
+			if(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){
+				this.velocity.y *= -1;
+			}
+		}else{
+	        if(this.visualObject.position.x < -this.visualObject.width/2){
+	            this.visualObject.position.x = this.p.width + this.visualObject.width - Math.abs(this.visualObject.position.x);
+	        } 
+	        if(this.visualObject.position.x > this.p.width + this.visualObject.width/2){
+				this.visualObject.position.x = this.visualObject.position.x - this.p.width - this.visualObject.width;
+			}
+	        if(this.visualObject.position.y < -this.visualObject.height/2){
+	            this.visualObject.position.y = this.p.height + this.visualObject.height - Math.abs(this.visualObject.position.y);
+	        }
+	        if(this.visualObject.position.y > this.p.height + this.visualObject.height/2){
+				this.visualObject.position.y = this.visualObject.position.y - this.p.height - this.visualObject.height;
+			}
+	    }
+		
+		this.velocity.limit(this.topspeed);
+
+		this.visualObject.position.add(this.velocity);
+	}
+
+	//绘制粒子
+	Particle.prototype.display = function(){
+		this.update();
+		this.visualObject.display();
+	}
+
+	module.exports = Particle;
 
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
 
-	eval("/**\r\n * infinite程序内部全局变量\r\n */\r\n\r\nvar GlobalVar = {\r\n    displayArray : [],\r\n    SOUNDFILE : null,\r\n    pp : null,\r\n    alignState : false,\r\n    attractPtL : null,\r\n    attractPtR : null,\r\n    countPerRow : 8   //align模式时，每行的button数量\r\n}\r\n\r\nmodule.exports = GlobalVar;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9HbG9iYWxWYXIuanM/OWI3MyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBIiwiZmlsZSI6IjUuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcclxuICogaW5maW5pdGXnqIvluo/lhoXpg6jlhajlsYDlj5jph49cclxuICovXHJcblxyXG52YXIgR2xvYmFsVmFyID0ge1xyXG4gICAgZGlzcGxheUFycmF5IDogW10sXHJcbiAgICBTT1VOREZJTEUgOiBudWxsLFxyXG4gICAgcHAgOiBudWxsLFxyXG4gICAgYWxpZ25TdGF0ZSA6IGZhbHNlLFxyXG4gICAgYXR0cmFjdFB0TCA6IG51bGwsXHJcbiAgICBhdHRyYWN0UHRSIDogbnVsbCxcclxuICAgIGNvdW50UGVyUm93IDogOCAgIC8vYWxpZ27mqKHlvI/ml7bvvIzmr4/ooYznmoRidXR0b27mlbDph49cclxufVxyXG5cclxubW9kdWxlLmV4cG9ydHMgPSBHbG9iYWxWYXI7XG5cblxuLyoqKioqKioqKioqKioqKioqXG4gKiogV0VCUEFDSyBGT09URVJcbiAqKiAuL2pzL0dsb2JhbFZhci5qc1xuICoqIG1vZHVsZSBpZCA9IDVcbiAqKiBtb2R1bGUgY2h1bmtzID0gMFxuICoqLyJdLCJzb3VyY2VSb290IjoiIn0=");
+	/**
+	 * infinite程序内部全局变量
+	 */
+
+	var GlobalVar = {
+	    displayArray : [],
+	    filterButton : [],
+	    SOUNDFILE : null,
+	    pp : null,
+	    alignState : false,
+	    attractPtL : null,
+	    attractPtR : null,
+	    countPerRow : 8   //align模式时，每行的button数量
+	}
+
+	module.exports = GlobalVar;
 
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
 
-	eval("/**\r\n * VisualObject\r\n * by:Zzzz\r\n * date:2016-05-03\r\n */\r\nvar VisualObject = function (options) {\r\n\tthis.position = options.position.copy();  //位置\r\n\tthis.width = options.width;  //宽度\r\n\tthis.height = options.height;  //高度\r\n\tthis.p = options.p;  //p5实例 \r\n\tthis.fillCol = options.fillCol || this.p.color(200,200,200,100);\r\n}\r\n\r\nVisualObject.prototype.update = function(){\r\n}\r\n\r\n//根据不同的状态绘制Button\r\nVisualObject.prototype.display = function () {\r\n\tthis.update();\r\n\tthis.drawGeometry();\r\n}\r\n\r\n// 绘制几何图形\r\nVisualObject.prototype.drawGeometry = function () {\r\n\tthis.strokeCol ? this.p.stroke(this.strokeCol) : this.p.noStroke();\r\n\tthis.p.fill(this.fillCol);\r\n\tthis.p.push();\r\n\tthis.p.translate(this.position.x, this.position.y);\r\n\tthis.p.ellipse(0, 0, this.width, this.height);\r\n\tthis.p.pop();\r\n}\r\n\r\n\r\nmodule.exports = VisualObject;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9WaXN1YWxPYmplY3QuanM/NGJlYSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5Q0FBeUM7QUFDekMsNEJBQTRCO0FBQzVCLDhCQUE4QjtBQUM5QixvQkFBb0I7QUFDcEI7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOzs7QUFHQSIsImZpbGUiOiI2LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXHJcbiAqIFZpc3VhbE9iamVjdFxyXG4gKiBieTpaenp6XHJcbiAqIGRhdGU6MjAxNi0wNS0wM1xyXG4gKi9cclxudmFyIFZpc3VhbE9iamVjdCA9IGZ1bmN0aW9uIChvcHRpb25zKSB7XHJcblx0dGhpcy5wb3NpdGlvbiA9IG9wdGlvbnMucG9zaXRpb24uY29weSgpOyAgLy/kvY3nva5cclxuXHR0aGlzLndpZHRoID0gb3B0aW9ucy53aWR0aDsgIC8v5a695bqmXHJcblx0dGhpcy5oZWlnaHQgPSBvcHRpb25zLmhlaWdodDsgIC8v6auY5bqmXHJcblx0dGhpcy5wID0gb3B0aW9ucy5wOyAgLy9wNeWunuS+iyBcclxuXHR0aGlzLmZpbGxDb2wgPSBvcHRpb25zLmZpbGxDb2wgfHwgdGhpcy5wLmNvbG9yKDIwMCwyMDAsMjAwLDEwMCk7XHJcbn1cclxuXHJcblZpc3VhbE9iamVjdC5wcm90b3R5cGUudXBkYXRlID0gZnVuY3Rpb24oKXtcclxufVxyXG5cclxuLy/moLnmja7kuI3lkIznmoTnirbmgIHnu5jliLZCdXR0b25cclxuVmlzdWFsT2JqZWN0LnByb3RvdHlwZS5kaXNwbGF5ID0gZnVuY3Rpb24gKCkge1xyXG5cdHRoaXMudXBkYXRlKCk7XHJcblx0dGhpcy5kcmF3R2VvbWV0cnkoKTtcclxufVxyXG5cclxuLy8g57uY5Yi25Yeg5L2V5Zu+5b2iXHJcblZpc3VhbE9iamVjdC5wcm90b3R5cGUuZHJhd0dlb21ldHJ5ID0gZnVuY3Rpb24gKCkge1xyXG5cdHRoaXMuc3Ryb2tlQ29sID8gdGhpcy5wLnN0cm9rZSh0aGlzLnN0cm9rZUNvbCkgOiB0aGlzLnAubm9TdHJva2UoKTtcclxuXHR0aGlzLnAuZmlsbCh0aGlzLmZpbGxDb2wpO1xyXG5cdHRoaXMucC5wdXNoKCk7XHJcblx0dGhpcy5wLnRyYW5zbGF0ZSh0aGlzLnBvc2l0aW9uLngsIHRoaXMucG9zaXRpb24ueSk7XHJcblx0dGhpcy5wLmVsbGlwc2UoMCwgMCwgdGhpcy53aWR0aCwgdGhpcy5oZWlnaHQpO1xyXG5cdHRoaXMucC5wb3AoKTtcclxufVxyXG5cclxuXHJcbm1vZHVsZS5leHBvcnRzID0gVmlzdWFsT2JqZWN0O1xuXG5cbi8qKioqKioqKioqKioqKioqKlxuICoqIFdFQlBBQ0sgRk9PVEVSXG4gKiogLi9qcy9WaXN1YWxPYmplY3QuanNcbiAqKiBtb2R1bGUgaWQgPSA2XG4gKiogbW9kdWxlIGNodW5rcyA9IDBcbiAqKi8iXSwic291cmNlUm9vdCI6IiJ9");
+	/**
+	 * VisualObject
+	 * by:Zzzz
+	 * date:2016-05-03
+	 */
+	var VisualObject = function (options) {
+		this.position = options.position.copy();  //位置
+		this.width = options.width;  //宽度
+		this.height = options.height;  //高度
+		this.p = options.p;  //p5实例 
+		this.fillCol = options.fillCol || this.p.color(200,200,200,100);
+	}
+
+	VisualObject.prototype.update = function(){
+	}
+
+	//根据不同的状态绘制Button
+	VisualObject.prototype.display = function () {
+		this.update();
+		this.drawGeometry();
+	}
+
+	// 绘制几何图形
+	VisualObject.prototype.drawGeometry = function () {
+		this.strokeCol ? this.p.stroke(this.strokeCol) : this.p.noStroke();
+		this.p.fill(this.fillCol);
+		this.p.push();
+		this.p.translate(this.position.x, this.position.y);
+		this.p.ellipse(0, 0, this.width, this.height);
+		this.p.pop();
+	}
+
+
+	module.exports = VisualObject;
 
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("/*\r\n基于p5.js,Button\r\nby:Zzzz\r\ndate:2016-03-03\r\n*/\r\nvar Button = __webpack_require__(8);\r\nvar util = __webpack_require__(3);\r\n\r\nfunction ButtonPlus(options) {\r\n\tButton.call(this, options);\r\n\tthis.breath = false;  //是否开启呼吸效果\r\n\tthis.breathState = false;  //呼吸状态\r\n\tthis.w = options.width;  //原始宽度数据备份\r\n\tthis.h = options.height;  //原始高度数据备份\r\n\tthis.clickTimeline = 0;   //On状态的时间轴\r\n\tthis.geometryType = \"circle\";\r\n\tthis.maxWidth = 100;\r\n}\r\nutil.inheritPrototype(ButtonPlus, Button);\r\n\r\n//统计ButtonPlus实例被选中个数，主要目的在于控制每次只能选择一个Button\r\nButtonPlus.prototype.hoverObjCount = 0;\r\n\r\n//判断ButtonPlus是否被选中（加强版）\r\nButtonPlus.prototype.isSelected = function () {\r\n\tvar width = this.width > 40 ? this.width : 40;\r\n\tvar height = this.width > 40 ? this.width : 40;\r\n\tif (this.width === this.height && this.geometryType === \"circle\") {\r\n\t\tif (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\treturn false;\r\n\t\t}\r\n\t} else {\r\n\t\tif (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n};\r\n\r\n//判断ButtonPlus的状态（加强版）\r\nButtonPlus.prototype.getState = function () {\r\n\t/**\r\n\t * hover (pState) ： 鼠标悬浮（被选中）\r\n\t * press (pState) ： 鼠标按下\r\n\t * click (pState) ： 鼠标点击\r\n\t * mouseOut (pState) ： 鼠标从button上移开/未被选中\r\n\t * on (pSwitch) : Button处于开启状态\r\n\t * off (pSwitch) ： Button处于关闭状态\r\n\t */\r\n\tif (this.isSelected()) {\r\n\t\tif (this.pState == \"click\") {\r\n\t\t\tif (this.p.mouseIsPressed) {\r\n\t\t\t\tif (this.pState != \"mouseOut\") {\r\n\t\t\t\t\treturn \"press\";\r\n\t\t\t\t} else {\r\n\t\t\t\t\treturn;\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\treturn \"click\";\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tif (this.constructor.prototype.hoverObjCount <= 0 || this.pState != \"mouseOut\") {\r\n\t\t\t\tif (this.p.mouseIsPressed) {\r\n\t\t\t\t\tif (this.pState == \"mouseOut\") {\r\n\t\t\t\t\t\treturn \"mouseOut\";\r\n\t\t\t\t\t} else {\t\r\n\t\t\t\t\t\t//如果button的大小小于90,则不出现press状态\r\n\t\t\t\t\t\tif(this.width >= this.maxWidth - 10){\r\n\t\t\t\t\t\t\treturn \"press\";\r\n\t\t\t\t\t\t}else{\r\n\t\t\t\t\t\t\treturn \"hover\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t} else {\r\n\t\t\t\t\tif (this.pState == \"press\") {\r\n\t\t\t\t\t\tif (this.pSwitch == \"on\") {\r\n\t\t\t\t\t\t\tthis.pSwitch = \"off\";\r\n\t\t\t\t\t\t\tthis.fire({ type: \"turnOff\" });\r\n\t\t\t\t\t\t\treturn \"hover\";\r\n\t\t\t\t\t\t} else {\r\n\r\n\t\t\t\t\t\t\tthis.pSwitch = \"on\";\r\n\t\t\t\t\t\t\tthis.fire({ type: \"turnOn\" });\r\n\t\t\t\t\t\t\treturn \"click\";\r\n\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t} else {\r\n\t\t\t\t\t\tif (this.pState != \"hover\") {\r\n\t\t\t\t\t\t\t//first\r\n\t\t\t\t\t\t\tthis.constructor.prototype.hoverObjCount += 1;\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\treturn \"hover\";\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\treturn \"mouseOut\";\r\n\t\t\t}\r\n\t\t}\r\n\t} else {\r\n\t\tif (this.pState == \"click\") {\r\n\t\t\treturn \"click\";\r\n\t\t} else {\r\n\t\t\tif (this.p.mouseIsPressed && this.pSwitch == \"on\") {\r\n\t\t\t\tthis.pSwitch = \"off\";\r\n\t\t\t\tthis.fire({ type: \"turnOff\" });\r\n\t\t\t}\r\n\t\t\tif (this.pState == \"hover\" || this.pState == \"press\") {\r\n\t\t\t\tthis.constructor.prototype.hoverObjCount -= 1;\r\n\t\t\t}\r\n\t\t\treturn \"mouseOut\";\r\n\t\t}\r\n\t}\r\n};\r\n\r\n//根据不同的状态绘制ButtonPlus（加强版）\r\nButtonPlus.prototype.display = function () {\r\n\t//this.update();\r\n\tif (this.strokeCol) {\r\n\t\tthis.p.stroke(this.strokeCol);\r\n\t} else {\r\n\t\tthis.p.noStroke();\r\n\t}\r\n\r\n\tthis.p.rectMode('center');\r\n\tthis.state = this.getState();\r\n\tthis.cursorState(this.state);  //鼠标状态\r\n\tswitch (this.state) {\r\n\t\tcase \"hover\":\r\n\t\t\t//音效\r\n\t\t\tif (this.pState == \"mouseOut\") {         //首次hover\r\n\t\t\t\tif (this.sound) this.sound.play();\r\n\t\t\t}\r\n\t\t\tthis.fillCol = this.buttonCol;\r\n\t\t\t//this.p.fill(this.fillCol);\r\n\t\t\tthis.drawGeometry();\r\n\t\t\tif (this.width > this.maxWidth) {\r\n\t\t\t\tthis.breath = true;\r\n\t\t\t}\r\n\r\n\t\t\tvar s = 1.1;\r\n\t\t\tif (this.breath) {\r\n\t\t\t\t//呼吸效果\r\n\t\t\t\tif (!this.breathState && this.width <= this.maxWidth) {\r\n\t\t\t\t\tthis.width *= 1.002;\r\n\t\t\t\t\tthis.height *= 1.002;\r\n\t\t\t\t} else {\r\n\t\t\t\t\tthis.breathState = true;\r\n\t\t\t\t}\r\n\t\t\t\tif (this.breathState && this.width > this.maxWidth - 10) {\r\n\t\t\t\t\tthis.width *= 0.995;\r\n\t\t\t\t\tthis.height *= 0.995;\r\n\t\t\t\t} else {\r\n\t\t\t\t\tthis.breathState = false;\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\t//放大\r\n\t\t\t\tif (this.width <= this.maxWidth) {\r\n\t\t\t\t\tthis.width *= s;\r\n\t\t\t\t\tthis.height *= s;\r\n\t\t\t\t} else {\r\n\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\tthis.fire({ type: \"hover\" });\r\n\t\t\tthis.pState = \"hover\";\r\n\t\t\tbreak;\r\n\t\tcase \"mouseOut\":\r\n\t\t\tif (this.buttonCol) {\r\n\t\t\t\tthis.fillCol = this.buttonCol;\r\n\t\t\t}\r\n\t\t\tthis.drawGeometry();\r\n\t\t\tthis.breath = false;\r\n\r\n\t\t\t//缩小\r\n\t\t\tvar s = 0.95;\r\n\t\t\tif (this.width > this.w) {\r\n\t\t\t\tthis.width *= s;\r\n\t\t\t\tthis.height *= s;\r\n\t\t\t}\r\n\r\n\t\t\tthis.fire({ type: \"mouseOut\" });\r\n\t\t\tthis.pState = \"mouseOut\";\r\n\t\t\tbreak;\r\n\t\tcase \"press\":\r\n\t\t\tthis.fillCol = this.pressCol;\r\n\t\t\tthis.drawGeometry();\r\n\t\t\tthis.fire({ type: \"press\" });\r\n\t\t\tthis.pState = \"press\";\r\n\t\t\tbreak;\r\n\t\tcase \"click\":\r\n\t\t\tthis.fillCol = this.clickCol;\r\n\t\t\tthis.drawGeometry();\r\n\r\n\t\t\t//点击反馈\r\n\t\t\tif (this.pState === \"press\") {\r\n\t\t\t\tthis.clickTimeline = 0;\r\n\t\t\t} else {\r\n\t\t\t\tthis.clickTimeline++;\r\n\t\t\t}\r\n\t\t\tif (this.clickTimeline < 40) {\r\n\t\t\t\tthis.p.stroke(200, 200, 200, 200 - this.clickTimeline * 5);\r\n\t\t\t\tthis.p.strokeWeight(10 - this.clickTimeline / 4);\r\n\t\t\t\tthis.p.noFill();\r\n\t\t\t\tthis.p.ellipse(this.position.x, this.position.y, this.width + Math.sqrt(this.clickTimeline * 50, 2), this.height + Math.sqrt(this.clickTimeline * 50, 2));\r\n\t\t\t}\r\n\r\n\r\n\t\t\tthis.fire({ type: \"click\" });\r\n\t\t\tthis.pState = \"click\";\r\n\t\t\tbreak;\r\n\t\tdefault:\r\n\t\t\tif (this.buttonCol) {\r\n\t\t\t\tthis.fillCol = this.buttonCol;\r\n\t\t\t} else {\r\n\t\t\t\tthis.fillCol = this.p.color(0, 0, 100);\r\n\t\t\t}\r\n\t\t\tthis.drawGeometry();\r\n\t}\r\n};\r\n\r\n//ButtonPlus状态重置\r\nButtonPlus.stateReset = function () {\r\n\tthis.prototype.hoverObjCount = 0;\r\n}; \r\n\r\nmodule.exports = ButtonPlus;\r\n//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9CdXR0b25QbHVzLmpzP2RhMjgiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBLHFCQUFxQjtBQUNyQiwwQkFBMEI7QUFDMUIsd0JBQXdCO0FBQ3hCLHlCQUF5QjtBQUN6Qix3QkFBd0I7QUFDeEI7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEdBQUc7QUFDSDtBQUNBO0FBQ0EsRUFBRTtBQUNGO0FBQ0E7QUFDQSxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQSxJQUFJO0FBQ0o7QUFDQTtBQUNBLEdBQUc7QUFDSDtBQUNBO0FBQ0E7QUFDQTtBQUNBLE1BQU0sTztBQUNOO0FBQ0E7QUFDQTtBQUNBLE9BQU87QUFDUDtBQUNBO0FBQ0E7QUFDQSxLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0Esa0JBQWtCLGtCQUFrQjtBQUNwQztBQUNBLE9BQU87O0FBRVA7QUFDQSxrQkFBa0IsaUJBQWlCO0FBQ25DOztBQUVBO0FBQ0EsTUFBTTtBQUNOO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsSUFBSTtBQUNKO0FBQ0E7QUFDQTtBQUNBLEVBQUU7QUFDRjtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQSxlQUFlLGtCQUFrQjtBQUNqQztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxFQUFFO0FBQ0Y7QUFDQTs7QUFFQTtBQUNBO0FBQ0EsOEJBQThCO0FBQzlCO0FBQ0E7QUFDQTtBQUNBLG1DQUFtQztBQUNuQztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQSxJQUFJO0FBQ0o7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUFLOztBQUVMO0FBQ0E7O0FBRUEsY0FBYyxnQkFBZ0I7QUFDOUI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUEsY0FBYyxtQkFBbUI7QUFDakM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGNBQWMsZ0JBQWdCO0FBQzlCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0EsSUFBSTtBQUNKO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7OztBQUdBLGNBQWMsZ0JBQWdCO0FBQzlCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxJQUFJO0FBQ0o7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQSxFOztBQUVBIiwiZmlsZSI6IjcuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxyXG7ln7rkuo5wNS5qcyxCdXR0b25cclxuYnk6Wnp6elxyXG5kYXRlOjIwMTYtMDMtMDNcclxuKi9cclxudmFyIEJ1dHRvbiA9IHJlcXVpcmUoXCIuL0J1dHRvbi5qc1wiKTtcclxudmFyIHV0aWwgPSByZXF1aXJlKFwiLi91dGlsLmpzXCIpO1xyXG5cclxuZnVuY3Rpb24gQnV0dG9uUGx1cyhvcHRpb25zKSB7XHJcblx0QnV0dG9uLmNhbGwodGhpcywgb3B0aW9ucyk7XHJcblx0dGhpcy5icmVhdGggPSBmYWxzZTsgIC8v5piv5ZCm5byA5ZCv5ZG85ZC45pWI5p6cXHJcblx0dGhpcy5icmVhdGhTdGF0ZSA9IGZhbHNlOyAgLy/lkbzlkLjnirbmgIFcclxuXHR0aGlzLncgPSBvcHRpb25zLndpZHRoOyAgLy/ljp/lp4vlrr3luqbmlbDmja7lpIfku71cclxuXHR0aGlzLmggPSBvcHRpb25zLmhlaWdodDsgIC8v5Y6f5aeL6auY5bqm5pWw5o2u5aSH5Lu9XHJcblx0dGhpcy5jbGlja1RpbWVsaW5lID0gMDsgICAvL09u54q25oCB55qE5pe26Ze06L20XHJcblx0dGhpcy5nZW9tZXRyeVR5cGUgPSBcImNpcmNsZVwiO1xyXG5cdHRoaXMubWF4V2lkdGggPSAxMDA7XHJcbn1cclxudXRpbC5pbmhlcml0UHJvdG90eXBlKEJ1dHRvblBsdXMsIEJ1dHRvbik7XHJcblxyXG4vL+e7n+iuoUJ1dHRvblBsdXPlrp7kvovooqvpgInkuK3kuKrmlbDvvIzkuLvopoHnm67nmoTlnKjkuo7mjqfliLbmr4/mrKHlj6rog73pgInmi6nkuIDkuKpCdXR0b25cclxuQnV0dG9uUGx1cy5wcm90b3R5cGUuaG92ZXJPYmpDb3VudCA9IDA7XHJcblxyXG4vL+WIpOaWrUJ1dHRvblBsdXPmmK/lkKbooqvpgInkuK3vvIjliqDlvLrniYjvvIlcclxuQnV0dG9uUGx1cy5wcm90b3R5cGUuaXNTZWxlY3RlZCA9IGZ1bmN0aW9uICgpIHtcclxuXHR2YXIgd2lkdGggPSB0aGlzLndpZHRoID4gNDAgPyB0aGlzLndpZHRoIDogNDA7XHJcblx0dmFyIGhlaWdodCA9IHRoaXMud2lkdGggPiA0MCA/IHRoaXMud2lkdGggOiA0MDtcclxuXHRpZiAodGhpcy53aWR0aCA9PT0gdGhpcy5oZWlnaHQgJiYgdGhpcy5nZW9tZXRyeVR5cGUgPT09IFwiY2lyY2xlXCIpIHtcclxuXHRcdGlmIChNYXRoLnBvdygodGhpcy5wLm1vdXNlWCAtIHRoaXMucG9zaXRpb24ueCksIDIpICsgTWF0aC5wb3coKHRoaXMucC5tb3VzZVkgLSB0aGlzLnBvc2l0aW9uLnkpLCAyKSA8PSBNYXRoLnBvdyh3aWR0aCAvIDIsIDIpKSB7XHJcblx0XHRcdHJldHVybiB0cnVlO1xyXG5cdFx0fSBlbHNlIHtcclxuXHRcdFx0cmV0dXJuIGZhbHNlO1xyXG5cdFx0fVxyXG5cdH0gZWxzZSB7XHJcblx0XHRpZiAodGhpcy5wLm1vdXNlWCA+PSB0aGlzLnBvc2l0aW9uLnggLSB3aWR0aCAvIDIgJiYgdGhpcy5wLm1vdXNlWCA8PSB0aGlzLnBvc2l0aW9uLnggKyB3aWR0aCAvIDIgJiYgdGhpcy5wLm1vdXNlWSA+PSB0aGlzLnBvc2l0aW9uLnkgLSBoZWlnaHQgLyAyICYmIHRoaXMucC5tb3VzZVkgPD0gdGhpcy5wb3NpdGlvbi55ICsgaGVpZ2h0IC8gMikge1xyXG5cdFx0XHRyZXR1cm4gdHJ1ZTtcclxuXHRcdH0gZWxzZSB7XHJcblx0XHRcdHJldHVybiBmYWxzZTtcclxuXHRcdH1cclxuXHR9XHJcbn07XHJcblxyXG4vL+WIpOaWrUJ1dHRvblBsdXPnmoTnirbmgIHvvIjliqDlvLrniYjvvIlcclxuQnV0dG9uUGx1cy5wcm90b3R5cGUuZ2V0U3RhdGUgPSBmdW5jdGlvbiAoKSB7XHJcblx0LyoqXHJcblx0ICogaG92ZXIgKHBTdGF0ZSkg77yaIOm8oOagh+aCrOa1ru+8iOiiq+mAieS4re+8iVxyXG5cdCAqIHByZXNzIChwU3RhdGUpIO+8miDpvKDmoIfmjInkuItcclxuXHQgKiBjbGljayAocFN0YXRlKSDvvJog6byg5qCH54K55Ye7XHJcblx0ICogbW91c2VPdXQgKHBTdGF0ZSkg77yaIOm8oOagh+S7jmJ1dHRvbuS4iuenu+W8gC/mnKrooqvpgInkuK1cclxuXHQgKiBvbiAocFN3aXRjaCkgOiBCdXR0b27lpITkuo7lvIDlkK/nirbmgIFcclxuXHQgKiBvZmYgKHBTd2l0Y2gpIO+8miBCdXR0b27lpITkuo7lhbPpl63nirbmgIFcclxuXHQgKi9cclxuXHRpZiAodGhpcy5pc1NlbGVjdGVkKCkpIHtcclxuXHRcdGlmICh0aGlzLnBTdGF0ZSA9PSBcImNsaWNrXCIpIHtcclxuXHRcdFx0aWYgKHRoaXMucC5tb3VzZUlzUHJlc3NlZCkge1xyXG5cdFx0XHRcdGlmICh0aGlzLnBTdGF0ZSAhPSBcIm1vdXNlT3V0XCIpIHtcclxuXHRcdFx0XHRcdHJldHVybiBcInByZXNzXCI7XHJcblx0XHRcdFx0fSBlbHNlIHtcclxuXHRcdFx0XHRcdHJldHVybjtcclxuXHRcdFx0XHR9XHJcblx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0cmV0dXJuIFwiY2xpY2tcIjtcclxuXHRcdFx0fVxyXG5cdFx0fSBlbHNlIHtcclxuXHRcdFx0aWYgKHRoaXMuY29uc3RydWN0b3IucHJvdG90eXBlLmhvdmVyT2JqQ291bnQgPD0gMCB8fCB0aGlzLnBTdGF0ZSAhPSBcIm1vdXNlT3V0XCIpIHtcclxuXHRcdFx0XHRpZiAodGhpcy5wLm1vdXNlSXNQcmVzc2VkKSB7XHJcblx0XHRcdFx0XHRpZiAodGhpcy5wU3RhdGUgPT0gXCJtb3VzZU91dFwiKSB7XHJcblx0XHRcdFx0XHRcdHJldHVybiBcIm1vdXNlT3V0XCI7XHJcblx0XHRcdFx0XHR9IGVsc2Uge1x0XHJcblx0XHRcdFx0XHRcdC8v5aaC5p6cYnV0dG9u55qE5aSn5bCP5bCP5LqOOTAs5YiZ5LiN5Ye6546wcHJlc3PnirbmgIFcclxuXHRcdFx0XHRcdFx0aWYodGhpcy53aWR0aCA+PSB0aGlzLm1heFdpZHRoIC0gMTApe1xyXG5cdFx0XHRcdFx0XHRcdHJldHVybiBcInByZXNzXCI7XHJcblx0XHRcdFx0XHRcdH1lbHNle1xyXG5cdFx0XHRcdFx0XHRcdHJldHVybiBcImhvdmVyXCJcclxuXHRcdFx0XHRcdFx0fVxyXG5cdFx0XHRcdFx0fVxyXG5cdFx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0XHRpZiAodGhpcy5wU3RhdGUgPT0gXCJwcmVzc1wiKSB7XHJcblx0XHRcdFx0XHRcdGlmICh0aGlzLnBTd2l0Y2ggPT0gXCJvblwiKSB7XHJcblx0XHRcdFx0XHRcdFx0dGhpcy5wU3dpdGNoID0gXCJvZmZcIjtcclxuXHRcdFx0XHRcdFx0XHR0aGlzLmZpcmUoeyB0eXBlOiBcInR1cm5PZmZcIiB9KTtcclxuXHRcdFx0XHRcdFx0XHRyZXR1cm4gXCJob3ZlclwiO1xyXG5cdFx0XHRcdFx0XHR9IGVsc2Uge1xyXG5cclxuXHRcdFx0XHRcdFx0XHR0aGlzLnBTd2l0Y2ggPSBcIm9uXCI7XHJcblx0XHRcdFx0XHRcdFx0dGhpcy5maXJlKHsgdHlwZTogXCJ0dXJuT25cIiB9KTtcclxuXHRcdFx0XHRcdFx0XHRyZXR1cm4gXCJjbGlja1wiO1xyXG5cclxuXHRcdFx0XHRcdFx0fVxyXG5cdFx0XHRcdFx0fSBlbHNlIHtcclxuXHRcdFx0XHRcdFx0aWYgKHRoaXMucFN0YXRlICE9IFwiaG92ZXJcIikge1xyXG5cdFx0XHRcdFx0XHRcdC8vZmlyc3RcclxuXHRcdFx0XHRcdFx0XHR0aGlzLmNvbnN0cnVjdG9yLnByb3RvdHlwZS5ob3Zlck9iakNvdW50ICs9IDE7XHJcblx0XHRcdFx0XHRcdH1cclxuXHRcdFx0XHRcdFx0cmV0dXJuIFwiaG92ZXJcIjtcclxuXHRcdFx0XHRcdH1cclxuXHRcdFx0XHR9XHJcblx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0cmV0dXJuIFwibW91c2VPdXRcIjtcclxuXHRcdFx0fVxyXG5cdFx0fVxyXG5cdH0gZWxzZSB7XHJcblx0XHRpZiAodGhpcy5wU3RhdGUgPT0gXCJjbGlja1wiKSB7XHJcblx0XHRcdHJldHVybiBcImNsaWNrXCI7XHJcblx0XHR9IGVsc2Uge1xyXG5cdFx0XHRpZiAodGhpcy5wLm1vdXNlSXNQcmVzc2VkICYmIHRoaXMucFN3aXRjaCA9PSBcIm9uXCIpIHtcclxuXHRcdFx0XHR0aGlzLnBTd2l0Y2ggPSBcIm9mZlwiO1xyXG5cdFx0XHRcdHRoaXMuZmlyZSh7IHR5cGU6IFwidHVybk9mZlwiIH0pO1xyXG5cdFx0XHR9XHJcblx0XHRcdGlmICh0aGlzLnBTdGF0ZSA9PSBcImhvdmVyXCIgfHwgdGhpcy5wU3RhdGUgPT0gXCJwcmVzc1wiKSB7XHJcblx0XHRcdFx0dGhpcy5jb25zdHJ1Y3Rvci5wcm90b3R5cGUuaG92ZXJPYmpDb3VudCAtPSAxO1xyXG5cdFx0XHR9XHJcblx0XHRcdHJldHVybiBcIm1vdXNlT3V0XCI7XHJcblx0XHR9XHJcblx0fVxyXG59O1xyXG5cclxuLy/moLnmja7kuI3lkIznmoTnirbmgIHnu5jliLZCdXR0b25QbHVz77yI5Yqg5by654mI77yJXHJcbkJ1dHRvblBsdXMucHJvdG90eXBlLmRpc3BsYXkgPSBmdW5jdGlvbiAoKSB7XHJcblx0Ly90aGlzLnVwZGF0ZSgpO1xyXG5cdGlmICh0aGlzLnN0cm9rZUNvbCkge1xyXG5cdFx0dGhpcy5wLnN0cm9rZSh0aGlzLnN0cm9rZUNvbCk7XHJcblx0fSBlbHNlIHtcclxuXHRcdHRoaXMucC5ub1N0cm9rZSgpO1xyXG5cdH1cclxuXHJcblx0dGhpcy5wLnJlY3RNb2RlKCdjZW50ZXInKTtcclxuXHR0aGlzLnN0YXRlID0gdGhpcy5nZXRTdGF0ZSgpO1xyXG5cdHRoaXMuY3Vyc29yU3RhdGUodGhpcy5zdGF0ZSk7ICAvL+m8oOagh+eKtuaAgVxyXG5cdHN3aXRjaCAodGhpcy5zdGF0ZSkge1xyXG5cdFx0Y2FzZSBcImhvdmVyXCI6XHJcblx0XHRcdC8v6Z+z5pWIXHJcblx0XHRcdGlmICh0aGlzLnBTdGF0ZSA9PSBcIm1vdXNlT3V0XCIpIHsgICAgICAgICAvL+mmluasoWhvdmVyXHJcblx0XHRcdFx0aWYgKHRoaXMuc291bmQpIHRoaXMuc291bmQucGxheSgpO1xyXG5cdFx0XHR9XHJcblx0XHRcdHRoaXMuZmlsbENvbCA9IHRoaXMuYnV0dG9uQ29sO1xyXG5cdFx0XHQvL3RoaXMucC5maWxsKHRoaXMuZmlsbENvbCk7XHJcblx0XHRcdHRoaXMuZHJhd0dlb21ldHJ5KCk7XHJcblx0XHRcdGlmICh0aGlzLndpZHRoID4gdGhpcy5tYXhXaWR0aCkge1xyXG5cdFx0XHRcdHRoaXMuYnJlYXRoID0gdHJ1ZTtcclxuXHRcdFx0fVxyXG5cclxuXHRcdFx0dmFyIHMgPSAxLjE7XHJcblx0XHRcdGlmICh0aGlzLmJyZWF0aCkge1xyXG5cdFx0XHRcdC8v5ZG85ZC45pWI5p6cXHJcblx0XHRcdFx0aWYgKCF0aGlzLmJyZWF0aFN0YXRlICYmIHRoaXMud2lkdGggPD0gdGhpcy5tYXhXaWR0aCkge1xyXG5cdFx0XHRcdFx0dGhpcy53aWR0aCAqPSAxLjAwMjtcclxuXHRcdFx0XHRcdHRoaXMuaGVpZ2h0ICo9IDEuMDAyO1xyXG5cdFx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0XHR0aGlzLmJyZWF0aFN0YXRlID0gdHJ1ZTtcclxuXHRcdFx0XHR9XHJcblx0XHRcdFx0aWYgKHRoaXMuYnJlYXRoU3RhdGUgJiYgdGhpcy53aWR0aCA+IHRoaXMubWF4V2lkdGggLSAxMCkge1xyXG5cdFx0XHRcdFx0dGhpcy53aWR0aCAqPSAwLjk5NTtcclxuXHRcdFx0XHRcdHRoaXMuaGVpZ2h0ICo9IDAuOTk1O1xyXG5cdFx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0XHR0aGlzLmJyZWF0aFN0YXRlID0gZmFsc2U7XHJcblx0XHRcdFx0fVxyXG5cdFx0XHR9IGVsc2Uge1xyXG5cdFx0XHRcdC8v5pS+5aSnXHJcblx0XHRcdFx0aWYgKHRoaXMud2lkdGggPD0gdGhpcy5tYXhXaWR0aCkge1xyXG5cdFx0XHRcdFx0dGhpcy53aWR0aCAqPSBzO1xyXG5cdFx0XHRcdFx0dGhpcy5oZWlnaHQgKj0gcztcclxuXHRcdFx0XHR9IGVsc2Uge1xyXG5cclxuXHRcdFx0XHR9XHJcblx0XHRcdH1cclxuXHJcblx0XHRcdHRoaXMuZmlyZSh7IHR5cGU6IFwiaG92ZXJcIiB9KTtcclxuXHRcdFx0dGhpcy5wU3RhdGUgPSBcImhvdmVyXCI7XHJcblx0XHRcdGJyZWFrO1xyXG5cdFx0Y2FzZSBcIm1vdXNlT3V0XCI6XHJcblx0XHRcdGlmICh0aGlzLmJ1dHRvbkNvbCkge1xyXG5cdFx0XHRcdHRoaXMuZmlsbENvbCA9IHRoaXMuYnV0dG9uQ29sO1xyXG5cdFx0XHR9XHJcblx0XHRcdHRoaXMuZHJhd0dlb21ldHJ5KCk7XHJcblx0XHRcdHRoaXMuYnJlYXRoID0gZmFsc2U7XHJcblxyXG5cdFx0XHQvL+e8qeWwj1xyXG5cdFx0XHR2YXIgcyA9IDAuOTU7XHJcblx0XHRcdGlmICh0aGlzLndpZHRoID4gdGhpcy53KSB7XHJcblx0XHRcdFx0dGhpcy53aWR0aCAqPSBzO1xyXG5cdFx0XHRcdHRoaXMuaGVpZ2h0ICo9IHM7XHJcblx0XHRcdH1cclxuXHJcblx0XHRcdHRoaXMuZmlyZSh7IHR5cGU6IFwibW91c2VPdXRcIiB9KTtcclxuXHRcdFx0dGhpcy5wU3RhdGUgPSBcIm1vdXNlT3V0XCI7XHJcblx0XHRcdGJyZWFrO1xyXG5cdFx0Y2FzZSBcInByZXNzXCI6XHJcblx0XHRcdHRoaXMuZmlsbENvbCA9IHRoaXMucHJlc3NDb2w7XHJcblx0XHRcdHRoaXMuZHJhd0dlb21ldHJ5KCk7XHJcblx0XHRcdHRoaXMuZmlyZSh7IHR5cGU6IFwicHJlc3NcIiB9KTtcclxuXHRcdFx0dGhpcy5wU3RhdGUgPSBcInByZXNzXCI7XHJcblx0XHRcdGJyZWFrO1xyXG5cdFx0Y2FzZSBcImNsaWNrXCI6XHJcblx0XHRcdHRoaXMuZmlsbENvbCA9IHRoaXMuY2xpY2tDb2w7XHJcblx0XHRcdHRoaXMuZHJhd0dlb21ldHJ5KCk7XHJcblxyXG5cdFx0XHQvL+eCueWHu+WPjemmiFxyXG5cdFx0XHRpZiAodGhpcy5wU3RhdGUgPT09IFwicHJlc3NcIikge1xyXG5cdFx0XHRcdHRoaXMuY2xpY2tUaW1lbGluZSA9IDA7XHJcblx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0dGhpcy5jbGlja1RpbWVsaW5lKys7XHJcblx0XHRcdH1cclxuXHRcdFx0aWYgKHRoaXMuY2xpY2tUaW1lbGluZSA8IDQwKSB7XHJcblx0XHRcdFx0dGhpcy5wLnN0cm9rZSgyMDAsIDIwMCwgMjAwLCAyMDAgLSB0aGlzLmNsaWNrVGltZWxpbmUgKiA1KTtcclxuXHRcdFx0XHR0aGlzLnAuc3Ryb2tlV2VpZ2h0KDEwIC0gdGhpcy5jbGlja1RpbWVsaW5lIC8gNCk7XHJcblx0XHRcdFx0dGhpcy5wLm5vRmlsbCgpO1xyXG5cdFx0XHRcdHRoaXMucC5lbGxpcHNlKHRoaXMucG9zaXRpb24ueCwgdGhpcy5wb3NpdGlvbi55LCB0aGlzLndpZHRoICsgTWF0aC5zcXJ0KHRoaXMuY2xpY2tUaW1lbGluZSAqIDUwLCAyKSwgdGhpcy5oZWlnaHQgKyBNYXRoLnNxcnQodGhpcy5jbGlja1RpbWVsaW5lICogNTAsIDIpKTtcclxuXHRcdFx0fVxyXG5cclxuXHJcblx0XHRcdHRoaXMuZmlyZSh7IHR5cGU6IFwiY2xpY2tcIiB9KTtcclxuXHRcdFx0dGhpcy5wU3RhdGUgPSBcImNsaWNrXCI7XHJcblx0XHRcdGJyZWFrO1xyXG5cdFx0ZGVmYXVsdDpcclxuXHRcdFx0aWYgKHRoaXMuYnV0dG9uQ29sKSB7XHJcblx0XHRcdFx0dGhpcy5maWxsQ29sID0gdGhpcy5idXR0b25Db2w7XHJcblx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0dGhpcy5maWxsQ29sID0gdGhpcy5wLmNvbG9yKDAsIDAsIDEwMCk7XHJcblx0XHRcdH1cclxuXHRcdFx0dGhpcy5kcmF3R2VvbWV0cnkoKTtcclxuXHR9XHJcbn07XHJcblxyXG4vL0J1dHRvblBsdXPnirbmgIHph43nva5cclxuQnV0dG9uUGx1cy5zdGF0ZVJlc2V0ID0gZnVuY3Rpb24gKCkge1xyXG5cdHRoaXMucHJvdG90eXBlLmhvdmVyT2JqQ291bnQgPSAwO1xyXG59OyBcclxuXHJcbm1vZHVsZS5leHBvcnRzID0gQnV0dG9uUGx1cztcclxuXG5cblxuLyoqKioqKioqKioqKioqKioqXG4gKiogV0VCUEFDSyBGT09URVJcbiAqKiAuL2pzL0J1dHRvblBsdXMuanNcbiAqKiBtb2R1bGUgaWQgPSA3XG4gKiogbW9kdWxlIGNodW5rcyA9IDBcbiAqKi8iXSwic291cmNlUm9vdCI6IiJ9");
+	/*
+	基于p5.js,Button
+	by:Zzzz
+	date:2016-03-03
+	*/
+	var Button = __webpack_require__(8);
+	var util = __webpack_require__(3);
+
+	function ButtonPlus(options) {
+		Button.call(this, options);
+		this.breath = false;  //是否开启呼吸效果
+		this.breathState = false;  //呼吸状态
+		this.w = options.width;  //原始宽度数据备份
+		this.h = options.height;  //原始高度数据备份
+		this.clickTimeline = 0;   //On状态的时间轴
+		this.geometryType = "circle";
+		this.maxWidth = 100;
+		this.filtered = false;   //用于过滤
+	}
+	util.inheritPrototype(ButtonPlus, Button);
+
+	//统计ButtonPlus实例被选中个数，主要目的在于控制每次只能选择一个Button
+	ButtonPlus.prototype.hoverObjCount = 0;
+
+	//判断ButtonPlus是否被选中（加强版）
+	ButtonPlus.prototype.isSelected = function () {
+		if (this.filtered){     //假如被排除了，那么所有的状态都为未选中（亦即永远选不中）
+			return false;
+		}
+		var width = this.width > 40 ? this.width : 40;
+		var height = this.width > 40 ? this.width : 40;
+		if (this.width === this.height && this.geometryType === "circle") {
+			if (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			if (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	};
+
+	//判断ButtonPlus的状态（加强版）
+	ButtonPlus.prototype.getState = function () {
+		/**
+		 * hover (pState) ： 鼠标悬浮（被选中）
+		 * press (pState) ： 鼠标按下
+		 * click (pState) ： 鼠标点击
+		 * mouseOut (pState) ： 鼠标从button上移开/未被选中
+		 * on (pSwitch) : Button处于开启状态
+		 * off (pSwitch) ： Button处于关闭状态
+		 */
+		if (this.isSelected()) {
+			if (this.pState == "click") {
+				if (this.p.mouseIsPressed) {
+					if (this.pState != "mouseOut") {
+						return "press";
+					} else {
+						return;
+					}
+				} else {
+					return "click";
+				}
+			} else {
+				if (this.constructor.prototype.hoverObjCount <= 0 || this.pState != "mouseOut") {
+					if (this.p.mouseIsPressed) {
+						if (this.pState == "mouseOut") {
+							return "mouseOut";
+						} else {	
+							//如果button的大小小于90,则不出现press状态
+							if(this.width >= this.maxWidth - 10){
+								return "press";
+							}else{
+								return "hover"
+							}
+						}
+					} else {
+						if (this.pState == "press") {
+							if (this.pSwitch == "on") {
+								this.pSwitch = "off";
+								this.fire({ type: "turnOff" });
+								return "hover";
+							} else {
+
+								this.pSwitch = "on";
+								this.fire({ type: "turnOn" });
+								return "click";
+
+							}
+						} else {
+							if (this.pState != "hover") {
+								//first
+								this.constructor.prototype.hoverObjCount += 1;
+							}
+							return "hover";
+						}
+					}
+				} else {
+					return "mouseOut";
+				}
+			}
+		} else {
+			if (this.pState == "click") {
+				return "click";
+			} else {
+				if (this.p.mouseIsPressed && this.pSwitch == "on") {
+					this.pSwitch = "off";
+					this.fire({ type: "turnOff" });
+				}
+				if (this.pState == "hover" || this.pState == "press") {
+					this.constructor.prototype.hoverObjCount -= 1;
+				}
+				return "mouseOut";
+			}
+		}
+	};
+
+	//根据不同的状态绘制ButtonPlus（加强版）
+	ButtonPlus.prototype.display = function () {
+		//this.update();
+		if (this.strokeCol) {
+			this.p.stroke(this.strokeCol);
+		} else {
+			this.p.noStroke();
+		}
+
+		this.p.rectMode('center');
+		this.state = this.getState();
+		this.cursorState(this.state);  //鼠标状态
+		switch (this.state) {
+			case "hover":
+				//音效
+				if (this.pState == "mouseOut") {         //首次hover
+					if (this.sound) this.sound.play();
+				}
+				this.fillCol = this.buttonCol;
+				//this.p.fill(this.fillCol);
+				this.drawObj();
+				if (this.width > this.maxWidth) {
+					this.breath = true;
+				}
+
+				var s = 1.1;
+				if (this.breath) {
+					//呼吸效果
+					if (!this.breathState && this.width <= this.maxWidth) {
+						this.width *= 1.002;
+						this.height *= 1.002;
+					} else {
+						this.breathState = true;
+					}
+					if (this.breathState && this.width > this.maxWidth - 10) {
+						this.width *= 0.995;
+						this.height *= 0.995;
+					} else {
+						this.breathState = false;
+					}
+				} else {
+					//放大
+					if (this.width <= this.maxWidth) {
+						this.width *= s;
+						this.height *= s;
+					} else {
+
+					}
+				}
+
+				this.fire({ type: "hover" });
+				this.pState = "hover";
+				break;
+			case "mouseOut":
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
+				}
+				this.drawObj();
+				this.breath = false;
+
+				//缩小
+				var s = 0.95;
+				if (this.width > this.w) {
+					this.width *= s;
+					this.height *= s;
+				}
+
+				this.fire({ type: "mouseOut" });
+				this.pState = "mouseOut";
+				break;
+			case "press":
+				this.fillCol = this.pressCol;
+				this.drawObj();
+				this.fire({ type: "press" });
+				this.pState = "press";
+				break;
+			case "click":
+				this.fillCol = this.clickCol;
+				this.drawObj();
+
+				//点击反馈
+				if (this.pState === "press") {
+					this.clickTimeline = 0;
+				} else {
+					this.clickTimeline++;
+				}
+				if (this.clickTimeline < 40) {
+					this.p.stroke(200, 200, 200, 200 - this.clickTimeline * 5);
+					this.p.strokeWeight(10 - this.clickTimeline / 4);
+					this.p.noFill();
+					this.p.ellipse(this.position.x, this.position.y, this.width + Math.sqrt(this.clickTimeline * 50, 2), this.height + Math.sqrt(this.clickTimeline * 50, 2));
+				}
+
+
+				this.fire({ type: "click" });
+				this.pState = "click";
+				break;
+			default:
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
+				} else {
+					this.fillCol = this.p.color(0, 0, 100);
+				}
+				this.drawObj();
+		}
+	};
+
+	//ButtonPlus状态重置
+	ButtonPlus.stateReset = function () {
+		this.prototype.hoverObjCount = 0;
+	};
+
+	ButtonPlus.prototype.drawObj = function (){
+		if (this.filtered){
+			this.drawFilteredObj();
+		}else{
+			this.drawGeometry();
+		}
+	}
+
+	ButtonPlus.prototype.drawFilteredObj = function (){
+		//this.strokeCol ? this.p.stroke(this.strokeCol) : this.p.noStroke();
+		this.p.fill(this.p.color(150,150,150));
+		this.p.push();
+		this.p.translate(this.position.x, this.position.y);
+		this.p.ellipse(0, 0, this.width, this.height);
+		this.p.pop();
+	}
+
+	module.exports = ButtonPlus;
+
 
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("/**\r\n * Button类，基于p5.js\r\n * by:Zzzz\r\n * date:2016-03-03\r\n */\r\n\r\nvar util = __webpack_require__(3);\r\nvar VisualObject = __webpack_require__(6);\r\n\r\nvar Button = function (options) {\r\n\tVisualObject.call(this,{\r\n\t\tposition : options.position,  //位置\r\n\t\twidth : options.width,   //宽度\r\n\t\theight : options.height,  //高度\r\n\t\tp : options.p,  //p5实例\r\n\t\tfillCol : options.fillCol\r\n\t});\r\n\tthis.pState = \"mouseOut\";  //Button初始状态\r\n\tthis.state;\r\n\tthis.pSwitch = \"off\";   //Button初始状态\r\n\tthis.hoverCol = options.hoverCol || this.p.color(\"#06799F\");  //鼠标悬浮时Button的颜色\r\n\tthis.pressCol = options.pressCol || this.p.color(\"#216278\");  //鼠标按下时Button的颜色\r\n\tthis.clickCol = options.clickCol || this.p.color(\"#024E68\");  //Button处于on状态时的颜色\r\n\tthis.positions = [];  //储存位置\r\n\tthis.handlers = {};  //事件处理程序\r\n}\r\nutil.inheritPrototype(Button, VisualObject);\r\n\r\n//判断Button是否被选中\r\nButton.prototype.isSelected = function () {\r\n\tif (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {\r\n\t\treturn true;\r\n\t} else {\r\n\t\treturn false;\r\n\t}\r\n}\r\n\r\n//判断Button的状态\r\nButton.prototype.getState = function () {\r\n\t/**\r\n\t * hover (pState) ： 鼠标悬浮（被选中）\r\n\t * press (pState) ： 鼠标按下\r\n\t * click (pState) ： 鼠标点击\r\n\t * mouseOut (pState) ： 鼠标从button上移开/未被选中\r\n\t * on (pSwitch) : Button处于开启状态\r\n\t * off (pSwitch) ： Button处于关闭状态\r\n\t */\r\n\tif (this.isSelected()) {\r\n\t\tif (this.pState == \"click\") {\r\n\t\t\tif (this.p.mouseIsPressed) {\r\n\t\t\t\treturn \"press\";\r\n\t\t\t} else {\r\n\t\t\t\treturn \"click\";\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tif (this.p.mouseIsPressed) {\r\n\t\t\t\treturn \"press\";\r\n\t\t\t} else {\r\n\t\t\t\tif (this.pState == \"press\") {\r\n\t\t\t\t\tif (this.pSwitch == \"on\") {\r\n\t\t\t\t\t\tthis.pSwitch = \"off\";\r\n\t\t\t\t\t\treturn \"hover\";\r\n\t\t\t\t\t} else {\r\n\t\t\t\t\t\tthis.pSwitch = \"on\";\r\n\t\t\t\t\t\treturn \"click\";\r\n\t\t\t\t\t}\r\n\t\t\t\t} else {\r\n\t\t\t\t\treturn \"hover\";\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t} else {\r\n\t\tif (this.pState == \"click\") {\r\n\t\t\treturn \"click\";\r\n\t\t} else {\r\n\t\t\treturn \"mouseOut\";\r\n\t\t}\r\n\t}\r\n}\r\n\r\n//鼠标指针图形\r\nButton.prototype.cursorState = function(state){\r\n\tif(this.constructor.prototype.hoverObjCount == 0){\r\n\t\t$(this.p.canvas).css(\"cursor\",\"default\");\r\n\t}else{\r\n\t\tif(state != \"mouseOut\"){\r\n\t\t\tif(this.isSelected()){\r\n\t\t\t\t$(this.p.canvas).css(\"cursor\",\"pointer\");\r\n\t\t\t}else{\r\n\t\t\t\t$(this.p.canvas).css(\"cursor\",\"default\");\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n\r\nButton.prototype.update = function(){\r\n}\r\n\r\n//根据不同的状态绘制Button\r\nButton.prototype.display = function () {\r\n\t//this.update();\r\n\tif (this.strokeCol) {\r\n\t\tthis.p.stroke(this.strokeCol);\r\n\t} else {\r\n\t\tthis.p.noStroke();\r\n\t}\r\n\tthis.p.rectMode('center');\r\n\tthis.tate = this.getState();\r\n\tswitch (this.tate) {\r\n\t\tcase \"hover\":\r\n\t\t\tthis.fillCol = this.hoverCol;\r\n\t\t\tthis.drawGeometry();\r\n\t\t\tthis.fire({ type: \"hover\" });\r\n\t\t\tthis.pState = \"hover\";\r\n\t\t\tbreak;\r\n\t\tcase \"mouseOut\":\r\n\t\t\tif (this.buttonCol) {\r\n\t\t\t\tthis.fillCol = this.buttonCol;\r\n\t\t\t} else {\r\n\t\t\t\tthis.fillCol = this.p.color(0, 0, 100);\r\n\t\t\t}\r\n\t\t\tthis.drawGeometry();\r\n\t\t\tthis.fire({ type: \"mouseOut\" });\r\n\t\t\tthis.pState = \"mouseOut\";\r\n\t\t\tbreak;\r\n\t\tcase \"press\":\r\n\t\t\tthis.fillCol = this.pressCol;\r\n\t\t\tthis.drawGeometry();\r\n\t\t\tthis.fire({ type: \"press\" });\r\n\t\t\tthis.pState = \"press\";\r\n\t\t\tbreak;\r\n\t\tcase \"click\":\r\n\t\t\tthis.fillCol = this.clickCol;\r\n\t\t\tthis.drawGeometry();\r\n\t\t\tthis.fire({ type: \"click\" });\r\n\t\t\tthis.pState = \"click\";\r\n\t\t\tbreak;\r\n\t\tdefault:\r\n\t\t\tif (this.buttonCol) {\r\n\t\t\t\tthis.fillCol = this.buttonCol;\r\n\t\t\t} else {\r\n\t\t\t\tthis.fillCol = this.p.color(0, 0, 100);\r\n\t\t\t}\r\n\t\t\tthis.drawGeometry();\r\n\t}\r\n}\r\n\r\n\r\n//事件相关\r\nButton.prototype.addHandler = function (type, handler) {\r\n\tif (typeof this.handlers[type] == \"undefined\") {\r\n\t\tthis.handlers[type] = [];\r\n\t}\r\n\tthis.handlers[type].push(handler);\r\n}\r\nButton.prototype.fire = function (event) {\r\n\tif (!event.target) {\r\n\t\tevent.target = this;\r\n\t}\r\n\tif (this.handlers[event.type] instanceof Array) {\r\n\t\tvar handlers = this.handlers[event.type];\r\n\t\tfor (var i = 0, len = handlers.length; i < len; i++) {\r\n\t\t\thandlers[i](event);\r\n\t\t}\r\n\t}\r\n}\r\nButton.prototype.removeHandler = function (type, handler) {\r\n\tif (this.handlers[type] instanceof Array) {\r\n\t\tvar handlers = this.handlers[type];\r\n\t\tfor (var i = 0, len = handlers.length; i < len; i++) {\r\n\t\t\tif (handers[i] === handler) {\r\n\t\t\t\tbreak;\r\n\t\t\t}\r\n\t\t}\r\n\t\thandlers.splice(i, 1);\r\n\t}\r\n}\r\n\r\n\r\nmodule.exports = Button;\r\n//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9CdXR0b24uanM/ZTA1MiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxFQUFFO0FBQ0YsMEJBQTBCO0FBQzFCO0FBQ0Esc0JBQXNCO0FBQ3RCLDZEQUE2RDtBQUM3RCw2REFBNkQ7QUFDN0QsNkRBQTZEO0FBQzdELHFCQUFxQjtBQUNyQixvQkFBb0I7QUFDcEI7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEVBQUU7QUFDRjtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLElBQUk7QUFDSjtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQSxJQUFJO0FBQ0o7QUFDQTtBQUNBO0FBQ0E7QUFDQSxNQUFNO0FBQ047QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsRUFBRTtBQUNGO0FBQ0E7QUFDQSxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQSxFQUFFO0FBQ0Y7QUFDQTtBQUNBO0FBQ0EsSUFBSTtBQUNKO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsRUFBRTtBQUNGO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxjQUFjLGdCQUFnQjtBQUM5QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsSUFBSTtBQUNKO0FBQ0E7QUFDQTtBQUNBLGNBQWMsbUJBQW1CO0FBQ2pDO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxjQUFjLGdCQUFnQjtBQUM5QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsY0FBYyxnQkFBZ0I7QUFDOUI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLElBQUk7QUFDSjtBQUNBO0FBQ0E7QUFDQTtBQUNBOzs7QUFHQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHdDQUF3QyxTQUFTO0FBQ2pEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esd0NBQXdDLFNBQVM7QUFDakQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7OztBQUdBIiwiZmlsZSI6IjguanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcclxuICogQnV0dG9u57G777yM5Z+65LqOcDUuanNcclxuICogYnk6Wnp6elxyXG4gKiBkYXRlOjIwMTYtMDMtMDNcclxuICovXHJcblxyXG52YXIgdXRpbCA9IHJlcXVpcmUoXCIuL3V0aWwuanNcIik7XHJcbnZhciBWaXN1YWxPYmplY3QgPSByZXF1aXJlKFwiLi9WaXN1YWxPYmplY3QuanNcIik7XHJcblxyXG52YXIgQnV0dG9uID0gZnVuY3Rpb24gKG9wdGlvbnMpIHtcclxuXHRWaXN1YWxPYmplY3QuY2FsbCh0aGlzLHtcclxuXHRcdHBvc2l0aW9uIDogb3B0aW9ucy5wb3NpdGlvbiwgIC8v5L2N572uXHJcblx0XHR3aWR0aCA6IG9wdGlvbnMud2lkdGgsICAgLy/lrr3luqZcclxuXHRcdGhlaWdodCA6IG9wdGlvbnMuaGVpZ2h0LCAgLy/pq5jluqZcclxuXHRcdHAgOiBvcHRpb25zLnAsICAvL3A15a6e5L6LXHJcblx0XHRmaWxsQ29sIDogb3B0aW9ucy5maWxsQ29sXHJcblx0fSk7XHJcblx0dGhpcy5wU3RhdGUgPSBcIm1vdXNlT3V0XCI7ICAvL0J1dHRvbuWIneWni+eKtuaAgVxyXG5cdHRoaXMuc3RhdGU7XHJcblx0dGhpcy5wU3dpdGNoID0gXCJvZmZcIjsgICAvL0J1dHRvbuWIneWni+eKtuaAgVxyXG5cdHRoaXMuaG92ZXJDb2wgPSBvcHRpb25zLmhvdmVyQ29sIHx8IHRoaXMucC5jb2xvcihcIiMwNjc5OUZcIik7ICAvL+m8oOagh+aCrOa1ruaXtkJ1dHRvbueahOminOiJslxyXG5cdHRoaXMucHJlc3NDb2wgPSBvcHRpb25zLnByZXNzQ29sIHx8IHRoaXMucC5jb2xvcihcIiMyMTYyNzhcIik7ICAvL+m8oOagh+aMieS4i+aXtkJ1dHRvbueahOminOiJslxyXG5cdHRoaXMuY2xpY2tDb2wgPSBvcHRpb25zLmNsaWNrQ29sIHx8IHRoaXMucC5jb2xvcihcIiMwMjRFNjhcIik7ICAvL0J1dHRvbuWkhOS6jm9u54q25oCB5pe255qE6aKc6ImyXHJcblx0dGhpcy5wb3NpdGlvbnMgPSBbXTsgIC8v5YKo5a2Y5L2N572uXHJcblx0dGhpcy5oYW5kbGVycyA9IHt9OyAgLy/kuovku7blpITnkIbnqIvluo9cclxufVxyXG51dGlsLmluaGVyaXRQcm90b3R5cGUoQnV0dG9uLCBWaXN1YWxPYmplY3QpO1xyXG5cclxuLy/liKTmlq1CdXR0b27mmK/lkKbooqvpgInkuK1cclxuQnV0dG9uLnByb3RvdHlwZS5pc1NlbGVjdGVkID0gZnVuY3Rpb24gKCkge1xyXG5cdGlmICh0aGlzLnAubW91c2VYID49IHRoaXMucG9zaXRpb24ueCAtIHdpZHRoIC8gMiAmJiB0aGlzLnAubW91c2VYIDw9IHRoaXMucG9zaXRpb24ueCArIHdpZHRoIC8gMiAmJiB0aGlzLnAubW91c2VZID49IHRoaXMucG9zaXRpb24ueSAtIGhlaWdodCAvIDIgJiYgdGhpcy5wLm1vdXNlWSA8PSB0aGlzLnBvc2l0aW9uLnkgKyBoZWlnaHQgLyAyKSB7XHJcblx0XHRyZXR1cm4gdHJ1ZTtcclxuXHR9IGVsc2Uge1xyXG5cdFx0cmV0dXJuIGZhbHNlO1xyXG5cdH1cclxufVxyXG5cclxuLy/liKTmlq1CdXR0b27nmoTnirbmgIFcclxuQnV0dG9uLnByb3RvdHlwZS5nZXRTdGF0ZSA9IGZ1bmN0aW9uICgpIHtcclxuXHQvKipcclxuXHQgKiBob3ZlciAocFN0YXRlKSDvvJog6byg5qCH5oKs5rWu77yI6KKr6YCJ5Lit77yJXHJcblx0ICogcHJlc3MgKHBTdGF0ZSkg77yaIOm8oOagh+aMieS4i1xyXG5cdCAqIGNsaWNrIChwU3RhdGUpIO+8miDpvKDmoIfngrnlh7tcclxuXHQgKiBtb3VzZU91dCAocFN0YXRlKSDvvJog6byg5qCH5LuOYnV0dG9u5LiK56e75byAL+acquiiq+mAieS4rVxyXG5cdCAqIG9uIChwU3dpdGNoKSA6IEJ1dHRvbuWkhOS6juW8gOWQr+eKtuaAgVxyXG5cdCAqIG9mZiAocFN3aXRjaCkg77yaIEJ1dHRvbuWkhOS6juWFs+mXreeKtuaAgVxyXG5cdCAqL1xyXG5cdGlmICh0aGlzLmlzU2VsZWN0ZWQoKSkge1xyXG5cdFx0aWYgKHRoaXMucFN0YXRlID09IFwiY2xpY2tcIikge1xyXG5cdFx0XHRpZiAodGhpcy5wLm1vdXNlSXNQcmVzc2VkKSB7XHJcblx0XHRcdFx0cmV0dXJuIFwicHJlc3NcIjtcclxuXHRcdFx0fSBlbHNlIHtcclxuXHRcdFx0XHRyZXR1cm4gXCJjbGlja1wiO1xyXG5cdFx0XHR9XHJcblx0XHR9IGVsc2Uge1xyXG5cdFx0XHRpZiAodGhpcy5wLm1vdXNlSXNQcmVzc2VkKSB7XHJcblx0XHRcdFx0cmV0dXJuIFwicHJlc3NcIjtcclxuXHRcdFx0fSBlbHNlIHtcclxuXHRcdFx0XHRpZiAodGhpcy5wU3RhdGUgPT0gXCJwcmVzc1wiKSB7XHJcblx0XHRcdFx0XHRpZiAodGhpcy5wU3dpdGNoID09IFwib25cIikge1xyXG5cdFx0XHRcdFx0XHR0aGlzLnBTd2l0Y2ggPSBcIm9mZlwiO1xyXG5cdFx0XHRcdFx0XHRyZXR1cm4gXCJob3ZlclwiO1xyXG5cdFx0XHRcdFx0fSBlbHNlIHtcclxuXHRcdFx0XHRcdFx0dGhpcy5wU3dpdGNoID0gXCJvblwiO1xyXG5cdFx0XHRcdFx0XHRyZXR1cm4gXCJjbGlja1wiO1xyXG5cdFx0XHRcdFx0fVxyXG5cdFx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0XHRyZXR1cm4gXCJob3ZlclwiO1xyXG5cdFx0XHRcdH1cclxuXHRcdFx0fVxyXG5cdFx0fVxyXG5cdH0gZWxzZSB7XHJcblx0XHRpZiAodGhpcy5wU3RhdGUgPT0gXCJjbGlja1wiKSB7XHJcblx0XHRcdHJldHVybiBcImNsaWNrXCI7XHJcblx0XHR9IGVsc2Uge1xyXG5cdFx0XHRyZXR1cm4gXCJtb3VzZU91dFwiO1xyXG5cdFx0fVxyXG5cdH1cclxufVxyXG5cclxuLy/pvKDmoIfmjIfpkojlm77lvaJcclxuQnV0dG9uLnByb3RvdHlwZS5jdXJzb3JTdGF0ZSA9IGZ1bmN0aW9uKHN0YXRlKXtcclxuXHRpZih0aGlzLmNvbnN0cnVjdG9yLnByb3RvdHlwZS5ob3Zlck9iakNvdW50ID09IDApe1xyXG5cdFx0JCh0aGlzLnAuY2FudmFzKS5jc3MoXCJjdXJzb3JcIixcImRlZmF1bHRcIik7XHJcblx0fWVsc2V7XHJcblx0XHRpZihzdGF0ZSAhPSBcIm1vdXNlT3V0XCIpe1xyXG5cdFx0XHRpZih0aGlzLmlzU2VsZWN0ZWQoKSl7XHJcblx0XHRcdFx0JCh0aGlzLnAuY2FudmFzKS5jc3MoXCJjdXJzb3JcIixcInBvaW50ZXJcIik7XHJcblx0XHRcdH1lbHNle1xyXG5cdFx0XHRcdCQodGhpcy5wLmNhbnZhcykuY3NzKFwiY3Vyc29yXCIsXCJkZWZhdWx0XCIpO1xyXG5cdFx0XHR9XHJcblx0XHR9XHJcblx0fVxyXG59XHJcblxyXG5CdXR0b24ucHJvdG90eXBlLnVwZGF0ZSA9IGZ1bmN0aW9uKCl7XHJcbn1cclxuXHJcbi8v5qC55o2u5LiN5ZCM55qE54q25oCB57uY5Yi2QnV0dG9uXHJcbkJ1dHRvbi5wcm90b3R5cGUuZGlzcGxheSA9IGZ1bmN0aW9uICgpIHtcclxuXHQvL3RoaXMudXBkYXRlKCk7XHJcblx0aWYgKHRoaXMuc3Ryb2tlQ29sKSB7XHJcblx0XHR0aGlzLnAuc3Ryb2tlKHRoaXMuc3Ryb2tlQ29sKTtcclxuXHR9IGVsc2Uge1xyXG5cdFx0dGhpcy5wLm5vU3Ryb2tlKCk7XHJcblx0fVxyXG5cdHRoaXMucC5yZWN0TW9kZSgnY2VudGVyJyk7XHJcblx0dGhpcy50YXRlID0gdGhpcy5nZXRTdGF0ZSgpO1xyXG5cdHN3aXRjaCAodGhpcy50YXRlKSB7XHJcblx0XHRjYXNlIFwiaG92ZXJcIjpcclxuXHRcdFx0dGhpcy5maWxsQ29sID0gdGhpcy5ob3ZlckNvbDtcclxuXHRcdFx0dGhpcy5kcmF3R2VvbWV0cnkoKTtcclxuXHRcdFx0dGhpcy5maXJlKHsgdHlwZTogXCJob3ZlclwiIH0pO1xyXG5cdFx0XHR0aGlzLnBTdGF0ZSA9IFwiaG92ZXJcIjtcclxuXHRcdFx0YnJlYWs7XHJcblx0XHRjYXNlIFwibW91c2VPdXRcIjpcclxuXHRcdFx0aWYgKHRoaXMuYnV0dG9uQ29sKSB7XHJcblx0XHRcdFx0dGhpcy5maWxsQ29sID0gdGhpcy5idXR0b25Db2w7XHJcblx0XHRcdH0gZWxzZSB7XHJcblx0XHRcdFx0dGhpcy5maWxsQ29sID0gdGhpcy5wLmNvbG9yKDAsIDAsIDEwMCk7XHJcblx0XHRcdH1cclxuXHRcdFx0dGhpcy5kcmF3R2VvbWV0cnkoKTtcclxuXHRcdFx0dGhpcy5maXJlKHsgdHlwZTogXCJtb3VzZU91dFwiIH0pO1xyXG5cdFx0XHR0aGlzLnBTdGF0ZSA9IFwibW91c2VPdXRcIjtcclxuXHRcdFx0YnJlYWs7XHJcblx0XHRjYXNlIFwicHJlc3NcIjpcclxuXHRcdFx0dGhpcy5maWxsQ29sID0gdGhpcy5wcmVzc0NvbDtcclxuXHRcdFx0dGhpcy5kcmF3R2VvbWV0cnkoKTtcclxuXHRcdFx0dGhpcy5maXJlKHsgdHlwZTogXCJwcmVzc1wiIH0pO1xyXG5cdFx0XHR0aGlzLnBTdGF0ZSA9IFwicHJlc3NcIjtcclxuXHRcdFx0YnJlYWs7XHJcblx0XHRjYXNlIFwiY2xpY2tcIjpcclxuXHRcdFx0dGhpcy5maWxsQ29sID0gdGhpcy5jbGlja0NvbDtcclxuXHRcdFx0dGhpcy5kcmF3R2VvbWV0cnkoKTtcclxuXHRcdFx0dGhpcy5maXJlKHsgdHlwZTogXCJjbGlja1wiIH0pO1xyXG5cdFx0XHR0aGlzLnBTdGF0ZSA9IFwiY2xpY2tcIjtcclxuXHRcdFx0YnJlYWs7XHJcblx0XHRkZWZhdWx0OlxyXG5cdFx0XHRpZiAodGhpcy5idXR0b25Db2wpIHtcclxuXHRcdFx0XHR0aGlzLmZpbGxDb2wgPSB0aGlzLmJ1dHRvbkNvbDtcclxuXHRcdFx0fSBlbHNlIHtcclxuXHRcdFx0XHR0aGlzLmZpbGxDb2wgPSB0aGlzLnAuY29sb3IoMCwgMCwgMTAwKTtcclxuXHRcdFx0fVxyXG5cdFx0XHR0aGlzLmRyYXdHZW9tZXRyeSgpO1xyXG5cdH1cclxufVxyXG5cclxuXHJcbi8v5LqL5Lu255u45YWzXHJcbkJ1dHRvbi5wcm90b3R5cGUuYWRkSGFuZGxlciA9IGZ1bmN0aW9uICh0eXBlLCBoYW5kbGVyKSB7XHJcblx0aWYgKHR5cGVvZiB0aGlzLmhhbmRsZXJzW3R5cGVdID09IFwidW5kZWZpbmVkXCIpIHtcclxuXHRcdHRoaXMuaGFuZGxlcnNbdHlwZV0gPSBbXTtcclxuXHR9XHJcblx0dGhpcy5oYW5kbGVyc1t0eXBlXS5wdXNoKGhhbmRsZXIpO1xyXG59XHJcbkJ1dHRvbi5wcm90b3R5cGUuZmlyZSA9IGZ1bmN0aW9uIChldmVudCkge1xyXG5cdGlmICghZXZlbnQudGFyZ2V0KSB7XHJcblx0XHRldmVudC50YXJnZXQgPSB0aGlzO1xyXG5cdH1cclxuXHRpZiAodGhpcy5oYW5kbGVyc1tldmVudC50eXBlXSBpbnN0YW5jZW9mIEFycmF5KSB7XHJcblx0XHR2YXIgaGFuZGxlcnMgPSB0aGlzLmhhbmRsZXJzW2V2ZW50LnR5cGVdO1xyXG5cdFx0Zm9yICh2YXIgaSA9IDAsIGxlbiA9IGhhbmRsZXJzLmxlbmd0aDsgaSA8IGxlbjsgaSsrKSB7XHJcblx0XHRcdGhhbmRsZXJzW2ldKGV2ZW50KTtcclxuXHRcdH1cclxuXHR9XHJcbn1cclxuQnV0dG9uLnByb3RvdHlwZS5yZW1vdmVIYW5kbGVyID0gZnVuY3Rpb24gKHR5cGUsIGhhbmRsZXIpIHtcclxuXHRpZiAodGhpcy5oYW5kbGVyc1t0eXBlXSBpbnN0YW5jZW9mIEFycmF5KSB7XHJcblx0XHR2YXIgaGFuZGxlcnMgPSB0aGlzLmhhbmRsZXJzW3R5cGVdO1xyXG5cdFx0Zm9yICh2YXIgaSA9IDAsIGxlbiA9IGhhbmRsZXJzLmxlbmd0aDsgaSA8IGxlbjsgaSsrKSB7XHJcblx0XHRcdGlmIChoYW5kZXJzW2ldID09PSBoYW5kbGVyKSB7XHJcblx0XHRcdFx0YnJlYWs7XHJcblx0XHRcdH1cclxuXHRcdH1cclxuXHRcdGhhbmRsZXJzLnNwbGljZShpLCAxKTtcclxuXHR9XHJcbn1cclxuXHJcblxyXG5tb2R1bGUuZXhwb3J0cyA9IEJ1dHRvbjtcclxuXG5cblxuLyoqKioqKioqKioqKioqKioqXG4gKiogV0VCUEFDSyBGT09URVJcbiAqKiAuL2pzL0J1dHRvbi5qc1xuICoqIG1vZHVsZSBpZCA9IDhcbiAqKiBtb2R1bGUgY2h1bmtzID0gMFxuICoqLyJdLCJzb3VyY2VSb290IjoiIn0=");
+	/**
+	 * Button类，基于p5.js
+	 * by:Zzzz
+	 * date:2016-03-03
+	 */
+
+	var util = __webpack_require__(3);
+	var VisualObject = __webpack_require__(6);
+
+	var Button = function (options) {
+		VisualObject.call(this,{
+			position : options.position,  //位置
+			width : options.width,   //宽度
+			height : options.height,  //高度
+			p : options.p,  //p5实例
+			fillCol : options.fillCol
+		});
+		this.pState = "mouseOut";  //Button初始状态
+		this.state;
+		this.pSwitch = "off";   //Button初始状态
+		this.hoverCol = options.hoverCol || this.p.color("#06799F");  //鼠标悬浮时Button的颜色
+		this.pressCol = options.pressCol || this.p.color("#216278");  //鼠标按下时Button的颜色
+		this.clickCol = options.clickCol || this.p.color("#024E68");  //Button处于on状态时的颜色
+		this.positions = [];  //储存位置
+		this.handlers = {};  //事件处理程序
+	}
+	util.inheritPrototype(Button, VisualObject);
+
+	//判断Button是否被选中
+	Button.prototype.isSelected = function () {
+		if (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	//判断Button的状态
+	Button.prototype.getState = function () {
+		/**
+		 * hover (pState) ： 鼠标悬浮（被选中）
+		 * press (pState) ： 鼠标按下
+		 * click (pState) ： 鼠标点击
+		 * mouseOut (pState) ： 鼠标从button上移开/未被选中
+		 * on (pSwitch) : Button处于开启状态
+		 * off (pSwitch) ： Button处于关闭状态
+		 */
+		if (this.isSelected()) {
+			if (this.pState == "click") {
+				if (this.p.mouseIsPressed) {
+					return "press";
+				} else {
+					return "click";
+				}
+			} else {
+				if (this.p.mouseIsPressed) {
+					return "press";
+				} else {
+					if (this.pState == "press") {
+						if (this.pSwitch == "on") {
+							this.pSwitch = "off";
+							return "hover";
+						} else {
+							this.pSwitch = "on";
+							return "click";
+						}
+					} else {
+						return "hover";
+					}
+				}
+			}
+		} else {
+			if (this.pState == "click") {
+				return "click";
+			} else {
+				return "mouseOut";
+			}
+		}
+	}
+
+	//鼠标指针图形
+	Button.prototype.cursorState = function(state){
+		if(this.constructor.prototype.hoverObjCount == 0){
+			$(this.p.canvas).css("cursor","default");
+		}else{
+			if(state != "mouseOut"){
+				if(this.isSelected()){
+					$(this.p.canvas).css("cursor","pointer");
+				}else{
+					$(this.p.canvas).css("cursor","default");
+				}
+			}
+		}
+	}
+
+	Button.prototype.update = function(){
+	}
+
+	//根据不同的状态绘制Button
+	Button.prototype.display = function () {
+		//this.update();
+		if (this.strokeCol) {
+			this.p.stroke(this.strokeCol);
+		} else {
+			this.p.noStroke();
+		}
+		this.p.rectMode('center');
+		this.tate = this.getState();
+		switch (this.tate) {
+			case "hover":
+				this.fillCol = this.hoverCol;
+				this.drawGeometry();
+				this.fire({ type: "hover" });
+				this.pState = "hover";
+				break;
+			case "mouseOut":
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
+				} else {
+					this.fillCol = this.p.color(0, 0, 100);
+				}
+				this.drawGeometry();
+				this.fire({ type: "mouseOut" });
+				this.pState = "mouseOut";
+				break;
+			case "press":
+				this.fillCol = this.pressCol;
+				this.drawGeometry();
+				this.fire({ type: "press" });
+				this.pState = "press";
+				break;
+			case "click":
+				this.fillCol = this.clickCol;
+				this.drawGeometry();
+				this.fire({ type: "click" });
+				this.pState = "click";
+				break;
+			default:
+				if (this.buttonCol) {
+					this.fillCol = this.buttonCol;
+				} else {
+					this.fillCol = this.p.color(0, 0, 100);
+				}
+				this.drawGeometry();
+		}
+	}
+
+
+	//事件相关
+	Button.prototype.addHandler = function (type, handler) {
+		if (typeof this.handlers[type] == "undefined") {
+			this.handlers[type] = [];
+		}
+		this.handlers[type].push(handler);
+	}
+	Button.prototype.fire = function (event) {
+		if (!event.target) {
+			event.target = this;
+		}
+		if (this.handlers[event.type] instanceof Array) {
+			var handlers = this.handlers[event.type];
+			for (var i = 0, len = handlers.length; i < len; i++) {
+				handlers[i](event);
+			}
+		}
+	}
+	Button.prototype.removeHandler = function (type, handler) {
+		if (this.handlers[type] instanceof Array) {
+			var handlers = this.handlers[type];
+			for (var i = 0, len = handlers.length; i < len; i++) {
+				if (handers[i] === handler) {
+					break;
+				}
+			}
+			handlers.splice(i, 1);
+		}
+	}
+
+
+	module.exports = Button;
+
 
 /***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("\r\nvar eventHandleFunc = __webpack_require__(10);\r\nvar util = __webpack_require__(3);\r\nvar globalVar = __webpack_require__(5);\r\nvar ButtonParticle = __webpack_require__(2);\r\nvar ButtonPlus = __webpack_require__(7);\r\n\r\nvar getInfo = function (type,arg){\r\n\tglobalVar.displayArray.ButtonParticle = [];\r\n\t\r\n\tif(window.XMLHttpRequest){\r\n\t\tXMLHTTP=new XMLHttpRequest();\r\n\t}else{\r\n\t\tXMLHTTP=new ActiveXObject(\"Microsoft.XMLHTTP\");\r\n\t}\r\n\r\n\tif(type === \"posts\"){\r\n\t\tXMLHTTP.onreadystatechange=function(){\r\n\t\t\tif(XMLHTTP.readyState==4 && XMLHTTP.status==200){\r\n\t\t\t\tvar posts = JSON.parse(XMLHTTP.responseText);\r\n\t\t\t\t//alert(XMLHTTP.responseText);\r\n\t\t\t\t//console.log(XMLHTTP.responseText);\r\n\t\t\t\t\r\n\t\t\t\tfor(var item in posts){\r\n\t\t\t\t\tvar size = Math.random()*20 + 15;\r\n\t\t\t\t\tvar options = {\r\n\t\t\t\t\t\tposition : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),\r\n\t\t\t\t\t\twidth : size,\r\n\t\t\t\t\t\theight : size,\r\n\t\t\t\t\t\tr : 25,\r\n\t\t\t\t\t\tp : globalVar.pp\r\n\t\t\t\t\t};\r\n\t\t\t\t\tvar optionsBP = {\r\n\t\t\t\t\t\tvisualObject : new ButtonPlus(options),\r\n\t\t\t\t\t\tp : globalVar.pp,\r\n\t\t\t\t\t\tvortexAttract : true\r\n\t\t\t\t\t};\r\n\t\t\t\t\t\r\n\t\t\t\t\tvar newObj = new ButtonParticle(optionsBP);\r\n\t\t\t\t\tnewObj.attractPt = globalVar.attractPtL;\r\n\t\t\t\t\tnewObj.reflect = true;\r\n\r\n\t\t\t\t\tnewObj.visualObject.addHandler(\"click\",eventHandleFunc.clicked_animation);\r\n\t\t\t\t\tnewObj.visualObject.addHandler(\"turnOn\",eventHandleFunc.showPostInfo);\r\n\t\t\t\t\tnewObj.visualObject.addHandler(\"turnOff\",eventHandleFunc.hideInfoFrame);\r\n\r\n\t\t\t\t\tnewObj.visualObject.sound = globalVar.SOUNDFILE;\r\n\t\t\t\t\tnewObj.visualObject.info = posts[item];\r\n\t\t\t\t\tnewObj.visualObject.buttonCol = newObj.visualObject.info[\"color\"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);\r\n\t\t\t\t\tglobalVar.displayArray.ButtonParticle.push(newObj);\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t\t//console.log(globalVar.displayArray.ButtonParticle);\r\n\t\t\t}\r\n\t\t}\r\n\t\tXMLHTTP.open(\"GET\",\"wp-content/themes/zbs/getPostInfo.php\");\r\n\t\tXMLHTTP.send();\r\n\t}else{\r\n\t\tif(type === \"users\"){\r\n\t\t\tXMLHTTP.onreadystatechange=function(){\r\n\t\t\t\tif(XMLHTTP.readyState==4 && XMLHTTP.status==200){\r\n\t\t\t\t\tvar users = JSON.parse(XMLHTTP.responseText);\r\n\t\t\t\t\t//alert(XMLHTTP.responseText);\r\n\t\t\t\t\t//console.log(XMLHTTP.responseText);\r\n\t\t\t\t\t\r\n\t\t\t\t\tvar i = 0;\r\n\t\t\t\t\tvar count = util.getJsonObjLength(users);\r\n\t\t\t\t\tfor(var item in users){\r\n\t\t\t\t\t\tvar size = Math.random()*20 + 20;\r\n\t\t\t\t\t\tvar options = {\r\n\t\t\t\t\t\t\tposition : new p5.Vector(Math.random()*900+30, Math.random()*550+25),\r\n\t\t\t\t\t\t\twidth : size,\r\n\t\t\t\t\t\t\theight : size,\r\n\t\t\t\t\t\t\tr : 25,\r\n\t\t\t\t\t\t\tp : globalVar.pp\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\tvar optionsBP = {\r\n\t\t\t\t\t\t\tvisualObject : new ButtonPlus(options),\r\n\t\t\t\t\t\t\tp : globalVar.pp,\r\n\t\t\t\t\t\t\tvortexAttract : true\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\tvar newObj = new ButtonParticle(optionsBP);\r\n\t\t\t\t\t\tif(i < count/2){\r\n\t\t\t\t\t\t\tnewObj.attractPt = globalVar.attractPtL;\r\n\t\t\t\t\t\t}else{\r\n\t\t\t\t\t\t\tnewObj.attractPt = globalVar.attractPtR;\r\n\t\t\t\t\t\t}\r\n\r\n\t\t\t\t\t\tnewObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);\r\n\t\t\t\t\t\tnewObj.reflect = true;\r\n\t\t\t\t\t\tnewObj.visualObject.addHandler(\"click\",eventHandleFunc.clicked_animation);\r\n\t\t\t\t\t\tnewObj.visualObject.addHandler(\"turnOn\",eventHandleFunc.hideSortUserInfo);\r\n\t\t\t\t\t\tnewObj.visualObject.addHandler(\"turnOn\",eventHandleFunc.showUserInfo);\r\n\t\t\t\t\t\tnewObj.visualObject.addHandler(\"turnOff\",eventHandleFunc.hideInfoFrame);\r\n\t\t\t\t\t\tnewObj.visualObject.addHandler(\"hover\",eventHandleFunc.showSortUserInfo);\r\n\t\t\t\t\t\tnewObj.visualObject.addHandler(\"mouseOut\",eventHandleFunc.hideSortUserInfo);\r\n\t\t\t\t\t\tnewObj.visualObject.sound = globalVar.SOUNDFILE;\r\n\t\t\t\t\t\tnewObj.visualObject.info = users[item];\r\n\t\t\t\t\t\t\r\n\t\t\t\t\t\tglobalVar.displayArray.ButtonParticle.push(newObj);\r\n\t\t\t\t\t\ti++;\r\n\t\t\t\t\t}\r\n\t\t\t\t\ti = null;\r\n\t\t\t\t\tcount = null;\r\n\t\t\t\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t\t\r\n\t\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\tXMLHTTP.open(\"GET\",\"wp-content/themes/zbs/getUserInfo.php\" + \"?userRole=\" + arg);\r\n\t\t\tXMLHTTP.send();\r\n\t\t}\r\n\t}\r\n\t\r\n}\r\n\r\n\r\nmodule.exports = getInfo;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9nZXRJbmZvLmpzP2E2MDQiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0EsRUFBRTtBQUNGO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOzs7QUFHQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsRUFBRTtBQUNGO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLE9BQU87QUFDUDtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Ozs7Ozs7QUFPQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7OztBQUdBIiwiZmlsZSI6IjkuanMiLCJzb3VyY2VzQ29udGVudCI6WyJcclxudmFyIGV2ZW50SGFuZGxlRnVuYyA9IHJlcXVpcmUoXCIuL0V2ZW50SGFuZGxlRnVuYy5qc1wiKTtcclxudmFyIHV0aWwgPSByZXF1aXJlKFwiLi91dGlsLmpzXCIpO1xyXG52YXIgZ2xvYmFsVmFyID0gcmVxdWlyZShcIi4vR2xvYmFsVmFyLmpzXCIpO1xyXG52YXIgQnV0dG9uUGFydGljbGUgPSByZXF1aXJlKFwiLi9CdXR0b25QYXJ0aWNsZS5qc1wiKTtcclxudmFyIEJ1dHRvblBsdXMgPSByZXF1aXJlKFwiLi9CdXR0b25QbHVzLmpzXCIpO1xyXG5cclxudmFyIGdldEluZm8gPSBmdW5jdGlvbiAodHlwZSxhcmcpe1xyXG5cdGdsb2JhbFZhci5kaXNwbGF5QXJyYXkuQnV0dG9uUGFydGljbGUgPSBbXTtcclxuXHRcclxuXHRpZih3aW5kb3cuWE1MSHR0cFJlcXVlc3Qpe1xyXG5cdFx0WE1MSFRUUD1uZXcgWE1MSHR0cFJlcXVlc3QoKTtcclxuXHR9ZWxzZXtcclxuXHRcdFhNTEhUVFA9bmV3IEFjdGl2ZVhPYmplY3QoXCJNaWNyb3NvZnQuWE1MSFRUUFwiKTtcclxuXHR9XHJcblxyXG5cdGlmKHR5cGUgPT09IFwicG9zdHNcIil7XHJcblx0XHRYTUxIVFRQLm9ucmVhZHlzdGF0ZWNoYW5nZT1mdW5jdGlvbigpe1xyXG5cdFx0XHRpZihYTUxIVFRQLnJlYWR5U3RhdGU9PTQgJiYgWE1MSFRUUC5zdGF0dXM9PTIwMCl7XHJcblx0XHRcdFx0dmFyIHBvc3RzID0gSlNPTi5wYXJzZShYTUxIVFRQLnJlc3BvbnNlVGV4dCk7XHJcblx0XHRcdFx0Ly9hbGVydChYTUxIVFRQLnJlc3BvbnNlVGV4dCk7XHJcblx0XHRcdFx0Ly9jb25zb2xlLmxvZyhYTUxIVFRQLnJlc3BvbnNlVGV4dCk7XHJcblx0XHRcdFx0XHJcblx0XHRcdFx0Zm9yKHZhciBpdGVtIGluIHBvc3RzKXtcclxuXHRcdFx0XHRcdHZhciBzaXplID0gTWF0aC5yYW5kb20oKSoyMCArIDE1O1xyXG5cdFx0XHRcdFx0dmFyIG9wdGlvbnMgPSB7XHJcblx0XHRcdFx0XHRcdHBvc2l0aW9uIDogbmV3IHA1LlZlY3RvcihNYXRoLnJhbmRvbSgpICogOTAwICsgMTAsTWF0aC5yYW5kb20oKSAqIDUwMCArIDEwKSxcclxuXHRcdFx0XHRcdFx0d2lkdGggOiBzaXplLFxyXG5cdFx0XHRcdFx0XHRoZWlnaHQgOiBzaXplLFxyXG5cdFx0XHRcdFx0XHRyIDogMjUsXHJcblx0XHRcdFx0XHRcdHAgOiBnbG9iYWxWYXIucHBcclxuXHRcdFx0XHRcdH07XHJcblx0XHRcdFx0XHR2YXIgb3B0aW9uc0JQID0ge1xyXG5cdFx0XHRcdFx0XHR2aXN1YWxPYmplY3QgOiBuZXcgQnV0dG9uUGx1cyhvcHRpb25zKSxcclxuXHRcdFx0XHRcdFx0cCA6IGdsb2JhbFZhci5wcCxcclxuXHRcdFx0XHRcdFx0dm9ydGV4QXR0cmFjdCA6IHRydWVcclxuXHRcdFx0XHRcdH07XHJcblx0XHRcdFx0XHRcclxuXHRcdFx0XHRcdHZhciBuZXdPYmogPSBuZXcgQnV0dG9uUGFydGljbGUob3B0aW9uc0JQKTtcclxuXHRcdFx0XHRcdG5ld09iai5hdHRyYWN0UHQgPSBnbG9iYWxWYXIuYXR0cmFjdFB0TDtcclxuXHRcdFx0XHRcdG5ld09iai5yZWZsZWN0ID0gdHJ1ZTtcclxuXHJcblx0XHRcdFx0XHRuZXdPYmoudmlzdWFsT2JqZWN0LmFkZEhhbmRsZXIoXCJjbGlja1wiLGV2ZW50SGFuZGxlRnVuYy5jbGlja2VkX2FuaW1hdGlvbik7XHJcblx0XHRcdFx0XHRuZXdPYmoudmlzdWFsT2JqZWN0LmFkZEhhbmRsZXIoXCJ0dXJuT25cIixldmVudEhhbmRsZUZ1bmMuc2hvd1Bvc3RJbmZvKTtcclxuXHRcdFx0XHRcdG5ld09iai52aXN1YWxPYmplY3QuYWRkSGFuZGxlcihcInR1cm5PZmZcIixldmVudEhhbmRsZUZ1bmMuaGlkZUluZm9GcmFtZSk7XHJcblxyXG5cdFx0XHRcdFx0bmV3T2JqLnZpc3VhbE9iamVjdC5zb3VuZCA9IGdsb2JhbFZhci5TT1VOREZJTEU7XHJcblx0XHRcdFx0XHRuZXdPYmoudmlzdWFsT2JqZWN0LmluZm8gPSBwb3N0c1tpdGVtXTtcclxuXHRcdFx0XHRcdG5ld09iai52aXN1YWxPYmplY3QuYnV0dG9uQ29sID0gbmV3T2JqLnZpc3VhbE9iamVjdC5pbmZvW1wiY29sb3JcIl0gfHwgbmV3T2JqLnZpc3VhbE9iamVjdC5wLmNvbG9yKE1hdGgucmFuZG9tKCkgKiAyNTUsIE1hdGgucmFuZG9tKCkgKiAyNTUsIE1hdGgucmFuZG9tKCkgKiAyNTUpO1xyXG5cdFx0XHRcdFx0Z2xvYmFsVmFyLmRpc3BsYXlBcnJheS5CdXR0b25QYXJ0aWNsZS5wdXNoKG5ld09iaik7XHJcblx0XHRcdFx0fVxyXG5cdFx0XHRcdFxyXG5cdFx0XHRcdFxyXG5cdFx0XHRcdC8vY29uc29sZS5sb2coZ2xvYmFsVmFyLmRpc3BsYXlBcnJheS5CdXR0b25QYXJ0aWNsZSk7XHJcblx0XHRcdH1cclxuXHRcdH1cclxuXHRcdFhNTEhUVFAub3BlbihcIkdFVFwiLFwid3AtY29udGVudC90aGVtZXMvemJzL2dldFBvc3RJbmZvLnBocFwiKTtcclxuXHRcdFhNTEhUVFAuc2VuZCgpO1xyXG5cdH1lbHNle1xyXG5cdFx0aWYodHlwZSA9PT0gXCJ1c2Vyc1wiKXtcclxuXHRcdFx0WE1MSFRUUC5vbnJlYWR5c3RhdGVjaGFuZ2U9ZnVuY3Rpb24oKXtcclxuXHRcdFx0XHRpZihYTUxIVFRQLnJlYWR5U3RhdGU9PTQgJiYgWE1MSFRUUC5zdGF0dXM9PTIwMCl7XHJcblx0XHRcdFx0XHR2YXIgdXNlcnMgPSBKU09OLnBhcnNlKFhNTEhUVFAucmVzcG9uc2VUZXh0KTtcclxuXHRcdFx0XHRcdC8vYWxlcnQoWE1MSFRUUC5yZXNwb25zZVRleHQpO1xyXG5cdFx0XHRcdFx0Ly9jb25zb2xlLmxvZyhYTUxIVFRQLnJlc3BvbnNlVGV4dCk7XHJcblx0XHRcdFx0XHRcclxuXHRcdFx0XHRcdHZhciBpID0gMDtcclxuXHRcdFx0XHRcdHZhciBjb3VudCA9IHV0aWwuZ2V0SnNvbk9iakxlbmd0aCh1c2Vycyk7XHJcblx0XHRcdFx0XHRmb3IodmFyIGl0ZW0gaW4gdXNlcnMpe1xyXG5cdFx0XHRcdFx0XHR2YXIgc2l6ZSA9IE1hdGgucmFuZG9tKCkqMjAgKyAyMDtcclxuXHRcdFx0XHRcdFx0dmFyIG9wdGlvbnMgPSB7XHJcblx0XHRcdFx0XHRcdFx0cG9zaXRpb24gOiBuZXcgcDUuVmVjdG9yKE1hdGgucmFuZG9tKCkqOTAwKzMwLCBNYXRoLnJhbmRvbSgpKjU1MCsyNSksXHJcblx0XHRcdFx0XHRcdFx0d2lkdGggOiBzaXplLFxyXG5cdFx0XHRcdFx0XHRcdGhlaWdodCA6IHNpemUsXHJcblx0XHRcdFx0XHRcdFx0ciA6IDI1LFxyXG5cdFx0XHRcdFx0XHRcdHAgOiBnbG9iYWxWYXIucHBcclxuXHRcdFx0XHRcdFx0fVxyXG5cdFx0XHRcdFx0XHR2YXIgb3B0aW9uc0JQID0ge1xyXG5cdFx0XHRcdFx0XHRcdHZpc3VhbE9iamVjdCA6IG5ldyBCdXR0b25QbHVzKG9wdGlvbnMpLFxyXG5cdFx0XHRcdFx0XHRcdHAgOiBnbG9iYWxWYXIucHAsXHJcblx0XHRcdFx0XHRcdFx0dm9ydGV4QXR0cmFjdCA6IHRydWVcclxuXHRcdFx0XHRcdFx0fVxyXG5cdFx0XHRcdFx0XHR2YXIgbmV3T2JqID0gbmV3IEJ1dHRvblBhcnRpY2xlKG9wdGlvbnNCUCk7XHJcblx0XHRcdFx0XHRcdGlmKGkgPCBjb3VudC8yKXtcclxuXHRcdFx0XHRcdFx0XHRuZXdPYmouYXR0cmFjdFB0ID0gZ2xvYmFsVmFyLmF0dHJhY3RQdEw7XHJcblx0XHRcdFx0XHRcdH1lbHNle1xyXG5cdFx0XHRcdFx0XHRcdG5ld09iai5hdHRyYWN0UHQgPSBnbG9iYWxWYXIuYXR0cmFjdFB0UjtcclxuXHRcdFx0XHRcdFx0fVxyXG5cclxuXHRcdFx0XHRcdFx0bmV3T2JqLnZpc3VhbE9iamVjdC5idXR0b25Db2wgPSBnbG9iYWxWYXIucHAuY29sb3IoTWF0aC5yYW5kb20oKSoxMDAsIE1hdGgucmFuZG9tKCkqNTAsIE1hdGgucmFuZG9tKCkqMjAwLDI1NSk7XHJcblx0XHRcdFx0XHRcdG5ld09iai5yZWZsZWN0ID0gdHJ1ZTtcclxuXHRcdFx0XHRcdFx0bmV3T2JqLnZpc3VhbE9iamVjdC5hZGRIYW5kbGVyKFwiY2xpY2tcIixldmVudEhhbmRsZUZ1bmMuY2xpY2tlZF9hbmltYXRpb24pO1xyXG5cdFx0XHRcdFx0XHRuZXdPYmoudmlzdWFsT2JqZWN0LmFkZEhhbmRsZXIoXCJ0dXJuT25cIixldmVudEhhbmRsZUZ1bmMuaGlkZVNvcnRVc2VySW5mbyk7XHJcblx0XHRcdFx0XHRcdG5ld09iai52aXN1YWxPYmplY3QuYWRkSGFuZGxlcihcInR1cm5PblwiLGV2ZW50SGFuZGxlRnVuYy5zaG93VXNlckluZm8pO1xyXG5cdFx0XHRcdFx0XHRuZXdPYmoudmlzdWFsT2JqZWN0LmFkZEhhbmRsZXIoXCJ0dXJuT2ZmXCIsZXZlbnRIYW5kbGVGdW5jLmhpZGVJbmZvRnJhbWUpO1xyXG5cdFx0XHRcdFx0XHRuZXdPYmoudmlzdWFsT2JqZWN0LmFkZEhhbmRsZXIoXCJob3ZlclwiLGV2ZW50SGFuZGxlRnVuYy5zaG93U29ydFVzZXJJbmZvKTtcclxuXHRcdFx0XHRcdFx0bmV3T2JqLnZpc3VhbE9iamVjdC5hZGRIYW5kbGVyKFwibW91c2VPdXRcIixldmVudEhhbmRsZUZ1bmMuaGlkZVNvcnRVc2VySW5mbyk7XHJcblx0XHRcdFx0XHRcdG5ld09iai52aXN1YWxPYmplY3Quc291bmQgPSBnbG9iYWxWYXIuU09VTkRGSUxFO1xyXG5cdFx0XHRcdFx0XHRuZXdPYmoudmlzdWFsT2JqZWN0LmluZm8gPSB1c2Vyc1tpdGVtXTtcclxuXHRcdFx0XHRcdFx0XHJcblx0XHRcdFx0XHRcdGdsb2JhbFZhci5kaXNwbGF5QXJyYXkuQnV0dG9uUGFydGljbGUucHVzaChuZXdPYmopO1xyXG5cdFx0XHRcdFx0XHRpKys7XHJcblx0XHRcdFx0XHR9XHJcblx0XHRcdFx0XHRpID0gbnVsbDtcclxuXHRcdFx0XHRcdGNvdW50ID0gbnVsbDtcclxuXHRcdFx0XHRcdFxyXG5cdFx0XHRcdFx0XHJcblx0XHRcdFx0XHRcclxuXHRcdFx0XHRcdFxyXG5cdFx0XHRcclxuXHRcdFx0XHRcdFxyXG5cdFx0XHRcdH1cclxuXHRcdFx0fVxyXG5cdFx0XHRYTUxIVFRQLm9wZW4oXCJHRVRcIixcIndwLWNvbnRlbnQvdGhlbWVzL3picy9nZXRVc2VySW5mby5waHBcIiArIFwiP3VzZXJSb2xlPVwiICsgYXJnKTtcclxuXHRcdFx0WE1MSFRUUC5zZW5kKCk7XHJcblx0XHR9XHJcblx0fVxyXG5cdFxyXG59XHJcblxyXG5cclxubW9kdWxlLmV4cG9ydHMgPSBnZXRJbmZvO1xuXG5cbi8qKioqKioqKioqKioqKioqKlxuICoqIFdFQlBBQ0sgRk9PVEVSXG4gKiogLi9qcy9nZXRJbmZvLmpzXG4gKiogbW9kdWxlIGlkID0gOVxuICoqIG1vZHVsZSBjaHVua3MgPSAwXG4gKiovIl0sInNvdXJjZVJvb3QiOiIifQ==");
+	/**
+	 * Created by zhang on 2016/5/8 0008.
+	 */
+	var globalVar = __webpack_require__(5);
+	var ButtonPlus = __webpack_require__(7);
+
+	var FilterButton = function (options){
+	    this.keyword = options.keyword;
+	    this.value = options.value;
+	    this.switch = false;
+
+	    if (options.node){
+	        this.node = options.node;
+	    }else{
+	        this.id = options.id;
+	        this.text = options.text || "FilterButton";
+	        this.parentId = options.parentId;
+	        this.createElement();
+	    }
+	    this.node.classList += "FilterButton";
+	    this.attachEvent();
+	};
+
+	FilterButton.prototype.createElement = function (){
+	    var doc = document;
+	    this.node = doc.createElement("a");
+	    this.node.id = this.id;
+	    this.node.innerHTML = this.text;
+	    this.parentId ? doc.getElementById(options.parentId).appendChild(this.node) : doc.body.appendChild(this.node);
+	};
+
+	FilterButton.prototype.doFilter = function (){
+	    var BP = globalVar.displayArray.ButtonParticle;
+
+	    for (var j = 0; j < globalVar.filterButton.length; j++){     //将全局环境中的其他FilterButton的switch全部设置为false,并修改按钮背景颜色
+	        if (globalVar.filterButton[j] !== this){
+	            globalVar.filterButton[j].switch = false;
+	            globalVar.filterButton[j].node.parentNode.classList.remove("active");
+	        }
+	    }
+
+	    for(var i = 0, len = BP.length; i < len; i++){
+	        BP[i].visualObject.filtered = false;
+	    }
+
+	    if (this.switch){
+	        for(i = 0, len = BP.length; i < len; i++){
+	            if (BP[i].visualObject.info[this.keyword] !== this.value){
+	                if(BP[i].visualObject.pState === "click"){
+	                    BP[i].visualObject.pState = "mouseOut";       //fliter切换后，将之前“click”状态的button改为普通状态，即状态重置
+	                    ButtonPlus.prototype.hoverObjCount = 0;        //选中个数也必须重置
+	                    BP[i].visualObject.fire({ type: "turnOff" });     //ButtonPlus触发turnOff事件
+	                }
+	                BP[i].visualObject.filtered = true;
+	            }
+	        }
+	    }
+	};
+
+	FilterButton.prototype.attachEvent = function (){
+	    this.node.onclick = function (){
+	        this.switch = ~this.switch;
+
+	        if (this.switch){                   //切换FilterButton的显示效果
+	            this.node.parentNode.classList.add("active");
+	        }else{
+	            this.node.parentNode.classList.remove("active");
+	        }
+
+	        this.doFilter();
+	    }.bind(this);
+	}
+
+	module.exports = FilterButton;
 
 /***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("/**\r\n * 定义与Button绑定的事件处理程序\r\n */\r\nvar util = __webpack_require__(3);\r\nvar getPostContent = __webpack_require__(11);\r\n\r\nvar eventHandleFunc = {\r\n    // clicked : function (event){\r\n    //     event.target.p.noStroke();\r\n    //     event.target.p.fill(0);\r\n    //     event.target.p.textAlign(\"center\");\r\n    //     var text;\r\n    //     text = event.target.info['title'];\r\n    //     if(text){\r\n    //         event.target.p.text(text,event.target.position.x,event.target.position.y);\r\n    //     }\t\r\n    // },\r\n\r\n    clicked_animation : function (event){\r\n        event.target.p.noStroke();\r\n        event.target.p.fill(0);\r\n        event.target.p.textAlign(\"center\");\r\n        event.target.p.stroke(255);\r\n        event.target.p.strokeWeight(5);\r\n        event.target.p.push();\r\n        event.target.p.translate(event.target.position.x,event.target.position.y);\r\n        if(event.target.clickTimeline < 40){\r\n            event.target.p.rotate(event.target.p.map(event.target.clickTimeline,0,40,0,Math.PI/4));\r\n        }else{\r\n            event.target.p.rotate(Math.PI/4);\r\n        }\r\n        event.target.p.line(-12,0,12,0);\r\n        event.target.p.line(0,-12,0,12);\r\n        event.target.p.pop();\r\n    },\r\n\r\n    showSortUserInfo : function (event){\r\n        if(event.target.pState !== \"hover\"){\r\n            var sketch = document.getElementById(\"sketch\");\r\n            var top = util.getElementTop(sketch);\r\n            var left = util.getElementLeft(sketch);\r\n\r\n            var sortInfoFrame = document.getElementById(\"sortInfoFrame\");\r\n            if(sortInfoFrame){\r\n                sortInfoFrame.style.visibility = \"visible\";\r\n                sortInfoFrame.innerHTML = \"\";\r\n            }else{\r\n                sortInfoFrame = document.createElement(\"div\");\r\n                sortInfoFrame.id = \"sortInfoFrame\";\r\n            }\r\n            sortInfoFrame.style.top = top+event.target.position.y-50 + \"px\";\r\n            sortInfoFrame.style.left = left+event.target.position.x+50 + \"px\";\r\n\r\n            var img = document.createElement(\"img\");\r\n            img.src = event.target.info['avatar'];\r\n            img.style.cssText = \"width:100px;height:100px;border-radius:5px;-moz-border-radius:5px;\";\r\n            sortInfoFrame.appendChild(img);\r\n\r\n            var name = document.createElement(\"div\");\r\n            name.innerHTML = \"<b>名字：</b>\" + event.target.info['name'];\r\n            name.style.cssText = \"margin-top:20px\";\r\n            sortInfoFrame.appendChild(name);\r\n\r\n            document.body.appendChild(sortInfoFrame);\r\n        }\r\n\r\n    },\r\n\r\n    hideSortUserInfo : function (event){\r\n        if (event.target.hoverObjCount === 0 || event.target.state === \"press\") {\r\n            var doc = document;\r\n            var sortInfoFrame = doc.getElementById(\"sortInfoFrame\");\r\n            if(sortInfoFrame){\r\n                sortInfoFrame.style.visibility = \"hidden\";\r\n            }\r\n        }\r\n    },\r\n\r\n    showUserInfo : function (event){\r\n        var doc = document;\r\n        var sketch = document.getElementById(\"sketch\");\r\n\r\n        var infoFrame = document.getElementById(\"infoFrame\");\r\n        if(infoFrame){\r\n            infoFrame.style.visibility = \"visible\";\r\n            infoFrame.innerHTML = \"\";    //清空\r\n        }else{\r\n            infoFrame = document.createElement(\"div\");\r\n            infoFrame.id = \"infoFrame\";\r\n        }\r\n\r\n        var introduction = doc.createElement(\"div\");\r\n        introduction.id = \"introduction\";\r\n\r\n            var avatar = doc.createElement(\"img\");      //avatar\r\n            avatar.src = event.target.info['avatar'];\r\n            avatar.width = 80;\r\n            avatar.height = 80;\r\n            avatar.alt = event.target.info['name'];\r\n\r\n            var infoContainer = doc.createElement(\"div\");\r\n            infoContainer.id = \"infoContainer\";\r\n\r\n                var name = doc.createElement(\"div\");     //title\r\n                name.id += \"name\";\r\n                name.innerHTML = \"<h2>\" + event.target.info['name'] + \"</h2>\";\r\n\r\n                var ps = event.target.info['posts'];\r\n                var fragment = doc.createDocumentFragment();\r\n                for(var i=0;i<ps.length;i++){\r\n                    var posts = doc.createElement(\"div\");     //author\r\n                    posts.className += \"postMeta\";\r\n                    posts.title = \"posts\";\r\n                    //posts.id = \"getPostContentButton\" + ps[i].id;\r\n                    posts.innerHTML = ps[i].title;\r\n                    posts.data_id = ps[i].id;\r\n                    posts.onclick = function (){\r\n                        getPostContent(this.data_id,true);\r\n                    };\r\n                    fragment.appendChild(posts);\r\n                }\r\n\r\n        infoContainer.appendChild(name);\r\n        infoContainer.appendChild(fragment);\r\n\r\n        introduction.appendChild(avatar);\r\n        introduction.appendChild(infoContainer);\r\n\r\n        infoFrame.appendChild(introduction);\r\n        doc.body.appendChild(infoFrame);\r\n    },\r\n\r\n    showPostInfo : function (event){\r\n        var doc = document;\r\n        var infoFrame = doc.getElementById(\"infoFrame\");    //infoFrame\r\n        if(infoFrame){\r\n            infoFrame.style.visibility = \"visible\";\r\n            infoFrame.innerHTML = \"\";    //清空\r\n        }else{\r\n            infoFrame = doc.createElement(\"div\");\r\n            infoFrame.id = \"infoFrame\";\r\n        }\r\n\r\n        var introduction = doc.createElement(\"div\");\r\n        introduction.id = \"introduction\";\r\n\r\n            var thumbnail = doc.createElement(\"img\");      //thumbnail\r\n            thumbnail.src = event.target.info['thumbnail'];\r\n            thumbnail.width = 80;\r\n            thumbnail.height = 80;\r\n            thumbnail.alt = event.target.info['title'];\r\n\r\n            var infoContainer = doc.createElement(\"div\");\r\n            infoContainer.id = \"infoContainer\";\r\n\r\n                var title = doc.createElement(\"div\");     //title\r\n                title.onclick = function (){\r\n                    getPostContent(event.target.info['id'], false);  //false : no title\r\n                };\r\n                title.id += \"title\";\r\n                title.innerHTML = \"<h2>\" + event.target.info['title'] + \"</h2>\";\r\n\r\n                var author = doc.createElement(\"div\");     //author\r\n                author.className += \"postMeta\";\r\n                author.title = \"author\";\r\n                author.innerHTML = \"作者：\" + event.target.info['author'];\r\n\r\n                var productType = doc.createElement(\"div\");\r\n                productType.className += \"postMeta\";\r\n                productType.title = \"productType\";\r\n                productType.innerHTML = \"作品类型：\" + (event.target.info['productType'] || \"-----\");\r\n\r\n                var major = doc.createElement(\"div\");\r\n                major.className += \"postMeta\";\r\n                major.title = \"major\";\r\n                major.innerHTML = \"专业：\" + (event.target.info['major'] || \"---\") + \"-\" + (event.target.info['subMajor'] || \"---\");\r\n\r\n                var creationDate = doc.createElement(\"div\");\r\n                creationDate.className += \"postMeta\";\r\n                creationDate.title = \"creationDate\";\r\n                creationDate.innerHTML = \"创作年份：\" + (event.target.info['creationDate'] || \"-----\") + \"年\";\r\n\r\n        infoContainer.appendChild(title);\r\n        infoContainer.appendChild(author);\r\n        infoContainer.appendChild(productType);\r\n        infoContainer.appendChild(major);\r\n        infoContainer.appendChild(creationDate);\r\n\r\n        introduction.appendChild(thumbnail);\r\n        introduction.appendChild(infoContainer);\r\n\r\n        infoFrame.appendChild(introduction);\r\n        doc.body.appendChild(infoFrame);\r\n    },\r\n\r\n    hideInfoFrame : function (event){\r\n        var doc = document;\r\n        var infoFrame = doc.getElementById(\"infoFrame\");\r\n        if(infoFrame){\r\n            infoFrame.style.visibility = \"hidden\";\r\n        }\r\n    }\r\n\r\n};\r\n\r\nmodule.exports = eventHandleFunc;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9FdmVudEhhbmRsZUZ1bmMuanM/ODY5YiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLFk7QUFDQSxRQUFROztBQUVSO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsU0FBUztBQUNUO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUFLOztBQUVMO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQSxhQUFhO0FBQ2I7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0EsNkNBQTZDLGFBQWEsa0JBQWtCLHVCQUF1QjtBQUNuRzs7QUFFQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOztBQUVBLEtBQUs7O0FBRUw7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7O0FBRUw7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBLHFDQUFxQztBQUNyQyxTQUFTO0FBQ1Q7QUFDQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUEsa0RBQWtEO0FBQ2xEO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUEsb0RBQW9EO0FBQ3BEO0FBQ0E7O0FBRUE7QUFDQTtBQUNBLDRCQUE0QixZQUFZO0FBQ3hDLHlEQUF5RDtBQUN6RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBLEtBQUs7O0FBRUw7QUFDQTtBQUNBLHdEQUF3RDtBQUN4RDtBQUNBO0FBQ0EscUNBQXFDO0FBQ3JDLFNBQVM7QUFDVDtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQSxxREFBcUQ7QUFDckQ7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQSxxREFBcUQ7QUFDckQ7QUFDQSxtRUFBbUU7QUFDbkU7QUFDQTtBQUNBOztBQUVBLHNEQUFzRDtBQUN0RDtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQSxLQUFLOztBQUVMO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBOztBQUVBIiwiZmlsZSI6IjEwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXHJcbiAqIOWumuS5ieS4jkJ1dHRvbue7keWumueahOS6i+S7tuWkhOeQhueoi+W6j1xyXG4gKi9cclxudmFyIHV0aWwgPSByZXF1aXJlKFwiLi91dGlsLmpzXCIpO1xyXG52YXIgZ2V0UG9zdENvbnRlbnQgPSByZXF1aXJlKFwiLi9nZXRQb3N0Q29udGVudC5qc1wiKTtcclxuXHJcbnZhciBldmVudEhhbmRsZUZ1bmMgPSB7XHJcbiAgICAvLyBjbGlja2VkIDogZnVuY3Rpb24gKGV2ZW50KXtcclxuICAgIC8vICAgICBldmVudC50YXJnZXQucC5ub1N0cm9rZSgpO1xyXG4gICAgLy8gICAgIGV2ZW50LnRhcmdldC5wLmZpbGwoMCk7XHJcbiAgICAvLyAgICAgZXZlbnQudGFyZ2V0LnAudGV4dEFsaWduKFwiY2VudGVyXCIpO1xyXG4gICAgLy8gICAgIHZhciB0ZXh0O1xyXG4gICAgLy8gICAgIHRleHQgPSBldmVudC50YXJnZXQuaW5mb1sndGl0bGUnXTtcclxuICAgIC8vICAgICBpZih0ZXh0KXtcclxuICAgIC8vICAgICAgICAgZXZlbnQudGFyZ2V0LnAudGV4dCh0ZXh0LGV2ZW50LnRhcmdldC5wb3NpdGlvbi54LGV2ZW50LnRhcmdldC5wb3NpdGlvbi55KTtcclxuICAgIC8vICAgICB9XHRcclxuICAgIC8vIH0sXHJcblxyXG4gICAgY2xpY2tlZF9hbmltYXRpb24gOiBmdW5jdGlvbiAoZXZlbnQpe1xyXG4gICAgICAgIGV2ZW50LnRhcmdldC5wLm5vU3Ryb2tlKCk7XHJcbiAgICAgICAgZXZlbnQudGFyZ2V0LnAuZmlsbCgwKTtcclxuICAgICAgICBldmVudC50YXJnZXQucC50ZXh0QWxpZ24oXCJjZW50ZXJcIik7XHJcbiAgICAgICAgZXZlbnQudGFyZ2V0LnAuc3Ryb2tlKDI1NSk7XHJcbiAgICAgICAgZXZlbnQudGFyZ2V0LnAuc3Ryb2tlV2VpZ2h0KDUpO1xyXG4gICAgICAgIGV2ZW50LnRhcmdldC5wLnB1c2goKTtcclxuICAgICAgICBldmVudC50YXJnZXQucC50cmFuc2xhdGUoZXZlbnQudGFyZ2V0LnBvc2l0aW9uLngsZXZlbnQudGFyZ2V0LnBvc2l0aW9uLnkpO1xyXG4gICAgICAgIGlmKGV2ZW50LnRhcmdldC5jbGlja1RpbWVsaW5lIDwgNDApe1xyXG4gICAgICAgICAgICBldmVudC50YXJnZXQucC5yb3RhdGUoZXZlbnQudGFyZ2V0LnAubWFwKGV2ZW50LnRhcmdldC5jbGlja1RpbWVsaW5lLDAsNDAsMCxNYXRoLlBJLzQpKTtcclxuICAgICAgICB9ZWxzZXtcclxuICAgICAgICAgICAgZXZlbnQudGFyZ2V0LnAucm90YXRlKE1hdGguUEkvNCk7XHJcbiAgICAgICAgfVxyXG4gICAgICAgIGV2ZW50LnRhcmdldC5wLmxpbmUoLTEyLDAsMTIsMCk7XHJcbiAgICAgICAgZXZlbnQudGFyZ2V0LnAubGluZSgwLC0xMiwwLDEyKTtcclxuICAgICAgICBldmVudC50YXJnZXQucC5wb3AoKTtcclxuICAgIH0sXHJcblxyXG4gICAgc2hvd1NvcnRVc2VySW5mbyA6IGZ1bmN0aW9uIChldmVudCl7XHJcbiAgICAgICAgaWYoZXZlbnQudGFyZ2V0LnBTdGF0ZSAhPT0gXCJob3ZlclwiKXtcclxuICAgICAgICAgICAgdmFyIHNrZXRjaCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwic2tldGNoXCIpO1xyXG4gICAgICAgICAgICB2YXIgdG9wID0gdXRpbC5nZXRFbGVtZW50VG9wKHNrZXRjaCk7XHJcbiAgICAgICAgICAgIHZhciBsZWZ0ID0gdXRpbC5nZXRFbGVtZW50TGVmdChza2V0Y2gpO1xyXG5cclxuICAgICAgICAgICAgdmFyIHNvcnRJbmZvRnJhbWUgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcInNvcnRJbmZvRnJhbWVcIik7XHJcbiAgICAgICAgICAgIGlmKHNvcnRJbmZvRnJhbWUpe1xyXG4gICAgICAgICAgICAgICAgc29ydEluZm9GcmFtZS5zdHlsZS52aXNpYmlsaXR5ID0gXCJ2aXNpYmxlXCI7XHJcbiAgICAgICAgICAgICAgICBzb3J0SW5mb0ZyYW1lLmlubmVySFRNTCA9IFwiXCI7XHJcbiAgICAgICAgICAgIH1lbHNle1xyXG4gICAgICAgICAgICAgICAgc29ydEluZm9GcmFtZSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgICAgICAgICBzb3J0SW5mb0ZyYW1lLmlkID0gXCJzb3J0SW5mb0ZyYW1lXCI7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgc29ydEluZm9GcmFtZS5zdHlsZS50b3AgPSB0b3ArZXZlbnQudGFyZ2V0LnBvc2l0aW9uLnktNTAgKyBcInB4XCI7XHJcbiAgICAgICAgICAgIHNvcnRJbmZvRnJhbWUuc3R5bGUubGVmdCA9IGxlZnQrZXZlbnQudGFyZ2V0LnBvc2l0aW9uLngrNTAgKyBcInB4XCI7XHJcblxyXG4gICAgICAgICAgICB2YXIgaW1nID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImltZ1wiKTtcclxuICAgICAgICAgICAgaW1nLnNyYyA9IGV2ZW50LnRhcmdldC5pbmZvWydhdmF0YXInXTtcclxuICAgICAgICAgICAgaW1nLnN0eWxlLmNzc1RleHQgPSBcIndpZHRoOjEwMHB4O2hlaWdodDoxMDBweDtib3JkZXItcmFkaXVzOjVweDstbW96LWJvcmRlci1yYWRpdXM6NXB4O1wiO1xyXG4gICAgICAgICAgICBzb3J0SW5mb0ZyYW1lLmFwcGVuZENoaWxkKGltZyk7XHJcblxyXG4gICAgICAgICAgICB2YXIgbmFtZSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgICAgIG5hbWUuaW5uZXJIVE1MID0gXCI8Yj7lkI3lrZfvvJo8L2I+XCIgKyBldmVudC50YXJnZXQuaW5mb1snbmFtZSddO1xyXG4gICAgICAgICAgICBuYW1lLnN0eWxlLmNzc1RleHQgPSBcIm1hcmdpbi10b3A6MjBweFwiO1xyXG4gICAgICAgICAgICBzb3J0SW5mb0ZyYW1lLmFwcGVuZENoaWxkKG5hbWUpO1xyXG5cclxuICAgICAgICAgICAgZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChzb3J0SW5mb0ZyYW1lKTtcclxuICAgICAgICB9XHJcblxyXG4gICAgfSxcclxuXHJcbiAgICBoaWRlU29ydFVzZXJJbmZvIDogZnVuY3Rpb24gKGV2ZW50KXtcclxuICAgICAgICBpZiAoZXZlbnQudGFyZ2V0LmhvdmVyT2JqQ291bnQgPT09IDAgfHwgZXZlbnQudGFyZ2V0LnN0YXRlID09PSBcInByZXNzXCIpIHtcclxuICAgICAgICAgICAgdmFyIGRvYyA9IGRvY3VtZW50O1xyXG4gICAgICAgICAgICB2YXIgc29ydEluZm9GcmFtZSA9IGRvYy5nZXRFbGVtZW50QnlJZChcInNvcnRJbmZvRnJhbWVcIik7XHJcbiAgICAgICAgICAgIGlmKHNvcnRJbmZvRnJhbWUpe1xyXG4gICAgICAgICAgICAgICAgc29ydEluZm9GcmFtZS5zdHlsZS52aXNpYmlsaXR5ID0gXCJoaWRkZW5cIjtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH1cclxuICAgIH0sXHJcblxyXG4gICAgc2hvd1VzZXJJbmZvIDogZnVuY3Rpb24gKGV2ZW50KXtcclxuICAgICAgICB2YXIgZG9jID0gZG9jdW1lbnQ7XHJcbiAgICAgICAgdmFyIHNrZXRjaCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwic2tldGNoXCIpO1xyXG5cclxuICAgICAgICB2YXIgaW5mb0ZyYW1lID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJpbmZvRnJhbWVcIik7XHJcbiAgICAgICAgaWYoaW5mb0ZyYW1lKXtcclxuICAgICAgICAgICAgaW5mb0ZyYW1lLnN0eWxlLnZpc2liaWxpdHkgPSBcInZpc2libGVcIjtcclxuICAgICAgICAgICAgaW5mb0ZyYW1lLmlubmVySFRNTCA9IFwiXCI7ICAgIC8v5riF56m6XHJcbiAgICAgICAgfWVsc2V7XHJcbiAgICAgICAgICAgIGluZm9GcmFtZSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgICAgIGluZm9GcmFtZS5pZCA9IFwiaW5mb0ZyYW1lXCI7XHJcbiAgICAgICAgfVxyXG5cclxuICAgICAgICB2YXIgaW50cm9kdWN0aW9uID0gZG9jLmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgaW50cm9kdWN0aW9uLmlkID0gXCJpbnRyb2R1Y3Rpb25cIjtcclxuXHJcbiAgICAgICAgICAgIHZhciBhdmF0YXIgPSBkb2MuY3JlYXRlRWxlbWVudChcImltZ1wiKTsgICAgICAvL2F2YXRhclxyXG4gICAgICAgICAgICBhdmF0YXIuc3JjID0gZXZlbnQudGFyZ2V0LmluZm9bJ2F2YXRhciddO1xyXG4gICAgICAgICAgICBhdmF0YXIud2lkdGggPSA4MDtcclxuICAgICAgICAgICAgYXZhdGFyLmhlaWdodCA9IDgwO1xyXG4gICAgICAgICAgICBhdmF0YXIuYWx0ID0gZXZlbnQudGFyZ2V0LmluZm9bJ25hbWUnXTtcclxuXHJcbiAgICAgICAgICAgIHZhciBpbmZvQ29udGFpbmVyID0gZG9jLmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgICAgIGluZm9Db250YWluZXIuaWQgPSBcImluZm9Db250YWluZXJcIjtcclxuXHJcbiAgICAgICAgICAgICAgICB2YXIgbmFtZSA9IGRvYy5jcmVhdGVFbGVtZW50KFwiZGl2XCIpOyAgICAgLy90aXRsZVxyXG4gICAgICAgICAgICAgICAgbmFtZS5pZCArPSBcIm5hbWVcIjtcclxuICAgICAgICAgICAgICAgIG5hbWUuaW5uZXJIVE1MID0gXCI8aDI+XCIgKyBldmVudC50YXJnZXQuaW5mb1snbmFtZSddICsgXCI8L2gyPlwiO1xyXG5cclxuICAgICAgICAgICAgICAgIHZhciBwcyA9IGV2ZW50LnRhcmdldC5pbmZvWydwb3N0cyddO1xyXG4gICAgICAgICAgICAgICAgdmFyIGZyYWdtZW50ID0gZG9jLmNyZWF0ZURvY3VtZW50RnJhZ21lbnQoKTtcclxuICAgICAgICAgICAgICAgIGZvcih2YXIgaT0wO2k8cHMubGVuZ3RoO2krKyl7XHJcbiAgICAgICAgICAgICAgICAgICAgdmFyIHBvc3RzID0gZG9jLmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7ICAgICAvL2F1dGhvclxyXG4gICAgICAgICAgICAgICAgICAgIHBvc3RzLmNsYXNzTmFtZSArPSBcInBvc3RNZXRhXCI7XHJcbiAgICAgICAgICAgICAgICAgICAgcG9zdHMudGl0bGUgPSBcInBvc3RzXCI7XHJcbiAgICAgICAgICAgICAgICAgICAgLy9wb3N0cy5pZCA9IFwiZ2V0UG9zdENvbnRlbnRCdXR0b25cIiArIHBzW2ldLmlkO1xyXG4gICAgICAgICAgICAgICAgICAgIHBvc3RzLmlubmVySFRNTCA9IHBzW2ldLnRpdGxlO1xyXG4gICAgICAgICAgICAgICAgICAgIHBvc3RzLmRhdGFfaWQgPSBwc1tpXS5pZDtcclxuICAgICAgICAgICAgICAgICAgICBwb3N0cy5vbmNsaWNrID0gZnVuY3Rpb24gKCl7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGdldFBvc3RDb250ZW50KHRoaXMuZGF0YV9pZCx0cnVlKTtcclxuICAgICAgICAgICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICAgICAgICAgIGZyYWdtZW50LmFwcGVuZENoaWxkKHBvc3RzKTtcclxuICAgICAgICAgICAgICAgIH1cclxuXHJcbiAgICAgICAgaW5mb0NvbnRhaW5lci5hcHBlbmRDaGlsZChuYW1lKTtcclxuICAgICAgICBpbmZvQ29udGFpbmVyLmFwcGVuZENoaWxkKGZyYWdtZW50KTtcclxuXHJcbiAgICAgICAgaW50cm9kdWN0aW9uLmFwcGVuZENoaWxkKGF2YXRhcik7XHJcbiAgICAgICAgaW50cm9kdWN0aW9uLmFwcGVuZENoaWxkKGluZm9Db250YWluZXIpO1xyXG5cclxuICAgICAgICBpbmZvRnJhbWUuYXBwZW5kQ2hpbGQoaW50cm9kdWN0aW9uKTtcclxuICAgICAgICBkb2MuYm9keS5hcHBlbmRDaGlsZChpbmZvRnJhbWUpO1xyXG4gICAgfSxcclxuXHJcbiAgICBzaG93UG9zdEluZm8gOiBmdW5jdGlvbiAoZXZlbnQpe1xyXG4gICAgICAgIHZhciBkb2MgPSBkb2N1bWVudDtcclxuICAgICAgICB2YXIgaW5mb0ZyYW1lID0gZG9jLmdldEVsZW1lbnRCeUlkKFwiaW5mb0ZyYW1lXCIpOyAgICAvL2luZm9GcmFtZVxyXG4gICAgICAgIGlmKGluZm9GcmFtZSl7XHJcbiAgICAgICAgICAgIGluZm9GcmFtZS5zdHlsZS52aXNpYmlsaXR5ID0gXCJ2aXNpYmxlXCI7XHJcbiAgICAgICAgICAgIGluZm9GcmFtZS5pbm5lckhUTUwgPSBcIlwiOyAgICAvL+a4heepulxyXG4gICAgICAgIH1lbHNle1xyXG4gICAgICAgICAgICBpbmZvRnJhbWUgPSBkb2MuY3JlYXRlRWxlbWVudChcImRpdlwiKTtcclxuICAgICAgICAgICAgaW5mb0ZyYW1lLmlkID0gXCJpbmZvRnJhbWVcIjtcclxuICAgICAgICB9XHJcblxyXG4gICAgICAgIHZhciBpbnRyb2R1Y3Rpb24gPSBkb2MuY3JlYXRlRWxlbWVudChcImRpdlwiKTtcclxuICAgICAgICBpbnRyb2R1Y3Rpb24uaWQgPSBcImludHJvZHVjdGlvblwiO1xyXG5cclxuICAgICAgICAgICAgdmFyIHRodW1ibmFpbCA9IGRvYy5jcmVhdGVFbGVtZW50KFwiaW1nXCIpOyAgICAgIC8vdGh1bWJuYWlsXHJcbiAgICAgICAgICAgIHRodW1ibmFpbC5zcmMgPSBldmVudC50YXJnZXQuaW5mb1sndGh1bWJuYWlsJ107XHJcbiAgICAgICAgICAgIHRodW1ibmFpbC53aWR0aCA9IDgwO1xyXG4gICAgICAgICAgICB0aHVtYm5haWwuaGVpZ2h0ID0gODA7XHJcbiAgICAgICAgICAgIHRodW1ibmFpbC5hbHQgPSBldmVudC50YXJnZXQuaW5mb1sndGl0bGUnXTtcclxuXHJcbiAgICAgICAgICAgIHZhciBpbmZvQ29udGFpbmVyID0gZG9jLmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgICAgIGluZm9Db250YWluZXIuaWQgPSBcImluZm9Db250YWluZXJcIjtcclxuXHJcbiAgICAgICAgICAgICAgICB2YXIgdGl0bGUgPSBkb2MuY3JlYXRlRWxlbWVudChcImRpdlwiKTsgICAgIC8vdGl0bGVcclxuICAgICAgICAgICAgICAgIHRpdGxlLm9uY2xpY2sgPSBmdW5jdGlvbiAoKXtcclxuICAgICAgICAgICAgICAgICAgICBnZXRQb3N0Q29udGVudChldmVudC50YXJnZXQuaW5mb1snaWQnXSwgZmFsc2UpOyAgLy9mYWxzZSA6IG5vIHRpdGxlXHJcbiAgICAgICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICAgICAgdGl0bGUuaWQgKz0gXCJ0aXRsZVwiO1xyXG4gICAgICAgICAgICAgICAgdGl0bGUuaW5uZXJIVE1MID0gXCI8aDI+XCIgKyBldmVudC50YXJnZXQuaW5mb1sndGl0bGUnXSArIFwiPC9oMj5cIjtcclxuXHJcbiAgICAgICAgICAgICAgICB2YXIgYXV0aG9yID0gZG9jLmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7ICAgICAvL2F1dGhvclxyXG4gICAgICAgICAgICAgICAgYXV0aG9yLmNsYXNzTmFtZSArPSBcInBvc3RNZXRhXCI7XHJcbiAgICAgICAgICAgICAgICBhdXRob3IudGl0bGUgPSBcImF1dGhvclwiO1xyXG4gICAgICAgICAgICAgICAgYXV0aG9yLmlubmVySFRNTCA9IFwi5L2c6ICF77yaXCIgKyBldmVudC50YXJnZXQuaW5mb1snYXV0aG9yJ107XHJcblxyXG4gICAgICAgICAgICAgICAgdmFyIHByb2R1Y3RUeXBlID0gZG9jLmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgICAgICAgICBwcm9kdWN0VHlwZS5jbGFzc05hbWUgKz0gXCJwb3N0TWV0YVwiO1xyXG4gICAgICAgICAgICAgICAgcHJvZHVjdFR5cGUudGl0bGUgPSBcInByb2R1Y3RUeXBlXCI7XHJcbiAgICAgICAgICAgICAgICBwcm9kdWN0VHlwZS5pbm5lckhUTUwgPSBcIuS9nOWTgeexu+Wei++8mlwiICsgKGV2ZW50LnRhcmdldC5pbmZvWydwcm9kdWN0VHlwZSddIHx8IFwiLS0tLS1cIik7XHJcblxyXG4gICAgICAgICAgICAgICAgdmFyIG1ham9yID0gZG9jLmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XHJcbiAgICAgICAgICAgICAgICBtYWpvci5jbGFzc05hbWUgKz0gXCJwb3N0TWV0YVwiO1xyXG4gICAgICAgICAgICAgICAgbWFqb3IudGl0bGUgPSBcIm1ham9yXCI7XHJcbiAgICAgICAgICAgICAgICBtYWpvci5pbm5lckhUTUwgPSBcIuS4k+S4mu+8mlwiICsgKGV2ZW50LnRhcmdldC5pbmZvWydtYWpvciddIHx8IFwiLS0tXCIpICsgXCItXCIgKyAoZXZlbnQudGFyZ2V0LmluZm9bJ3N1Yk1ham9yJ10gfHwgXCItLS1cIik7XHJcblxyXG4gICAgICAgICAgICAgICAgdmFyIGNyZWF0aW9uRGF0ZSA9IGRvYy5jcmVhdGVFbGVtZW50KFwiZGl2XCIpO1xyXG4gICAgICAgICAgICAgICAgY3JlYXRpb25EYXRlLmNsYXNzTmFtZSArPSBcInBvc3RNZXRhXCI7XHJcbiAgICAgICAgICAgICAgICBjcmVhdGlvbkRhdGUudGl0bGUgPSBcImNyZWF0aW9uRGF0ZVwiO1xyXG4gICAgICAgICAgICAgICAgY3JlYXRpb25EYXRlLmlubmVySFRNTCA9IFwi5Yib5L2c5bm05Lu977yaXCIgKyAoZXZlbnQudGFyZ2V0LmluZm9bJ2NyZWF0aW9uRGF0ZSddIHx8IFwiLS0tLS1cIikgKyBcIuW5tFwiO1xyXG5cclxuICAgICAgICBpbmZvQ29udGFpbmVyLmFwcGVuZENoaWxkKHRpdGxlKTtcclxuICAgICAgICBpbmZvQ29udGFpbmVyLmFwcGVuZENoaWxkKGF1dGhvcik7XHJcbiAgICAgICAgaW5mb0NvbnRhaW5lci5hcHBlbmRDaGlsZChwcm9kdWN0VHlwZSk7XHJcbiAgICAgICAgaW5mb0NvbnRhaW5lci5hcHBlbmRDaGlsZChtYWpvcik7XHJcbiAgICAgICAgaW5mb0NvbnRhaW5lci5hcHBlbmRDaGlsZChjcmVhdGlvbkRhdGUpO1xyXG5cclxuICAgICAgICBpbnRyb2R1Y3Rpb24uYXBwZW5kQ2hpbGQodGh1bWJuYWlsKTtcclxuICAgICAgICBpbnRyb2R1Y3Rpb24uYXBwZW5kQ2hpbGQoaW5mb0NvbnRhaW5lcik7XHJcblxyXG4gICAgICAgIGluZm9GcmFtZS5hcHBlbmRDaGlsZChpbnRyb2R1Y3Rpb24pO1xyXG4gICAgICAgIGRvYy5ib2R5LmFwcGVuZENoaWxkKGluZm9GcmFtZSk7XHJcbiAgICB9LFxyXG5cclxuICAgIGhpZGVJbmZvRnJhbWUgOiBmdW5jdGlvbiAoZXZlbnQpe1xyXG4gICAgICAgIHZhciBkb2MgPSBkb2N1bWVudDtcclxuICAgICAgICB2YXIgaW5mb0ZyYW1lID0gZG9jLmdldEVsZW1lbnRCeUlkKFwiaW5mb0ZyYW1lXCIpO1xyXG4gICAgICAgIGlmKGluZm9GcmFtZSl7XHJcbiAgICAgICAgICAgIGluZm9GcmFtZS5zdHlsZS52aXNpYmlsaXR5ID0gXCJoaWRkZW5cIjtcclxuICAgICAgICB9XHJcbiAgICB9XHJcblxyXG59O1xyXG5cclxubW9kdWxlLmV4cG9ydHMgPSBldmVudEhhbmRsZUZ1bmM7XG5cblxuLyoqKioqKioqKioqKioqKioqXG4gKiogV0VCUEFDSyBGT09URVJcbiAqKiAuL2pzL0V2ZW50SGFuZGxlRnVuYy5qc1xuICoqIG1vZHVsZSBpZCA9IDEwXG4gKiogbW9kdWxlIGNodW5rcyA9IDBcbiAqKi8iXSwic291cmNlUm9vdCI6IiJ9");
+	
+	var eventHandleFunc = __webpack_require__(11);
+	var util = __webpack_require__(3);
+	var globalVar = __webpack_require__(5);
+	var ButtonParticle = __webpack_require__(2);
+	var ButtonPlus = __webpack_require__(7);
+
+	var getInfo = function (type,arg){
+		globalVar.displayArray.ButtonParticle = [];
+		
+		if(window.XMLHttpRequest){
+			XMLHTTP=new XMLHttpRequest();
+		}else{
+			XMLHTTP=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		if(type === "posts"){
+			XMLHTTP.onreadystatechange=function(){
+				if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+					var posts = JSON.parse(XMLHTTP.responseText);
+					//alert(XMLHTTP.responseText);
+					//console.log(XMLHTTP.responseText);
+					
+					for(var item in posts){
+						var size = Math.random()*20 + 15;
+						var options = {
+							position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+							width : size,
+							height : size,
+							r : 25,
+							p : globalVar.pp
+						};
+						var optionsBP = {
+							visualObject : new ButtonPlus(options),
+							p : globalVar.pp,
+							vortexAttract : true
+						};
+						
+						var newObj = new ButtonParticle(optionsBP);
+						newObj.attractPt = globalVar.attractPtL;
+						newObj.reflect = true;
+
+						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showPostInfo);
+						newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
+
+						newObj.visualObject.sound = globalVar.SOUNDFILE;
+						newObj.visualObject.info = posts[item];
+						newObj.visualObject.buttonCol = newObj.visualObject.info["color"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);
+						globalVar.displayArray.ButtonParticle.push(newObj);
+					}
+					
+					
+					//console.log(globalVar.displayArray.ButtonParticle);
+				}
+			}
+			XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
+			XMLHTTP.send();
+		}else{
+			if(type === "users"){
+				XMLHTTP.onreadystatechange=function(){
+					if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+						var users = JSON.parse(XMLHTTP.responseText);
+						//alert(XMLHTTP.responseText);
+						//console.log(XMLHTTP.responseText);
+						
+						var i = 0;
+						var count = util.getJsonObjLength(users);
+						for(var item in users){
+							var size = Math.random()*20 + 20;
+							var options = {
+								position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
+								width : size,
+								height : size,
+								r : 25,
+								p : globalVar.pp
+							}
+							var optionsBP = {
+								visualObject : new ButtonPlus(options),
+								p : globalVar.pp,
+								vortexAttract : true
+							}
+							var newObj = new ButtonParticle(optionsBP);
+							if(i < count/2){
+								newObj.attractPt = globalVar.attractPtL;
+							}else{
+								newObj.attractPt = globalVar.attractPtR;
+							}
+
+							newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
+							newObj.reflect = true;
+							newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
+							newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideSortUserInfo);
+							newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo);
+							newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
+							newObj.visualObject.addHandler("hover",eventHandleFunc.showSortUserInfo);
+							newObj.visualObject.addHandler("mouseOut",eventHandleFunc.hideSortUserInfo);
+							newObj.visualObject.sound = globalVar.SOUNDFILE;
+							newObj.visualObject.info = users[item];
+							
+							globalVar.displayArray.ButtonParticle.push(newObj);
+							i++;
+						}
+						i = null;
+						count = null;
+						
+						
+						
+						
+				
+						
+					}
+				}
+				XMLHTTP.open("GET","wp-content/themes/zbs/getUserInfo.php" + "?userRole=" + arg);
+				XMLHTTP.send();
+			}
+		}
+		
+	}
+
+
+	module.exports = getInfo;
 
 /***/ },
 /* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * 定义与Button绑定的事件处理程序
+	 */
+	var util = __webpack_require__(3);
+	var getPostContent = __webpack_require__(12);
+
+	var eventHandleFunc = {
+	    // clicked : function (event){
+	    //     event.target.p.noStroke();
+	    //     event.target.p.fill(0);
+	    //     event.target.p.textAlign("center");
+	    //     var text;
+	    //     text = event.target.info['title'];
+	    //     if(text){
+	    //         event.target.p.text(text,event.target.position.x,event.target.position.y);
+	    //     }	
+	    // },
+
+	    clicked_animation : function (event){
+	        event.target.p.noStroke();
+	        event.target.p.fill(0);
+	        event.target.p.textAlign("center");
+	        event.target.p.stroke(255);
+	        event.target.p.strokeWeight(5);
+	        event.target.p.push();
+	        event.target.p.translate(event.target.position.x,event.target.position.y);
+	        if(event.target.clickTimeline < 40){
+	            event.target.p.rotate(event.target.p.map(event.target.clickTimeline,0,40,0,Math.PI/4));
+	        }else{
+	            event.target.p.rotate(Math.PI/4);
+	        }
+	        event.target.p.line(-12,0,12,0);
+	        event.target.p.line(0,-12,0,12);
+	        event.target.p.pop();
+	    },
+
+	    showSortUserInfo : function (event){
+	        if(event.target.pState !== "hover"){
+	            var sketch = document.getElementById("sketch");
+	            var top = util.getElementTop(sketch);
+	            var left = util.getElementLeft(sketch);
+
+	            var sortInfoFrame = document.getElementById("sortInfoFrame");
+	            if(sortInfoFrame){
+	                sortInfoFrame.style.visibility = "visible";
+	                sortInfoFrame.innerHTML = "";
+	            }else{
+	                sortInfoFrame = document.createElement("div");
+	                sortInfoFrame.id = "sortInfoFrame";
+	            }
+	            sortInfoFrame.style.top = top+event.target.position.y-50 + "px";
+	            sortInfoFrame.style.left = left+event.target.position.x+50 + "px";
+
+	            var img = document.createElement("img");
+	            img.src = event.target.info['avatar'];
+	            img.style.cssText = "width:100px;height:100px;border-radius:5px;-moz-border-radius:5px;";
+	            sortInfoFrame.appendChild(img);
+
+	            var name = document.createElement("div");
+	            name.innerHTML = "<b>名字：</b>" + event.target.info['name'];
+	            name.style.cssText = "margin-top:20px";
+	            sortInfoFrame.appendChild(name);
+
+	            document.body.appendChild(sortInfoFrame);
+	        }
+
+	    },
+
+	    hideSortUserInfo : function (event){
+	        if (event.target.hoverObjCount === 0 || event.target.state === "press") {
+	            var doc = document;
+	            var sortInfoFrame = doc.getElementById("sortInfoFrame");
+	            if(sortInfoFrame){
+	                sortInfoFrame.style.visibility = "hidden";
+	            }
+	        }
+	    },
+
+	    showUserInfo : function (event){
+	        var doc = document;
+	        var sketch = document.getElementById("sketch");
+
+	        var infoFrame = document.getElementById("infoFrame");
+	        if(infoFrame){
+	            infoFrame.style.visibility = "visible";
+	            infoFrame.innerHTML = "";    //清空
+	        }else{
+	            infoFrame = document.createElement("div");
+	            infoFrame.id = "infoFrame";
+	        }
+
+	        var introduction = doc.createElement("div");
+	        introduction.id = "introduction";
+
+	            var avatar = doc.createElement("img");      //avatar
+	            avatar.src = event.target.info['avatar'];
+	            avatar.width = 80;
+	            avatar.height = 80;
+	            avatar.alt = event.target.info['name'];
+
+	            var infoContainer = doc.createElement("div");
+	            infoContainer.id = "infoContainer";
+
+	                var name = doc.createElement("div");     //title
+	                name.id += "name";
+	                name.innerHTML = "<h2>" + event.target.info['name'] + "</h2>";
+
+	                var ps = event.target.info['posts'];
+	                var fragment = doc.createDocumentFragment();
+	                for(var i=0;i<ps.length;i++){
+	                    var posts = doc.createElement("div");     //author
+	                    posts.className += "postMeta";
+	                    posts.title = "posts";
+	                    //posts.id = "getPostContentButton" + ps[i].id;
+	                    posts.innerHTML = ps[i].title;
+	                    posts.data_id = ps[i].id;
+	                    posts.onclick = function (){
+	                        getPostContent(this.data_id,true);
+	                    };
+	                    fragment.appendChild(posts);
+	                }
+
+	        infoContainer.appendChild(name);
+	        infoContainer.appendChild(fragment);
+
+	        introduction.appendChild(avatar);
+	        introduction.appendChild(infoContainer);
+
+	        infoFrame.appendChild(introduction);
+	        doc.body.appendChild(infoFrame);
+	    },
+
+	    showPostInfo : function (event){
+	        var doc = document;
+	        var infoFrame = doc.getElementById("infoFrame");    //infoFrame
+	        if(infoFrame){
+	            infoFrame.style.visibility = "visible";
+	            infoFrame.innerHTML = "";    //清空
+	        }else{
+	            infoFrame = doc.createElement("div");
+	            infoFrame.id = "infoFrame";
+	        }
+
+	        var introduction = doc.createElement("div");
+	        introduction.id = "introduction";
+
+	            var thumbnail = doc.createElement("img");      //thumbnail
+	            thumbnail.src = event.target.info['thumbnail'];
+	            thumbnail.width = 80;
+	            thumbnail.height = 80;
+	            thumbnail.alt = event.target.info['title'];
+
+	            var infoContainer = doc.createElement("div");
+	            infoContainer.id = "infoContainer";
+
+	                var title = doc.createElement("div");     //title
+	                title.onclick = function (){
+	                    getPostContent(event.target.info['id'], false);  //false : no title
+	                };
+	                title.id += "title";
+	                title.innerHTML = "<h2>" + event.target.info['title'] + "</h2>";
+
+	                var author = doc.createElement("div");     //author
+	                author.className += "postMeta";
+	                author.title = "author";
+	                author.innerHTML = "作者：" + event.target.info['author'];
+
+	                var productType = doc.createElement("div");
+	                productType.className += "postMeta";
+	                productType.title = "productType";
+	                productType.innerHTML = "作品类型：" + (event.target.info['productType'] || "-----");
+
+	                var major = doc.createElement("div");
+	                major.className += "postMeta";
+	                major.title = "major";
+	                major.innerHTML = "专业：" + (event.target.info['major'] || "---") + "-" + (event.target.info['subMajor'] || "---");
+
+	                var creationDate = doc.createElement("div");
+	                creationDate.className += "postMeta";
+	                creationDate.title = "creationDate";
+	                creationDate.innerHTML = "创作年份：" + (event.target.info['creationDate'] || "-----") + "年";
+
+	        infoContainer.appendChild(title);
+	        infoContainer.appendChild(author);
+	        infoContainer.appendChild(productType);
+	        infoContainer.appendChild(major);
+	        infoContainer.appendChild(creationDate);
+
+	        introduction.appendChild(thumbnail);
+	        introduction.appendChild(infoContainer);
+
+	        infoFrame.appendChild(introduction);
+	        doc.body.appendChild(infoFrame);
+	    },
+
+	    hideInfoFrame : function (event){
+	        var doc = document;
+	        var infoFrame = doc.getElementById("infoFrame");
+	        if(infoFrame){
+	            infoFrame.style.visibility = "hidden";
+	        }
+	    }
+
+	};
+
+	module.exports = eventHandleFunc;
+
+/***/ },
+/* 12 */
 /***/ function(module, exports) {
 
-	eval("var getPostContent = function (id, title){\r\n\tif(window.XMLHttpRequest){\r\n\t\tXMLHTTP=new XMLHttpRequest();\r\n\t}else{\r\n\t\tXMLHTTP=new ActiveXObject(\"Microsoft.XMLHTTP\");\r\n\t}\r\n\r\n\tXMLHTTP.onreadystatechange=function(){\r\n\t\tif(XMLHTTP.readyState==4 && XMLHTTP.status==200){\r\n\t\t\tvar postContent = document.createElement(\"div\");\r\n\t\t\tpostContent.id = \"postContent\";\r\n\t\t\tpostContent.innerHTML = XMLHTTP.responseText;\r\n\t\t\tinfoFrame = document.getElementById(\"infoFrame\");\r\n\t\t\tvar pc = document.getElementById(\"postContent\");\r\n\t\t\tif(infoFrame){\r\n\t\t\t\tif(pc){\r\n\t\t\t\t\tpc.parentNode.removeChild(pc);\r\n\t\t\t\t}\r\n\t\t\t\tinfoFrame.appendChild(postContent);\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\tvar height = document.documentElement.clientHeight - 60 ;\r\n\t\t\t$(\"#infoFrame\").animate({height:height});\r\n\t\t\t\r\n\t\t\t//窗口尺寸改变\r\n\t\t\t$(window).resize(function() {\r\n\t\t\t\tif($(\"#infoFrame\").css(\"height\") != \"100px\"){ //若高度大于停靠在下方是的高度时\r\n\t\t\t\t\t$(\"#infoFrame\").css(\"height\",document.documentElement.clientHeight - 60);\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t\t\r\n\t\t\t//将sketch隐藏并移出显示范围，否则即使被遮盖也会有交互效果\r\n\t\t\t$(\"#sketch\").fadeOut();\r\n\t\t\tsetTimeout(function (){$('#sketch').css('position','fixed')},200);\r\n\t\t\t$(\"#sketch\").css(\"bottom\",\"-900px\");\r\n\t\t\t\r\n\t\t\t\r\n\t\t\t//返回按钮（关闭）\r\n\t\t\tvar cancel = document.getElementById(\"postContent_delete\");\r\n\t\t\tif(!cancel){\r\n\t\t\t\tvar cancel = document.createElement(\"button\");\r\n\t\t\t\tcancel.id = \"postContent_delete\";\r\n\t\t\t\tcancel.className = \"btn btn-danger btn-sm\";\r\n\t\t\t\t//cancel.innerHTML = \"<span class='glyphicon glyphicon-remove'></span>\";\r\n\t\t\t\tcancel.onclick = function (){\r\n\t\t\t\t\t$(\"#infoFrame\").animate({height:\"100px\"});\r\n\t\t\t\t\t$(\"#infoFrame\").animate({ scrollTop: 0 }, 400);\r\n\t\t\t\t\t$(\"#postContent\").fadeOut();\r\n\t\t\t\t\t//setTimeout(function (){infoFrame.removeChild(postContent);},300);\r\n\t\t\t\t\tthis.remove();\r\n\r\n\t\t\t\t\t$(\"#sketch\").css(\"position\",\"static\"); //将sketch移回\r\n\t\t\t\t\t$(\"#sketch\").fadeIn();\r\n\t\t\t\t}\r\n\t\t\t\tdocument.body.appendChild(cancel);\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\t//滚到顶部\r\n\t\t\tvar toTop = document.getElementById(\"toTop\");\r\n\t\t\tif(!toTop){\r\n\t\t\t\tvar toTop = document.createElement(\"button\");\r\n\t\t\t\ttoTop.id = \"toTop\";\r\n\t\t\t\ttoTop.className = \"btn btn-default btn-sm\";\r\n\t\t\t\ttoTop.onclick = function (){\r\n\t\t\t\t\t$(\"#infoFrame\").animate({ scrollTop: 0 }, 400);\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\tdocument.body.appendChild(toTop);\r\n\t\t\t}\r\n\t\t\t\r\n\t\t\t/*检查滚动*/\r\n\t\t\tvar sTop;\r\n\t\t\tsTop = document.getElementById(\"infoFrame\").scrollTop;\r\n\r\n\t\t\t$(\"#infoFrame\").scroll(function(){\r\n\t\t\t\tsTop = document.getElementById(\"infoFrame\").scrollTop; \r\n\t\t\t});\r\n\r\n\t\t\tif(sTop == 0){\r\n\t\t\t\t$(\"#toTop\").css(\"display\",\"none\");\r\n\t\t\t}else{\r\n\t\t\t\t$(\"#toTop\").css(\"display\",\"block\");\r\n\t\t\t}\r\n\t\t\t$(\"#infoFrame\").scroll(function(){\r\n\t\t\t\tif(sTop == 0){\r\n\t\t\t\t\t$(\"#toTop\").fadeOut();\r\n\t\t\t\t}else{\r\n\t\t\t\t\t$(\"#toTop\").fadeIn();\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t\t\r\n\t\t\t// $(\"#postContent\").css(\"display\",\"none\");\r\n\t\t\t// $(\"#postContent\").fadeIn();\r\n\t\t\t\r\n\t\t}\r\n\t}\r\n\tXMLHTTP.open(\"GET\",\"wp-content/themes/zbs/getPostContent.php?id=\"+id+\"&title=\"+title);\r\n\tXMLHTTP.send();\r\n}\r\n\r\n\r\n\r\n\r\nmodule.exports = getPostContent;//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9qcy9nZXRQb3N0Q29udGVudC5qcz9kYzI2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBLEVBQUU7QUFDRjtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsNEJBQTRCLGNBQWM7O0FBRTFDO0FBQ0E7QUFDQSxpREFBaUQ7QUFDakQ7QUFDQTtBQUNBLElBQUk7O0FBRUo7QUFDQTtBQUNBLDBCQUEwQixxQ0FBcUM7QUFDL0Q7OztBQUdBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw4QkFBOEIsZUFBZTtBQUM3Qyw4QkFBOEIsZUFBZTtBQUM3QztBQUNBLDhCQUE4QixvQ0FBb0M7QUFDbEU7O0FBRUEsMkNBQTJDO0FBQzNDO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsOEJBQThCLGVBQWU7QUFDN0M7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSwwRDtBQUNBLElBQUk7O0FBRUo7QUFDQTtBQUNBLElBQUk7QUFDSjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsS0FBSztBQUNMO0FBQ0E7QUFDQSxJQUFJOztBQUVKO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7Ozs7QUFLQSIsImZpbGUiOiIxMS5qcyIsInNvdXJjZXNDb250ZW50IjpbInZhciBnZXRQb3N0Q29udGVudCA9IGZ1bmN0aW9uIChpZCwgdGl0bGUpe1xyXG5cdGlmKHdpbmRvdy5YTUxIdHRwUmVxdWVzdCl7XHJcblx0XHRYTUxIVFRQPW5ldyBYTUxIdHRwUmVxdWVzdCgpO1xyXG5cdH1lbHNle1xyXG5cdFx0WE1MSFRUUD1uZXcgQWN0aXZlWE9iamVjdChcIk1pY3Jvc29mdC5YTUxIVFRQXCIpO1xyXG5cdH1cclxuXHJcblx0WE1MSFRUUC5vbnJlYWR5c3RhdGVjaGFuZ2U9ZnVuY3Rpb24oKXtcclxuXHRcdGlmKFhNTEhUVFAucmVhZHlTdGF0ZT09NCAmJiBYTUxIVFRQLnN0YXR1cz09MjAwKXtcclxuXHRcdFx0dmFyIHBvc3RDb250ZW50ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKTtcclxuXHRcdFx0cG9zdENvbnRlbnQuaWQgPSBcInBvc3RDb250ZW50XCI7XHJcblx0XHRcdHBvc3RDb250ZW50LmlubmVySFRNTCA9IFhNTEhUVFAucmVzcG9uc2VUZXh0O1xyXG5cdFx0XHRpbmZvRnJhbWUgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImluZm9GcmFtZVwiKTtcclxuXHRcdFx0dmFyIHBjID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJwb3N0Q29udGVudFwiKTtcclxuXHRcdFx0aWYoaW5mb0ZyYW1lKXtcclxuXHRcdFx0XHRpZihwYyl7XHJcblx0XHRcdFx0XHRwYy5wYXJlbnROb2RlLnJlbW92ZUNoaWxkKHBjKTtcclxuXHRcdFx0XHR9XHJcblx0XHRcdFx0aW5mb0ZyYW1lLmFwcGVuZENoaWxkKHBvc3RDb250ZW50KTtcclxuXHRcdFx0fVxyXG5cdFx0XHRcclxuXHRcdFx0dmFyIGhlaWdodCA9IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudC5jbGllbnRIZWlnaHQgLSA2MCA7XHJcblx0XHRcdCQoXCIjaW5mb0ZyYW1lXCIpLmFuaW1hdGUoe2hlaWdodDpoZWlnaHR9KTtcclxuXHRcdFx0XHJcblx0XHRcdC8v56qX5Y+j5bC65a+45pS55Y+YXHJcblx0XHRcdCQod2luZG93KS5yZXNpemUoZnVuY3Rpb24oKSB7XHJcblx0XHRcdFx0aWYoJChcIiNpbmZvRnJhbWVcIikuY3NzKFwiaGVpZ2h0XCIpICE9IFwiMTAwcHhcIil7IC8v6Iul6auY5bqm5aSn5LqO5YGc6Z2g5Zyo5LiL5pa55piv55qE6auY5bqm5pe2XHJcblx0XHRcdFx0XHQkKFwiI2luZm9GcmFtZVwiKS5jc3MoXCJoZWlnaHRcIixkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQuY2xpZW50SGVpZ2h0IC0gNjApO1xyXG5cdFx0XHRcdH1cclxuXHRcdFx0fSk7XHJcblx0XHRcdFxyXG5cdFx0XHQvL+WwhnNrZXRjaOmakOiXj+W5tuenu+WHuuaYvuekuuiMg+WbtO+8jOWQpuWImeWNs+S9v+iiq+mBruebluS5n+S8muacieS6pOS6kuaViOaenFxyXG5cdFx0XHQkKFwiI3NrZXRjaFwiKS5mYWRlT3V0KCk7XHJcblx0XHRcdHNldFRpbWVvdXQoZnVuY3Rpb24gKCl7JCgnI3NrZXRjaCcpLmNzcygncG9zaXRpb24nLCdmaXhlZCcpfSwyMDApO1xyXG5cdFx0XHQkKFwiI3NrZXRjaFwiKS5jc3MoXCJib3R0b21cIixcIi05MDBweFwiKTtcclxuXHRcdFx0XHJcblx0XHRcdFxyXG5cdFx0XHQvL+i/lOWbnuaMiemSru+8iOWFs+mXre+8iVxyXG5cdFx0XHR2YXIgY2FuY2VsID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJwb3N0Q29udGVudF9kZWxldGVcIik7XHJcblx0XHRcdGlmKCFjYW5jZWwpe1xyXG5cdFx0XHRcdHZhciBjYW5jZWwgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwiYnV0dG9uXCIpO1xyXG5cdFx0XHRcdGNhbmNlbC5pZCA9IFwicG9zdENvbnRlbnRfZGVsZXRlXCI7XHJcblx0XHRcdFx0Y2FuY2VsLmNsYXNzTmFtZSA9IFwiYnRuIGJ0bi1kYW5nZXIgYnRuLXNtXCI7XHJcblx0XHRcdFx0Ly9jYW5jZWwuaW5uZXJIVE1MID0gXCI8c3BhbiBjbGFzcz0nZ2x5cGhpY29uIGdseXBoaWNvbi1yZW1vdmUnPjwvc3Bhbj5cIjtcclxuXHRcdFx0XHRjYW5jZWwub25jbGljayA9IGZ1bmN0aW9uICgpe1xyXG5cdFx0XHRcdFx0JChcIiNpbmZvRnJhbWVcIikuYW5pbWF0ZSh7aGVpZ2h0OlwiMTAwcHhcIn0pO1xyXG5cdFx0XHRcdFx0JChcIiNpbmZvRnJhbWVcIikuYW5pbWF0ZSh7IHNjcm9sbFRvcDogMCB9LCA0MDApO1xyXG5cdFx0XHRcdFx0JChcIiNwb3N0Q29udGVudFwiKS5mYWRlT3V0KCk7XHJcblx0XHRcdFx0XHQvL3NldFRpbWVvdXQoZnVuY3Rpb24gKCl7aW5mb0ZyYW1lLnJlbW92ZUNoaWxkKHBvc3RDb250ZW50KTt9LDMwMCk7XHJcblx0XHRcdFx0XHR0aGlzLnJlbW92ZSgpO1xyXG5cclxuXHRcdFx0XHRcdCQoXCIjc2tldGNoXCIpLmNzcyhcInBvc2l0aW9uXCIsXCJzdGF0aWNcIik7IC8v5bCGc2tldGNo56e75ZueXHJcblx0XHRcdFx0XHQkKFwiI3NrZXRjaFwiKS5mYWRlSW4oKTtcclxuXHRcdFx0XHR9XHJcblx0XHRcdFx0ZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChjYW5jZWwpO1xyXG5cdFx0XHR9XHJcblx0XHRcdFxyXG5cdFx0XHQvL+a7muWIsOmhtumDqFxyXG5cdFx0XHR2YXIgdG9Ub3AgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcInRvVG9wXCIpO1xyXG5cdFx0XHRpZighdG9Ub3Ape1xyXG5cdFx0XHRcdHZhciB0b1RvcCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJidXR0b25cIik7XHJcblx0XHRcdFx0dG9Ub3AuaWQgPSBcInRvVG9wXCI7XHJcblx0XHRcdFx0dG9Ub3AuY2xhc3NOYW1lID0gXCJidG4gYnRuLWRlZmF1bHQgYnRuLXNtXCI7XHJcblx0XHRcdFx0dG9Ub3Aub25jbGljayA9IGZ1bmN0aW9uICgpe1xyXG5cdFx0XHRcdFx0JChcIiNpbmZvRnJhbWVcIikuYW5pbWF0ZSh7IHNjcm9sbFRvcDogMCB9LCA0MDApO1xyXG5cdFx0XHRcdH1cclxuXHRcdFx0XHRcclxuXHRcdFx0XHRkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKHRvVG9wKTtcclxuXHRcdFx0fVxyXG5cdFx0XHRcclxuXHRcdFx0Lyrmo4Dmn6Xmu5rliqgqL1xyXG5cdFx0XHR2YXIgc1RvcDtcclxuXHRcdFx0c1RvcCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiaW5mb0ZyYW1lXCIpLnNjcm9sbFRvcDtcclxuXHJcblx0XHRcdCQoXCIjaW5mb0ZyYW1lXCIpLnNjcm9sbChmdW5jdGlvbigpe1xyXG5cdFx0XHRcdHNUb3AgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImluZm9GcmFtZVwiKS5zY3JvbGxUb3A7IFxyXG5cdFx0XHR9KTtcclxuXHJcblx0XHRcdGlmKHNUb3AgPT0gMCl7XHJcblx0XHRcdFx0JChcIiN0b1RvcFwiKS5jc3MoXCJkaXNwbGF5XCIsXCJub25lXCIpO1xyXG5cdFx0XHR9ZWxzZXtcclxuXHRcdFx0XHQkKFwiI3RvVG9wXCIpLmNzcyhcImRpc3BsYXlcIixcImJsb2NrXCIpO1xyXG5cdFx0XHR9XHJcblx0XHRcdCQoXCIjaW5mb0ZyYW1lXCIpLnNjcm9sbChmdW5jdGlvbigpe1xyXG5cdFx0XHRcdGlmKHNUb3AgPT0gMCl7XHJcblx0XHRcdFx0XHQkKFwiI3RvVG9wXCIpLmZhZGVPdXQoKTtcclxuXHRcdFx0XHR9ZWxzZXtcclxuXHRcdFx0XHRcdCQoXCIjdG9Ub3BcIikuZmFkZUluKCk7XHJcblx0XHRcdFx0fVxyXG5cdFx0XHR9KTtcclxuXHRcdFx0XHJcblx0XHRcdC8vICQoXCIjcG9zdENvbnRlbnRcIikuY3NzKFwiZGlzcGxheVwiLFwibm9uZVwiKTtcclxuXHRcdFx0Ly8gJChcIiNwb3N0Q29udGVudFwiKS5mYWRlSW4oKTtcclxuXHRcdFx0XHJcblx0XHR9XHJcblx0fVxyXG5cdFhNTEhUVFAub3BlbihcIkdFVFwiLFwid3AtY29udGVudC90aGVtZXMvemJzL2dldFBvc3RDb250ZW50LnBocD9pZD1cIitpZCtcIiZ0aXRsZT1cIit0aXRsZSk7XHJcblx0WE1MSFRUUC5zZW5kKCk7XHJcbn1cclxuXHJcblxyXG5cclxuXHJcbm1vZHVsZS5leHBvcnRzID0gZ2V0UG9zdENvbnRlbnQ7XG5cblxuLyoqKioqKioqKioqKioqKioqXG4gKiogV0VCUEFDSyBGT09URVJcbiAqKiAuL2pzL2dldFBvc3RDb250ZW50LmpzXG4gKiogbW9kdWxlIGlkID0gMTFcbiAqKiBtb2R1bGUgY2h1bmtzID0gMFxuICoqLyJdLCJzb3VyY2VSb290IjoiIn0=");
+	var getPostContent = function (id, title){
+		if(window.XMLHttpRequest){
+			XMLHTTP=new XMLHttpRequest();
+		}else{
+			XMLHTTP=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		XMLHTTP.onreadystatechange=function(){
+			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+				var postContent = document.createElement("div");
+				postContent.id = "postContent";
+				postContent.innerHTML = XMLHTTP.responseText;
+				var infoFrame = document.getElementById("infoFrame");
+				var pc = document.getElementById("postContent");
+				if(infoFrame){
+					if(pc){
+						pc.parentNode.removeChild(pc);
+					}
+					infoFrame.appendChild(postContent);
+				}
+
+				var $infoFrame = $("#infoFrame");
+				var $sketch = $("#sketch");
+
+				var height = document.documentElement.clientHeight - 60 ;
+				$infoFrame.animate({height:height});
+				
+				//窗口尺寸改变
+				$(window).resize(function() {
+					if($infoFrame.css("height") != "100px"){ //若高度大于停靠在下方是的高度时
+						$infoFrame.css("height",document.documentElement.clientHeight - 60);
+					}
+				});
+				
+				//将sketch隐藏并移出显示范围，否则即使被遮盖也会有交互效果
+				$sketch.fadeOut();
+				setTimeout(function (){$('#sketch').css('position','fixed')},200);
+				$sketch.css("bottom","-900px");
+
+				//折叠FilterBar,并隐藏filterBarBtn
+				$("#filter").slideUp("fast",function (){
+					$("#filterBarBtn").fadeOut();
+				});
+				
+				
+				//返回按钮（关闭）
+				var cancel = document.getElementById("postContent_delete");
+				if(!cancel){
+					cancel = document.createElement("button");
+					cancel.id = "postContent_delete";
+					cancel.title = "关闭";
+					cancel.className = "btn btn-danger btn-sm";
+					//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
+					cancel.onclick = function (){
+						$infoFrame.animate({height:"100px"});
+						$infoFrame.animate({ scrollTop: 0 }, 400);
+						$("#postContent").fadeOut();
+						this.remove();
+
+						$sketch.css("position","static"); //将sketch移回
+						$sketch.fadeIn();
+						$("#filterBarBtn").fadeIn();
+					};
+					document.body.appendChild(cancel);
+				}
+				
+				//滚到顶部
+				var toTop = document.getElementById("toTop");
+				if(!toTop){
+					toTop = document.createElement("button");
+					toTop.id = "toTop";
+					toTop.title = "返回顶部";
+					toTop.className = "btn btn-default btn-sm";
+					toTop.onclick = function (){
+						$infoFrame.animate({ scrollTop: 0 }, 400);
+					};
+					
+					document.body.appendChild(toTop);
+				}
+
+				var $toTop = $("#toTop");
+				
+				/*检查滚动*/
+				var sTop;
+				sTop = document.getElementById("infoFrame").scrollTop;
+				if(sTop == 0){
+					$toTop.css("display","none");
+				}else{
+					$toTop.css("display","block");
+				}
+
+				$infoFrame.scroll(function(){
+					sTop = document.getElementById("infoFrame").scrollTop;
+					if(sTop == 0){
+						$toTop.fadeOut();
+					}else{
+						$toTop.fadeIn();
+					}
+				});
+				
+				// $("#postContent").css("display","none");
+				// $("#postContent").fadeIn();
+				
+			}
+		};
+		XMLHTTP.open("GET","wp-content/themes/zbs/getPostContent.php?id="+id+"&title="+title);
+		XMLHTTP.send();
+	};
+
+
+	module.exports = getPostContent;
 
 /***/ }
 /******/ ]);

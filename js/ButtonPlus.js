@@ -15,6 +15,7 @@ function ButtonPlus(options) {
 	this.clickTimeline = 0;   //On状态的时间轴
 	this.geometryType = "circle";
 	this.maxWidth = 100;
+	this.filtered = false;   //用于过滤
 }
 util.inheritPrototype(ButtonPlus, Button);
 
@@ -23,6 +24,9 @@ ButtonPlus.prototype.hoverObjCount = 0;
 
 //判断ButtonPlus是否被选中（加强版）
 ButtonPlus.prototype.isSelected = function () {
+	if (this.filtered){     //假如被排除了，那么所有的状态都为未选中（亦即永远选不中）
+		return false;
+	}
 	var width = this.width > 40 ? this.width : 40;
 	var height = this.width > 40 ? this.width : 40;
 	if (this.width === this.height && this.geometryType === "circle") {
@@ -135,7 +139,7 @@ ButtonPlus.prototype.display = function () {
 			}
 			this.fillCol = this.buttonCol;
 			//this.p.fill(this.fillCol);
-			this.drawGeometry();
+			this.drawObj();
 			if (this.width > this.maxWidth) {
 				this.breath = true;
 			}
@@ -172,7 +176,7 @@ ButtonPlus.prototype.display = function () {
 			if (this.buttonCol) {
 				this.fillCol = this.buttonCol;
 			}
-			this.drawGeometry();
+			this.drawObj();
 			this.breath = false;
 
 			//缩小
@@ -187,13 +191,13 @@ ButtonPlus.prototype.display = function () {
 			break;
 		case "press":
 			this.fillCol = this.pressCol;
-			this.drawGeometry();
+			this.drawObj();
 			this.fire({ type: "press" });
 			this.pState = "press";
 			break;
 		case "click":
 			this.fillCol = this.clickCol;
-			this.drawGeometry();
+			this.drawObj();
 
 			//点击反馈
 			if (this.pState === "press") {
@@ -218,13 +222,30 @@ ButtonPlus.prototype.display = function () {
 			} else {
 				this.fillCol = this.p.color(0, 0, 100);
 			}
-			this.drawGeometry();
+			this.drawObj();
 	}
 };
 
 //ButtonPlus状态重置
 ButtonPlus.stateReset = function () {
 	this.prototype.hoverObjCount = 0;
-}; 
+};
+
+ButtonPlus.prototype.drawObj = function (){
+	if (this.filtered){
+		this.drawFilteredObj();
+	}else{
+		this.drawGeometry();
+	}
+}
+
+ButtonPlus.prototype.drawFilteredObj = function (){
+	//this.strokeCol ? this.p.stroke(this.strokeCol) : this.p.noStroke();
+	this.p.fill(this.p.color(150,150,150));
+	this.p.push();
+	this.p.translate(this.position.x, this.position.y);
+	this.p.ellipse(0, 0, this.width, this.height);
+	this.p.pop();
+}
 
 module.exports = ButtonPlus;
