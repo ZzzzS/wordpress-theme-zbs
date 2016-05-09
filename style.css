@@ -48,16 +48,17 @@ body {
       #filterBar #filter #filterT td {
         text-align: center;
         padding: 8px 10px; }
-        #filterBar #filter #filterT td a {
+        #filterBar #filter #filterT td button {
           padding: 2px 5px;
+          background-color: white;
           color: #3868ae;
           text-decoration: none;
-          border: 1px gray solid;
+          border: 1px #ddd solid;
           margin: 0 5px;
           border-radius: 3px;
           -moz-border-radius: 3px;
           -webkit-border-radius: 3px; }
-          #filterBar #filter #filterT td a:hover {
+          #filterBar #filter #filterT td button:hover {
             border: 1px #3868ae solid; }
       #filterBar #filter #filterT .active {
         background-color: #3868ae;
@@ -76,12 +77,19 @@ body {
         padding: 3px; }
   #filterBar #filterBarBtn {
     display: block;
-    width: 80px;
-    height: 30px;
-    margin: 0 auto;
-    left: 0;
-    rigth: 0; }
+    width: 100px;
+    border-width: 0;
+    background: #bbb;
+    height: 15px;
+    padding: 0;
+    border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    margin: 0 auto; }
     #filterBar #filterBarBtn span:before {
+      position: relative;
+      bottom: 3px;
+      color: white;
       font-family: FontAwesome;
       content: "\f078"; }
 

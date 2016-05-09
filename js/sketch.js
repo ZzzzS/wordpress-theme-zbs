@@ -227,7 +227,7 @@ var options_2014 = {
 
 var options_2015 = {
 	id : "2015",
-	text : "2013年",
+	text : "2015年",
 	parentId : "year",
 	keyword : "creationDate",
 	value : "2015"
@@ -277,6 +277,62 @@ var options7 = {
 	value : "科学技术"
 };
 
+var options8 = {
+	id : "syxf",
+	text : "试验先锋",
+	parentId : "type",
+	keyword : "cat",
+	value : "试验先锋"
+};
+
+var options_sjcd = {
+	id : "sjcd",
+	text : "视觉传达",
+	parentId : "major",
+	keyword : "major",
+	value : "视觉传达"
+};
+
+var options_gysj = {
+	id : "gysj",
+	text : "工业设计",
+	parentId : "major",
+	keyword : "major",
+	value : "工业设计"
+};
+
+var options_fssj = {
+	id : "fssj",
+	text : "服饰设计",
+	parentId : "major",
+	keyword : "major",
+	value : "服饰设计"
+};
+
+var options_jzyhy = {
+	id : "jzyhy",
+	text : "建筑与环艺/展示",
+	parentId : "major",
+	keyword : "major",
+	value : "建筑与环艺(展示)"
+};
+
+var options_smdh = {
+	id : "smdh",
+	text : "数媒与动画",
+	parentId : "major",
+	keyword : "major",
+	value : "数字多媒体与动画影像"
+};
+
+var options_ys = {
+	id : "ys",
+	text : "艺术",
+	parentId : "major",
+	keyword : "major",
+	value : "艺术"
+};
+
 globalVar.filterButton.push(new FilterButton(options_2010));
 globalVar.filterButton.push(new FilterButton(options_2011));
 globalVar.filterButton.push(new FilterButton(options_2012));
@@ -289,5 +345,14 @@ globalVar.filterButton.push(new FilterButton(options3));
 globalVar.filterButton.push(new FilterButton(options4));
 globalVar.filterButton.push(new FilterButton(options5));
 globalVar.filterButton.push(new FilterButton(options6));
+globalVar.filterButton.push(new FilterButton(options7));
+globalVar.filterButton.push(new FilterButton(options8));
 
+globalVar.filterButton.push(new FilterButton(options_sjcd));
+globalVar.filterButton.push(new FilterButton(options_gysj));
+globalVar.filterButton.push(new FilterButton(options_fssj));
+globalVar.filterButton.push(new FilterButton(options_jzyhy));
+globalVar.filterButton.push(new FilterButton(options_smdh));
+globalVar.filterButton.push(new FilterButton(options_ys));
 
+console.log(FilterButton.prototype.select);

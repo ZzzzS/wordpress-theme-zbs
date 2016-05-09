@@ -11,8 +11,8 @@
 				<td id="type"></td>
 			</tr>
 			<tr>
-				<th>年份</th>
-				<td>2010</td>
+				<th>专业</th>
+				<td id="major"></td>
 			</tr>
 			<tr>
 				<td colspan="2">

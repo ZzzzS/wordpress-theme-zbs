@@ -16,7 +16,7 @@ $sketchWidth: 962px;
 $sketchHeight: 602px;
 $postInfoWith: 850px;
 $navigation_bar_height : 50px;
-$filterBarBtnWidth: 80px;
+$filterBarBtnWidth: 100px;
 $themeMajorCol : #3868ae;
 
 @mixin borderRadius($rad: 10px){
@@ -88,11 +88,12 @@ body {
 				@extend th;
 				text-align: center;
 				padding:8px 10px;
-				a{
+				button{
 					padding: 2px 5px;
+					background-color: white;
 					color : $themeMajorCol;
 					text-decoration:none;
-					border:1px gray solid ;
+					border:1px #ddd solid ;
 					margin : 0 5px;
 					@include borderRadius(3px);
 
@@ -123,18 +124,36 @@ body {
 	}
 
 	#filterBarBtn{
+		//filter:alpha(opacity=50);
+		//-moz-opacity:0;
+		//-khtml-opacity: 0;
+		//opacity: 0;
 		display: block;
 		width: $filterBarBtnWidth;
-		height: 30px;
+		border-width: 0;
+		background: #bbb;
+		height: 15px;
+		padding: 0;
+		@include borderRadius(0 0 5px 5px);
+		//border-left:solid 20px rgba(0,0,0,0);
+		//border-right:solid 20px transparent;
+		//border-bottom:solid transparent 20px;
+		//border-top: solid #761c19 20px;
 		margin :0 auto;
-		//position: absolute;
-		//top: $navigation_bar_height;
-		//top: 0;bottom: 0;
-		left: 0;rigth: 0;
 		span:before{
+			position: relative;
+			bottom: 3px;
+			color: white;
 			font-family: FontAwesome;
 			content: "\f078";
 		}
+		//&:after{
+		//	display: inline-block;
+		//	@include showBoxBorder();
+		//	width:$filterBarBtnWidth;
+		//	height:100px;
+		//	content: "sssss";
+		//}
 	}
 }
 
