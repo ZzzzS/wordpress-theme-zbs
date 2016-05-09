@@ -41,11 +41,11 @@ var sketch = function(p){
 				height : size,
 				p : globalVar.pp,
 				fillCol : globalVar.pp.color(200,200,200,50)
-			}
+			};
 			var options = {
 				visualObject : new VisualObject(optionsVO),
 				p : globalVar.pp
-			}
+			};
 			globalVar.displayArray.backgroundBall.push(new Particle(options));
 		}
 		
@@ -147,7 +147,7 @@ $(document).ready(function(){
 					"position" : new p5.Vector(i*70,j*70),
 					"strength" : 1.5,
 					"vortex" : false
-				}
+				};
 				var attractPt = new AttractPoint(options);
 				globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
 				globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
@@ -162,17 +162,6 @@ $(document).ready(function(){
 	});
 
 	setSketch();   //设置sketch的位置。
-
-	//var $f2010 = $("#2010");
-	//$f2010.click(function (){
-	//	alert("2010");
-	//	for(var i = 0, len = globalVar.displayArray.ButtonParticle.length; i < len; i++){
-	//		if (globalVar.displayArray.ButtonParticle[i].visualObject.info["creationDate"] !== "2010"){
-	//			console.log(globalVar.displayArray.ButtonParticle[i].visualObject.info["creationDate"]);
-	//			globalVar.displayArray.ButtonParticle[i].visualObject.filtered = true;
-	//		}
-	//	}
-	//});
 });
 
 function setSketch(){      //设置sketch的位置。
@@ -181,6 +170,11 @@ function setSketch(){      //设置sketch的位置。
 	var height = sketch.css("height");
 	sketch.css("margin-top", ((parseInt(clientHeight) - parseInt(height)) / 2 - 50) + "px");
 }
+
+$("#sketch").click(function (){
+	//折叠FilterBar,并隐藏filterBarBtn
+	$("#filter").slideUp("fast");
+});
 
 //窗口尺寸改变
 $(window).resize(function() {
@@ -191,41 +185,106 @@ $("#filterBarBtn").click(function (){
 	$("#filter").slideToggle("slow");
 });
 
-var options = {
-	node : document.getElementById("2010"),
+var options_2010 = {
+	id : "2010",
+	text : "2010年",
+	parentId : "year",
 	keyword : "creationDate",
 	value : "2010"
 };
 
-var options2 = {
-	node : document.getElementById("2015"),
+var options_2011 = {
+	id : "2011",
+	text : "2011年",
+	parentId : "year",
+	keyword : "creationDate",
+	value : "2011"
+};
+
+var options_2012 = {
+	id : "2012",
+	text : "2012年",
+	parentId : "year",
+	keyword : "creationDate",
+	value : "2012"
+};
+
+var options_2013 = {
+	id : "2013",
+	text : "2013年",
+	parentId : "year",
+	keyword : "creationDate",
+	value : "2013"
+};
+
+var options_2014 = {
+	id : "2014",
+	text : "2014年",
+	parentId : "year",
+	keyword : "creationDate",
+	value : "2014"
+};
+
+var options_2015 = {
+	id : "2015",
+	text : "2013年",
+	parentId : "year",
 	keyword : "creationDate",
 	value : "2015"
 };
 
+var options_2016 = {
+	id : "2016",
+	text : "2016年",
+	parentId : "year",
+	keyword : "creationDate",
+	value : "2016"
+};
+
 var options3 = {
-	node : document.getElementById("grqg"),
+	id : "grqg",
+	text : "个人情感",
+	parentId : "type",
 	keyword : "cat",
 	value : "个人情感"
 };
 var options4 = {
-	node : document.getElementById("gnyh"),
+	id : "gnyh",
+	text : "功能优化",
+	parentId : "type",
 	keyword : "cat",
 	value : "功能优化"
 };
 var options5 = {
-	node : document.getElementById("shht"),
+	id : "shht",
+	text : "社会话题",
+	parentId : "type",
 	keyword : "cat",
 	value : "社会话题"
 };
 var options6 = {
-	node : document.getElementById("clyyycx"),
+	id : "clyyycx",
+	text : "材料应用与创新",
+	parentId : "type",
 	keyword : "cat",
 	value : "材料应用与创新"
 };
+var options7 = {
+	id : "kxjs",
+	text : "科学技术",
+	parentId : "type",
+	keyword : "cat",
+	value : "科学技术"
+};
 
-globalVar.filterButton.push(new FilterButton(options));
-globalVar.filterButton.push(new FilterButton(options2));
+globalVar.filterButton.push(new FilterButton(options_2010));
+globalVar.filterButton.push(new FilterButton(options_2011));
+globalVar.filterButton.push(new FilterButton(options_2012));
+globalVar.filterButton.push(new FilterButton(options_2013));
+globalVar.filterButton.push(new FilterButton(options_2014));
+globalVar.filterButton.push(new FilterButton(options_2015));
+globalVar.filterButton.push(new FilterButton(options_2016));
+
 globalVar.filterButton.push(new FilterButton(options3));
 globalVar.filterButton.push(new FilterButton(options4));
 globalVar.filterButton.push(new FilterButton(options5));

@@ -18,8 +18,6 @@ var getInfo = function (type,arg){
 		XMLHTTP.onreadystatechange=function(){
 			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 				var posts = JSON.parse(XMLHTTP.responseText);
-				//alert(XMLHTTP.responseText);
-				//console.log(XMLHTTP.responseText);
 				
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
@@ -49,11 +47,9 @@ var getInfo = function (type,arg){
 					newObj.visualObject.buttonCol = newObj.visualObject.info["color"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);
 					globalVar.displayArray.ButtonParticle.push(newObj);
 				}
-				
-				
-				//console.log(globalVar.displayArray.ButtonParticle);
+
 			}
-		}
+		};
 		XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
 		XMLHTTP.send();
 	}else{
@@ -74,12 +70,12 @@ var getInfo = function (type,arg){
 							height : size,
 							r : 25,
 							p : globalVar.pp
-						}
+						};
 						var optionsBP = {
 							visualObject : new ButtonPlus(options),
 							p : globalVar.pp,
 							vortexAttract : true
-						}
+						};
 						var newObj = new ButtonParticle(optionsBP);
 						if(i < count/2){
 							newObj.attractPt = globalVar.attractPtL;

@@ -26,7 +26,18 @@ FilterButton.prototype.createElement = function (){
     this.node = doc.createElement("a");
     this.node.id = this.id;
     this.node.innerHTML = this.text;
-    this.parentId ? doc.getElementById(options.parentId).appendChild(this.node) : doc.body.appendChild(this.node);
+    this.node.href = "#";
+    if (this.parentId){
+        var parentNode = doc.getElementById(this.parentId);
+        if (parentNode){
+            parentNode.appendChild(this.node);
+        }else{
+            doc.body.appendChild(this.node);
+        }
+    }else{
+        doc.body.appendChild(this.node);
+    }
+
 };
 
 FilterButton.prototype.doFilter = function (){
@@ -35,7 +46,7 @@ FilterButton.prototype.doFilter = function (){
     for (var j = 0; j < globalVar.filterButton.length; j++){     //将全局环境中的其他FilterButton的switch全部设置为false,并修改按钮背景颜色
         if (globalVar.filterButton[j] !== this){
             globalVar.filterButton[j].switch = false;
-            globalVar.filterButton[j].node.parentNode.classList.remove("active");
+            globalVar.filterButton[j].node.classList.remove("active");
         }
     }
 
@@ -62,13 +73,13 @@ FilterButton.prototype.attachEvent = function (){
         this.switch = ~this.switch;
 
         if (this.switch){                   //切换FilterButton的显示效果
-            this.node.parentNode.classList.add("active");
+            this.node.classList.add("active");
         }else{
-            this.node.parentNode.classList.remove("active");
+            this.node.classList.remove("active");
         }
 
         this.doFilter();
     }.bind(this);
-}
+};
 
 module.exports = FilterButton;

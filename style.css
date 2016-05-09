@@ -39,20 +39,30 @@ body {
   #filterBar #filter {
     display: none; }
     #filterBar #filter #filterT {
+      background: white;
       border: 1px gray solid;
       border-collapse: collapse;
       margin: 0 auto; }
-      #filterBar #filter #filterT th, #filterBar #filter #filterT td, #filterBar #filter #filterT .active {
-        padding: 2px 5px; }
-      #filterBar #filter #filterT td, #filterBar #filter #filterT .active {
-        text-align: center; }
-        #filterBar #filter #filterT td a, #filterBar #filter #filterT .active a {
+      #filterBar #filter #filterT th, #filterBar #filter #filterT td {
+        padding: 2px 10px; }
+      #filterBar #filter #filterT td {
+        text-align: center;
+        padding: 8px 10px; }
+        #filterBar #filter #filterT td a {
+          padding: 2px 5px;
           color: #3868ae;
-          text-decoration: none; }
+          text-decoration: none;
+          border: 1px gray solid;
+          margin: 0 5px;
+          border-radius: 3px;
+          -moz-border-radius: 3px;
+          -webkit-border-radius: 3px; }
+          #filterBar #filter #filterT td a:hover {
+            border: 1px #3868ae solid; }
       #filterBar #filter #filterT .active {
-        background-color: #3868ae; }
-        #filterBar #filter #filterT .active a {
-          color: white; }
+        background-color: #3868ae;
+        border: 1px #3868ae solid;
+        color: white; }
     #filterBar #filter #btnGroup {
       width: 100%;
       display: -webkit-flex;
@@ -62,7 +72,7 @@ body {
       flex-direction: row;
       flex-wrap: nowrap; }
       #filterBar #filter #btnGroup button {
-        margin: 5px 20px;
+        margin: 0px 20px;
         padding: 3px; }
   #filterBar #filterBarBtn {
     display: block;
