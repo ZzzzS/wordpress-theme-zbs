@@ -168,12 +168,16 @@ function setSketch(){      //设置sketch的位置。
 	var clientHeight = document.documentElement.clientHeight;
 	var sketch = $("#sketch");
 	var height = sketch.css("height");
-	sketch.css("margin-top", ((parseInt(clientHeight) - parseInt(height)) / 2 - 50) + "px");
+	sketch.css("margin-top", ((parseInt(clientHeight) - parseInt(height) + 50) / 2) + "px");
 }
 
-$("#sketch").click(function (){
-	//折叠FilterBar,并隐藏filterBarBtn
-	$("#filter").slideUp("fast");
+$("body").click(function (e){
+	if ($(e.target).is("#filterBar , #filterBarBtn , #filterBar button")){
+		return;
+	}else{
+		//折叠FilterBar,并隐藏filterBarBtn
+		$("#filter").slideUp("fast");
+	}
 });
 
 //窗口尺寸改变
@@ -355,4 +359,49 @@ globalVar.filterButton.push(new FilterButton(options_jzyhy));
 globalVar.filterButton.push(new FilterButton(options_smdh));
 globalVar.filterButton.push(new FilterButton(options_ys));
 
-console.log(FilterButton.prototype.select);
+
+var options_cancelAll = {
+	id : "bcancelAll",
+	type : "cancel",
+	class : "cancel",
+	parentId : "cancelAll",
+	title: "全部取消",
+	text : ""
+};
+
+var options_cancelYear = {
+	id : "bcancelYear",
+	type : "cancel",
+	class : "cancel",
+	parentId : "cancelYear",
+	title: "取消‘年份’",
+	keyword : "creationDate",
+	text : ""
+};
+
+var options_cancelMajor = {
+	id : "bcancelMajor",
+	type : "cancel",
+	class : "cancel",
+	parentId : "cancelMajor",
+	title: "取消‘专业’",
+	keyword : "major",
+	text : ""
+};
+
+var options_cancelType = {
+	id : "bcancelType",
+	type : "cancel",
+	class : "cancel",
+	parentId : "cancelType",
+	title: "取消‘类别’",
+	keyword : "cat",
+	text : ""
+};
+
+
+
+globalVar.filterButton.push(new FilterButton(options_cancelAll));
+globalVar.filterButton.push(new FilterButton(options_cancelYear));
+globalVar.filterButton.push(new FilterButton(options_cancelMajor));
+globalVar.filterButton.push(new FilterButton(options_cancelType));

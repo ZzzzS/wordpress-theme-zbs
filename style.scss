@@ -18,6 +18,7 @@ $postInfoWith: 850px;
 $navigation_bar_height : 50px;
 $filterBarBtnWidth: 100px;
 $themeMajorCol : #3868ae;
+$Red : #D9534F;
 
 @mixin borderRadius($rad: 10px){
 	border-radius: $rad;
@@ -58,6 +59,10 @@ body {
 #navigation_bar{
 	width:100%;
 	height:$navigation_bar_height;
+	position: absolute;
+	top:0;
+	left:0;
+	z-index:9999;
 	@include showBoxBorder();
 	#logo{
 		width:auto;
@@ -77,15 +82,18 @@ body {
 	#filter{
 		display: none;
 		#filterT{
-			background: white;
+			background: rgba(255,255,255,0.5);
 			border:1px gray solid;
 			border-collapse:collapse;
 			margin: 0 auto;
 			th{
+				background-color: #ccc;
+				color: white;
 				padding: 2px 10px;
+				border-right: none;
 			}
 			td{
-				@extend th;
+				//@extend th;
 				text-align: center;
 				padding:8px 10px;
 				button{
@@ -101,6 +109,29 @@ body {
 						border:1px $themeMajorCol solid;
 					}
 				}
+
+				.cancel{
+					&:before{
+						font-family: FontAwesome;
+						color:white;
+						content: "\f00d";
+					}
+					width : 20px;
+					height : 100%;
+					padding:0;
+					margin: 0;
+					border-width: 0;
+					@include borderRadius(0px);
+					background-color: white;
+				}
+
+				.cancelActive{
+					background-color: $Red;
+				}
+
+			}
+			.cancelCell{
+				padding: 0;
 			}
 			.active{
 				background-color: $themeMajorCol;
@@ -124,10 +155,6 @@ body {
 	}
 
 	#filterBarBtn{
-		//filter:alpha(opacity=50);
-		//-moz-opacity:0;
-		//-khtml-opacity: 0;
-		//opacity: 0;
 		display: block;
 		width: $filterBarBtnWidth;
 		border-width: 0;
@@ -135,25 +162,16 @@ body {
 		height: 15px;
 		padding: 0;
 		@include borderRadius(0 0 5px 5px);
-		//border-left:solid 20px rgba(0,0,0,0);
-		//border-right:solid 20px transparent;
-		//border-bottom:solid transparent 20px;
-		//border-top: solid #761c19 20px;
 		margin :0 auto;
-		span:before{
+		&:before{
 			position: relative;
-			bottom: 3px;
+			display:block;
+			bottom: 11px;
+			height:0;
 			color: white;
 			font-family: FontAwesome;
 			content: "\f078";
 		}
-		//&:after{
-		//	display: inline-block;
-		//	@include showBoxBorder();
-		//	width:$filterBarBtnWidth;
-		//	height:100px;
-		//	content: "sssss";
-		//}
 	}
 }
 
@@ -258,6 +276,8 @@ $iconSize: 16px;
 		//@include showBoxBorder();
 	}
 	position:absolute;
+	border: solid 1px $Red;
+	background-color: $Red;
 	top:$buttonSize / 2;
 	right:50px;
 	width:$buttonSize;
@@ -268,6 +288,8 @@ $iconSize: 16px;
 
 #toTop{
 	@extend #postContent_delete;
+	background-color: white;
+	border: solid 1px gray;
 	&:before{
 		content: "\f077";
 		color: gray;
@@ -287,12 +309,6 @@ $iconSize: 16px;
 }
 
 
-//#buttonGroup{
-//	z-index: 1000;
-//	position:absolute;
-//	top:100px;
-//	right:50px;
-//}
 
 
 

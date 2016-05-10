@@ -7,6 +7,7 @@ var getPostContent = function (id, title){
 
 	XMLHTTP.onreadystatechange=function(){
 		if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+			var navigation_bar = document.getElementById("navigation_bar");
 			var postContent = document.createElement("div");
 			postContent.id = "postContent";
 			postContent.innerHTML = XMLHTTP.responseText;
@@ -49,7 +50,6 @@ var getPostContent = function (id, title){
 				cancel = document.createElement("button");
 				cancel.id = "postContent_delete";
 				cancel.title = "关闭";
-				cancel.className = "btn btn-danger btn-sm";
 				//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
 				cancel.onclick = function (){
 					$infoFrame.animate({height:"100px"});
@@ -61,7 +61,8 @@ var getPostContent = function (id, title){
 					$sketch.fadeIn();
 					$("#filterBarBtn").fadeIn();
 				};
-				document.body.appendChild(cancel);
+
+				navigation_bar.appendChild(cancel);
 			}
 			
 			//滚到顶部
@@ -70,12 +71,11 @@ var getPostContent = function (id, title){
 				toTop = document.createElement("button");
 				toTop.id = "toTop";
 				toTop.title = "返回顶部";
-				toTop.className = "btn btn-default btn-sm";
 				toTop.onclick = function (){
 					$infoFrame.animate({ scrollTop: 0 }, 400);
 				};
-				
-				document.body.appendChild(toTop);
+
+				navigation_bar.appendChild(toTop);
 			}
 
 			var $toTop = $("#toTop");
@@ -83,7 +83,7 @@ var getPostContent = function (id, title){
 			/*检查滚动*/
 			var sTop;
 			sTop = document.getElementById("infoFrame").scrollTop;
-			if(sTop == 0){
+			if(sTop === 0){
 				$toTop.css("display","none");
 			}else{
 				$toTop.css("display","block");
@@ -91,7 +91,7 @@ var getPostContent = function (id, title){
 
 			$infoFrame.scroll(function(){
 				sTop = document.getElementById("infoFrame").scrollTop;
-				if(sTop == 0){
+				if(sTop === 0){
 					$toTop.fadeOut();
 				}else{
 					$toTop.fadeIn();

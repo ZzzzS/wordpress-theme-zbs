@@ -237,7 +237,7 @@ ButtonPlus.prototype.drawObj = function (){
 	}else{
 		this.drawGeometry();
 	}
-}
+};
 
 ButtonPlus.prototype.drawFilteredObj = function (){
 	//this.strokeCol ? this.p.stroke(this.strokeCol) : this.p.noStroke();
@@ -246,6 +246,6 @@ ButtonPlus.prototype.drawFilteredObj = function (){
 	this.p.translate(this.position.x, this.position.y);
 	this.p.ellipse(0, 0, this.width, this.height);
 	this.p.pop();
-}
+};
 
 module.exports = ButtonPlus;

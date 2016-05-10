@@ -5,20 +5,27 @@ var globalVar = require("./GlobalVar.js");
 var ButtonPlus = require("./ButtonPlus.js");
 
 var FilterButton = function (options){
+    this.type = options.type;
+    if (this.type !== "cancel"){
+        this.value = options.value;
+        this.switch = false;
+    }
     this.keyword = options.keyword;
-    this.value = options.value;
-    this.switch = false;
-    this.selectId = globalVar.filterButton.length;
+
 
     if (options.node){
         this.node = options.node;
     }else{
         this.id = options.id;
-        this.text = options.text || "FilterButton";
+        this.text = options.text;
         this.parentId = options.parentId;
         this.createElement();
     }
-    this.node.classList += "FilterButton";
+    if (options.class){
+        this.node.classList += options.class;
+    }
+    //this.node.classList += "FilterButton";
+    this.node.title = options.title;
     this.attachEvent();
 };
 
@@ -40,7 +47,6 @@ FilterButton.prototype.createElement = function (){
     }else{
         doc.body.appendChild(this.node);
     }
-
 };
 
 FilterButton.prototype.doFilter = function (){
@@ -50,9 +56,6 @@ FilterButton.prototype.doFilter = function (){
         BP[i].visualObject.filtered = false;
     }
 
-
-    //alert(this.value);
-    //console.log(this.constructor.prototype.select);
     var status = [];
     for (i = 0, len = BP.length; i < len; i++) {
         var m = 0;
@@ -78,9 +81,7 @@ FilterButton.prototype.doFilter = function (){
                     }else{
                         status[i] |= true;
                     }
-                    //BP[i].visualObject.filtered = true;
                 }else{
-                    //BP[i].visualObject.filtered = false;
                     if (m === 0){
                         status[i] = false;
                     }else{
@@ -91,18 +92,11 @@ FilterButton.prototype.doFilter = function (){
             }
             m ++;
         }
-        console.log(i);
-        console.log(status);
     }
 
     for(i = 0; i < len; i++){
         BP[i].visualObject.filtered = status[i];
     }
-
-
-
-
-
 
     //for (var j = 0; j < globalVar.filterButton.length; j++){     //将全局环境中的其他FilterButton的switch全部设置为false,并修改按钮背景颜色
     //    if (globalVar.filterButton[j] !== this){
@@ -130,35 +124,91 @@ FilterButton.prototype.doFilter = function (){
 };
 
 FilterButton.prototype.attachEvent = function (){
-    this.node.onclick = function (){
-        this.switch = ~this.switch;
+    if (this.type !== "cancel"){
+        this.node.onclick = function (){
+            this.switch = this.switch ? false : true;
 
-        if (this.switch){                   //切换FilterButton的显示效果
-            this.node.classList.add("active");
+            if (this.switch){                 //切换FilterButton的显示效果
+                this.node.classList.add("active");
 
-            if(!this.constructor.prototype.select[this.keyword]){
-                this.constructor.prototype.select[this.keyword] = [];
+                if(!this.constructor.prototype.select[this.keyword]){
+                    this.constructor.prototype.select[this.keyword] = [];
+                }
+                this.constructor.prototype.select[this.keyword].push(this.value);
+
+                for(var i in globalVar.filterButton){                                        //当该类型有按钮被按下时,激活该类型的删除按钮
+                    if (globalVar.filterButton[i].type === "cancel" && globalVar.filterButton[i].keyword === this.keyword){
+                        globalVar.filterButton[i].node.classList.add("cancelActive");
+                    }
+                    if (globalVar.filterButton[i].type === "cancel" && globalVar.filterButton[i].keyword === undefined){
+                        globalVar.filterButton[i].node.classList.add("cancelActive");
+                    }
+                }
+            }else{
+                this.node.classList.remove("active");
+                var keyword = this.constructor.prototype.select[this.keyword];
+                if (keyword !== undefined){
+                    var id = keyword.indexOf(this.value);
+                    keyword.splice(id, 1);
+                }
+                if (keyword.length === 0){
+                    for(var i in globalVar.filterButton){                                        //当该类型的所有按钮没被按下时,取消激活该类型的删除按钮
+                        if (globalVar.filterButton[i].type === "cancel" && globalVar.filterButton[i].keyword === this.keyword){
+                            globalVar.filterButton[i].node.classList.remove("cancelActive");
+                        }
+                    }
+                }
+
+                this.disactiveCancelAll();    //当所有按钮没被按下时,取消激活cancelAll
+
             }
-            this.constructor.prototype.select[this.keyword].push(this.value);
-            //console.log(this.constructor.prototype.select);
 
-            //this.changeSelect();       //更改globalVar.select的状态
-        }else{
-            this.node.classList.remove("active");
-            var id = this.constructor.prototype.select[this.keyword].indexOf(this.value);
-            this.constructor.prototype.select[this.keyword].splice(id, 1);
-            //this.changeSelect();      //更改globalVar.select的状态
-        }
+            this.doFilter();
+        }.bind(this);
+    }else{                                              //如果是删除按钮
+        this.node.onclick = function (){
+            if (this.keyword){
+                this.constructor.prototype.select[this.keyword] = [];
 
-        this.doFilter();
-    }.bind(this);
+                for (var i in globalVar.filterButton){        //清除某个类型的按钮
+                    if (globalVar.filterButton[i].switch && globalVar.filterButton[i].keyword === this.keyword){
+                        globalVar.filterButton[i].switch = globalVar.filterButton[i].switch ? false : true;
+                        globalVar.filterButton[i].node.classList.remove("active");
+                    }
+                }
+
+                this.disactiveCancelAll();    //当所有按钮没被按下时,取消激活cancelAll
+
+            }else{                              //全部清除
+                for (var keyword in this.constructor.prototype.select) {
+                    this.constructor.prototype.select[keyword] = [];
+                }
+                for (i in globalVar.filterButton){
+                    if (globalVar.filterButton[i].switch){
+                        globalVar.filterButton[i].switch = globalVar.filterButton[i].switch ? false : true;
+                        globalVar.filterButton[i].node.classList.remove("active");
+                    }
+                    if (globalVar.filterButton[i].type === "cancel"){
+                        globalVar.filterButton[i].node.classList.remove("cancelActive");
+                    }
+                }
+            }
+            this.node.classList.remove("cancelActive");
+            this.doFilter();
+        }.bind(this);
+    }
 };
 
-FilterButton.prototype.changeSelect = function (){
-    if (this.switch){
-        globalVar.select |= 1 << this.selectId;
-    }else{
-        globalVar.selsct &= ~(1 << this.selectId);
+FilterButton.prototype.disactiveCancelAll = function (){   //当所有按钮没被按下时,取消激活cancelAll
+    for (var i in this.constructor.prototype.select){
+        if (this.constructor.prototype.select[i].length !== 0){
+            return;
+        }
+    }
+    for(var i in globalVar.filterButton){
+        if (globalVar.filterButton[i].type === "cancel" && globalVar.filterButton[i].keyword === undefined){
+            globalVar.filterButton[i].node.classList.remove("cancelActive");
+        }
     }
 };
 

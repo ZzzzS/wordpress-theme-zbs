@@ -3,19 +3,23 @@
 		<div id = "filter">
 		<table id = "filterT" border="1" cellpadding="10">
 			<tr>
-				<th>年份</th>
+				<th>年份<td id="cancelYear" class="cancelCell"></td></th>
+				
 				<td id="year"></td>
+				<td id="cancelAll" class="cancelCell" rowspan="3"></td>
 			</tr>
 			<tr>
 				<th>类别</th>
+				<td id="cancelType" class="cancelCell"></td>
 				<td id="type"></td>
 			</tr>
 			<tr>
 				<th>专业</th>
+				<td id="cancelMajor" class="cancelCell"></td>
 				<td id="major"></td>
 			</tr>
 			<tr>
-				<td colspan="2">
+				<td colspan="4">
 					<div id="btnGroup">
 						<button type="button" class="btn btn-default btn-sm" id="getUsers">getUsers</button>
 						<button type="button" class="btn btn-default btn-sm" id="getPosts">getPosts</button>
