@@ -17,6 +17,7 @@ var getInfo = function (type,arg){
 	if(type === "posts"){
 		XMLHTTP.onreadystatechange=function(){
 			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+				//alert(XMLHTTP.responseText);
 				var posts = JSON.parse(XMLHTTP.responseText);
 				
 				for(var item in posts){
@@ -40,7 +41,10 @@ var getInfo = function (type,arg){
 
 					newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
 					newObj.visualObject.addHandler("turnOn",eventHandleFunc.showPostInfo);
+					newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideShortInfo);
 					newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
+					newObj.visualObject.addHandler("hover",eventHandleFunc.showShortPostInfo);
+					newObj.visualObject.addHandler("mouseOut",eventHandleFunc.hideShortInfo);
 
 					newObj.visualObject.sound = globalVar.SOUNDFILE;
 					newObj.visualObject.info = posts[item];
@@ -86,11 +90,11 @@ var getInfo = function (type,arg){
 						newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
 						newObj.reflect = true;
 						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
-						newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideSortUserInfo);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideShortInfo);
 						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo);
 						newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
-						newObj.visualObject.addHandler("hover",eventHandleFunc.showSortUserInfo);
-						newObj.visualObject.addHandler("mouseOut",eventHandleFunc.hideSortUserInfo);
+						newObj.visualObject.addHandler("hover",eventHandleFunc.showShortUserInfo);
+						newObj.visualObject.addHandler("mouseOut",eventHandleFunc.hideShortInfo);
 						newObj.visualObject.sound = globalVar.SOUNDFILE;
 						newObj.visualObject.info = users[item];
 						

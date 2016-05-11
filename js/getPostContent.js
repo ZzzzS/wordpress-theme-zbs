@@ -8,28 +8,26 @@ var getPostContent = function (id, title){
 	XMLHTTP.onreadystatechange=function(){
 		if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 			var navigation_bar = document.getElementById("navigation_bar");
-			var postContent = document.createElement("div");
-			postContent.id = "postContent";
-			postContent.innerHTML = XMLHTTP.responseText;
 			var infoFrame = document.getElementById("infoFrame");
-			var pc = document.getElementById("postContent");
+			var postContent = document.getElementById("postContent");
 			if(infoFrame){
-				if(pc){
-					pc.parentNode.removeChild(pc);
+				if(postContent){
+					postContent.innerHTML = XMLHTTP.responseText;
 				}
-				infoFrame.appendChild(postContent);
 			}
+			//postContent.style.display = "block";//
+			$("#postContent").fadeIn();
 
 			var $infoFrame = $("#infoFrame");
 			var $sketch = $("#sketch");
 
-			var height = document.documentElement.clientHeight - 60 ;
+			var height = document.documentElement.clientHeight - 50 ;
 			$infoFrame.animate({height:height});
 			
 			//窗口尺寸改变
 			$(window).resize(function() {
 				if($infoFrame.css("height") != "100px"){ //若高度大于停靠在下方是的高度时
-					$infoFrame.css("height",document.documentElement.clientHeight - 60);
+					$infoFrame.css("height",document.documentElement.clientHeight - 50);
 				}
 			});
 			
@@ -42,29 +40,10 @@ var getPostContent = function (id, title){
 			$("#filter").slideUp("fast",function (){
 				$("#filterBarBtn").fadeOut();
 			});
-			
-			
-			//返回按钮（关闭）
-			var cancel = document.getElementById("postContent_delete");
-			if(!cancel){
-				cancel = document.createElement("button");
-				cancel.id = "postContent_delete";
-				cancel.title = "关闭";
-				//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
-				cancel.onclick = function (){
-					$infoFrame.animate({height:"100px"});
-					$infoFrame.animate({ scrollTop: 0 }, 400);
-					$("#postContent").fadeOut();
-					this.remove();
 
-					$sketch.css("position","static"); //将sketch移回
-					$sketch.fadeIn();
-					$("#filterBarBtn").fadeIn();
-				};
 
-				navigation_bar.appendChild(cancel);
-			}
-			
+			var rightCtrlBar = document.getElementById("rightCtrlBar");
+
 			//滚到顶部
 			var toTop = document.getElementById("toTop");
 			if(!toTop){
@@ -75,11 +54,11 @@ var getPostContent = function (id, title){
 					$infoFrame.animate({ scrollTop: 0 }, 400);
 				};
 
-				navigation_bar.appendChild(toTop);
+				rightCtrlBar.appendChild(toTop);
 			}
 
 			var $toTop = $("#toTop");
-			
+
 			/*检查滚动*/
 			var sTop;
 			sTop = document.getElementById("infoFrame").scrollTop;
@@ -97,6 +76,35 @@ var getPostContent = function (id, title){
 					$toTop.fadeIn();
 				}
 			});
+
+			//返回按钮（关闭）
+			var cancel = document.getElementById("postContent_delete");
+			if(!cancel){
+				cancel = document.createElement("button");
+				cancel.id = "postContent_delete";
+				cancel.title = "关闭";
+				//cancel.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
+				cancel.onclick = function (){
+					$infoFrame.animate({height:"100px"});
+					$infoFrame.animate({ scrollTop: 0 }, 400);
+					$("#postContent").fadeOut();
+					//var postContent = document.getElementById("postContent");
+					//postContent.style.display = "none";
+					var title = document.getElementById("title");
+					if (title){
+						title.classList.add("title_link");     //添加标题鼠标悬浮样式
+					}
+					$(this).fadeOut();
+
+					$sketch.css("position","static"); //将sketch移回
+					$sketch.fadeIn();
+					$("#filterBarBtn").fadeIn();
+				};
+				rightCtrlBar.appendChild(cancel);
+			}
+			$("#postContent_delete").fadeIn();
+			
+
 			
 			// $("#postContent").css("display","none");
 			// $("#postContent").fadeIn();

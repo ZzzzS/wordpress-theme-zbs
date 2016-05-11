@@ -160,7 +160,6 @@ FilterButton.prototype.attachEvent = function (){
                 }
 
                 this.disactiveCancelAll();    //当所有按钮没被按下时,取消激活cancelAll
-
             }
 
             this.doFilter();

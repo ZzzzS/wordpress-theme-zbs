@@ -28,6 +28,7 @@ var sketch = function(p){
 		};
 		globalVar.attractPtL = new AttractPoint(optionL);
 		globalVar.attractPtR = new AttractPoint(optionR);
+
 	};
 	p.setup = function(){
 		p.createCanvas(960,600);
@@ -48,7 +49,6 @@ var sketch = function(p){
 			};
 			globalVar.displayArray.backgroundBall.push(new Particle(options));
 		}
-		
 	};
 	
 	p.draw = function(){
@@ -59,16 +59,28 @@ var sketch = function(p){
 		for(var objType in globalVar.displayArray){
 			if (objType === "ButtonParticle"){     //重新排序控制绘图顺序
 				resortButtonParticle(globalVar.displayArray);
+				p.push();
+				p.translate(0,0);
+				var translate = {
+					x : globalVar.translate[globalVar.translate.length - 1].x + 0,
+					y : globalVar.translate[globalVar.translate.length - 1].y + 0
+				};
+				globalVar.translate.push(translate);
+			}else{
+
 			}
+
 			for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
 				globalVar.displayArray[objType][i].display();
 				// if(i === 1 && globalVar.displayArray[objType][i].visualObject.isSelected()){
 				// 	buttonHoverCount++;
 				// }
 			}
+			if (objType === "ButtonParticle") {
+				p.pop();
+				globalVar.translate.pop();
+			}
 		}
-		
-
 		// var num = new p5.Noise();
 		// console.log(num);
 		// if(buttonHoverCount > 0){
@@ -183,6 +195,7 @@ $("body").click(function (e){
 //窗口尺寸改变
 $(window).resize(function() {
 	setSketch(); //设置sketch的位置。
+	$("#infoFrame").css("width", $(window).width());
 });
 
 $("#filterBarBtn").click(function (){

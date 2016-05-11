@@ -10,7 +10,12 @@
 			$userInfo = array();
 			$userInfo["name"] = $user->display_name;
 			$avatars = get_user_meta( $user->ID, 'wp_user_avatars', true );
-			if(!empty($avatars)) $userInfo["avatar"] = $avatars['250'];
+			if(!empty($avatars))
+			{ 
+				$userInfo["avatar"] = $avatars['250'];
+			}else{
+				$userInfo["avatar"] = get_template_directory_uri()."/image/sky01.jpg";
+			}
 			
 			global $wpdb;			
 			$author_id = $user->ID; 

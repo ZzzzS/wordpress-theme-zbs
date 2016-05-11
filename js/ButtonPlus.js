@@ -5,6 +5,7 @@ date:2016-03-03
 */
 var Button = require("./Button.js");
 var util = require("./util.js");
+var globalVar = require("./GlobalVar.js");
 
 function ButtonPlus(options) {
 	Button.call(this, options);
@@ -24,19 +25,24 @@ ButtonPlus.prototype.hoverObjCount = 0;
 
 //判断ButtonPlus是否被选中（加强版）
 ButtonPlus.prototype.isSelected = function () {
+	var translateX = globalVar.translate[globalVar.translate.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
+		translateY = globalVar.translate[globalVar.translate.length - 1].y,
+		mouseX = this.p.mouseX - translateX,
+		mouseY = this.p.mouseY - translateY;
+
 	if (this.filtered){     //假如被排除了，那么所有的状态都为未选中（亦即永远选不中）
 		return false;
 	}
 	var width = this.width > 40 ? this.width : 40;
 	var height = this.width > 40 ? this.width : 40;
 	if (this.width === this.height && this.geometryType === "circle") {
-		if (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
+		if (Math.pow((mouseX - this.position.x), 2) + Math.pow((mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
 			return true;
 		} else {
 			return false;
 		}
 	} else {
-		if (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {
+		if (mouseX >= this.position.x - width / 2 && mouseX <= this.position.x + width / 2 && mouseY >= this.position.y - height / 2 && mouseY <= this.position.y + height / 2) {
 			return true;
 		} else {
 			return false;

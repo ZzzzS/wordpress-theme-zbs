@@ -49,5 +49,12 @@
     <![endif]-->
 	</head>
 <body>
-	<div id="navigation_bar"><img id="logo" src="<?php bloginfo('template_directory'); ?>/weblogo-06.png" width="200"/></div>
-	
+	<div id="navigation_bar">
+		<img id="logo" src="<?php bloginfo('template_directory'); ?>/logo01.jpg" />
+		<div id="rightCtrlBar">
+			<form name="search">
+				<input type="text" name="search-input" />
+				<button type="submit" value="Submit" id="searchSubmit"/></button>
+			</form>
+		</div>
+	</div>

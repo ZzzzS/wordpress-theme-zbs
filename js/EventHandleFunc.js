@@ -34,7 +34,7 @@ var eventHandleFunc = {
         event.target.p.pop();
     },
 
-    showSortUserInfo : function (event){
+    showShortUserInfo : function (event){
         if(event.target.pState !== "hover"){
             var sketch = document.getElementById("sketch");
             var top = util.getElementTop(sketch);
@@ -49,7 +49,7 @@ var eventHandleFunc = {
                 sortInfoFrame.id = "sortInfoFrame";
             }
             sortInfoFrame.style.top = top+event.target.position.y-50 + "px";
-            sortInfoFrame.style.left = left+event.target.position.x+50 + "px";
+            sortInfoFrame.style.left = left+event.target.position.x+80 + "px";
 
             var img = document.createElement("img");
             img.src = event.target.info['avatar'];
@@ -66,7 +66,39 @@ var eventHandleFunc = {
 
     },
 
-    hideSortUserInfo : function (event){
+    showShortPostInfo : function (event){
+        if(event.target.pState !== "hover"){
+            var sketch = document.getElementById("sketch");
+            var top = util.getElementTop(sketch);
+            var left = util.getElementLeft(sketch);
+
+            var sortInfoFrame = document.getElementById("sortInfoFrame");
+            if(sortInfoFrame){
+                sortInfoFrame.style.visibility = "visible";
+                sortInfoFrame.innerHTML = "";
+            }else{
+                sortInfoFrame = document.createElement("div");
+                sortInfoFrame.id = "sortInfoFrame";
+            }
+            sortInfoFrame.style.top = top+event.target.position.y-50 + "px";
+            sortInfoFrame.style.left = left+event.target.position.x+80 + "px";
+
+            var img = document.createElement("img");
+            img.src = event.target.info['thumbnail'];
+            img.style.cssText = "width:100px;height:100px;border-radius:5px;-moz-border-radius:5px;";
+            sortInfoFrame.appendChild(img);
+
+            var title = document.createElement("div");
+            title.innerHTML = "<b>作品：</b>" + event.target.info['title'];
+            title.style.cssText = "margin-top:20px";
+            sortInfoFrame.appendChild(title);
+
+            document.body.appendChild(sortInfoFrame);
+        }
+
+    },
+
+    hideShortInfo : function (event){
         if (event.target.hoverObjCount === 0 || event.target.state === "press") {
             var doc = document;
             var sortInfoFrame = doc.getElementById("sortInfoFrame");
@@ -85,7 +117,7 @@ var eventHandleFunc = {
             infoFrame.style.visibility = "visible";
             infoFrame.innerHTML = "";    //清空
         }else{
-            infoFrame = document.createElement("div");
+            infoFrame = doc.createElement("div");
             infoFrame.id = "infoFrame";
         }
 
@@ -103,13 +135,16 @@ var eventHandleFunc = {
 
                 var name = doc.createElement("div");     //title
                 name.id += "name";
-                name.innerHTML = "<h2>" + event.target.info['name'] + "</h2>";
+                name.innerHTML = "<h3>" + event.target.info['name'] + "</h3>";
+
+                var postList = doc.createElement("div");
+                postList.id = "postList";
 
                 var ps = event.target.info['posts'];
                 var fragment = doc.createDocumentFragment();
                 for(var i=0;i<ps.length;i++){
                     var posts = doc.createElement("div");     //author
-                    posts.className += "postMeta";
+                    posts.className += "postList";
                     posts.title = "posts";
                     //posts.id = "getPostContentButton" + ps[i].id;
                     posts.innerHTML = ps[i].title;
@@ -120,13 +155,41 @@ var eventHandleFunc = {
                     fragment.appendChild(posts);
                 }
 
-        infoContainer.appendChild(name);
-        infoContainer.appendChild(fragment);
+            var fragment_1 = doc.createDocumentFragment();
 
+            var major = doc.createElement("div");
+            major.className += "postMeta";
+            major.title = "major";
+            major.innerHTML = "专业：" +  "---";
+
+            var unit = doc.createElement("div");
+            unit.className += "postMeta";
+            unit.title = "unit";
+            unit.innerHTML = "单位/学校：" +  "广州美术学院";
+
+            var profession = doc.createElement("div");
+            profession.className += "postMeta";
+            profession.title = "profession";
+            profession.innerHTML = "职业：" +  "---";
+
+            fragment_1.appendChild(major);
+            fragment_1.appendChild(unit);
+            fragment_1.appendChild(profession);
+
+        var postContent = document.createElement("div");
+        postContent.id = "postContent"
+        postContent.style.display = "none";
+
+        infoContainer.appendChild(name);
+        infoContainer.appendChild(fragment_1);
+
+        postList.appendChild(fragment);
+        introduction.appendChild(postList);
         introduction.appendChild(avatar);
         introduction.appendChild(infoContainer);
 
         infoFrame.appendChild(introduction);
+        infoFrame.appendChild(postContent);
         doc.body.appendChild(infoFrame);
     },
 
@@ -154,11 +217,14 @@ var eventHandleFunc = {
             infoContainer.id = "infoContainer";
 
                 var title = doc.createElement("div");     //title
+                title.classList.add("title_link");     //添加标题鼠标悬浮样式
                 title.onclick = function (){
                     getPostContent(event.target.info['id'], false);  //false : no title
+                    var infoContainer = document.getElementById("infoContainer");
+                    this.classList.remove("title_link");     //删除标题鼠标悬浮样式
                 };
                 title.id += "title";
-                title.innerHTML = "<h2>" + event.target.info['title'] + "</h2>";
+                title.innerHTML = "<h3>" + event.target.info['title'] + "</h3>";
 
                 var author = doc.createElement("div");     //author
                 author.className += "postMeta";
@@ -180,6 +246,10 @@ var eventHandleFunc = {
                 creationDate.title = "creationDate";
                 creationDate.innerHTML = "创作年份：" + (event.target.info['creationDate'] || "-----") + "年";
 
+        var postContent = document.createElement("div");
+        postContent.id = "postContent"
+        postContent.style.display = "none";
+
         infoContainer.appendChild(title);
         infoContainer.appendChild(author);
         infoContainer.appendChild(productType);
@@ -190,7 +260,10 @@ var eventHandleFunc = {
         introduction.appendChild(infoContainer);
 
         infoFrame.appendChild(introduction);
+        infoFrame.appendChild(postContent);
         doc.body.appendChild(infoFrame);
+
+        $("#infoFrame").css("width", $(window).width());
     },
 
     hideInfoFrame : function (event){

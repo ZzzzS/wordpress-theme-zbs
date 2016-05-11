@@ -28,10 +28,10 @@
 			
 			$thumbnail_id = get_post_thumbnail_id();
 			if($thumbnail_id ){
-				$thumb = wp_get_attachment_image_src($thumbnail_id, 'thumbnail')[0];
-				$postInfo["thumbnail"] = $thumb;
+				$thumb = wp_get_attachment_image_src($thumbnail_id, 'thumbnail');
+				$postInfo["thumbnail"] = $thumb[0];
 			}else{
-				$postInfo["thumbnail"] = false;
+				$postInfo["thumbnail"] = get_template_directory_uri()."/image/sky01.jpg";
 			}
 			$cat = get_the_terms( $post->ID, 'product_category' ,  ' ' );
 			$postInfo["cat"] = $cat[0]->name;

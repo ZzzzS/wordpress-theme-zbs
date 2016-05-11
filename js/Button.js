@@ -28,7 +28,12 @@ util.inheritPrototype(Button, VisualObject);
 
 //判断Button是否被选中
 Button.prototype.isSelected = function () {
-	if (this.p.mouseX >= this.position.x - width / 2 && this.p.mouseX <= this.position.x + width / 2 && this.p.mouseY >= this.position.y - height / 2 && this.p.mouseY <= this.position.y + height / 2) {
+	var translateX = globalVar.translate[globalVar.translate.length - 1].x,      //p5的bug,translate后,鼠标位置出错.
+		translateY = globalVar.translate[globalVar.translate.length - 1].y,
+		mouseX = this.p.mouseX - translateX,
+		mouseY = this.p.mouseY - translateY;
+
+	if (mouseX >= this.position.x - width / 2 && mouseX <= this.position.x + width / 2 && mouseY >= this.position.y - height / 2 && mouseY <= this.position.y + height / 2) {
 		return true;
 	} else {
 		return false;

@@ -21,9 +21,9 @@
 			<tr>
 				<td colspan="4">
 					<div id="btnGroup">
-						<button type="button" class="btn btn-default btn-sm" id="getUsers">getUsers</button>
-						<button type="button" class="btn btn-default btn-sm" id="getPosts">getPosts</button>
-						<button type="button" class="btn btn-default btn-sm" id="align">align</button>
+						<button type="button" class="" id="getUsers" title="作者"></button>
+						<button type="button" class="" id="getPosts" title="作品"></button>
+						<button type="button" class="" id="align" title="排列"></button>
 					</div>
 				</td>
 			</tr>
@@ -36,10 +36,6 @@
 	</div>
 	
 	<div id="sketch"></div>
-
-	<div id="info"></div>
-
-	<div class="btn-group-vertical" role="group" aria-label="..." id="buttonGroup">
 		
 	</div>
 	
