@@ -37,7 +37,6 @@ var getInfo = function (type,arg){
 					
 					var newObj = new ButtonParticle(optionsBP);
 					newObj.attractPt = globalVar.attractPtL;
-					newObj.reflect = true;
 
 					newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
 					newObj.visualObject.addHandler("turnOn",eventHandleFunc.showPostInfo);
@@ -88,7 +87,6 @@ var getInfo = function (type,arg){
 						}
 
 						newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
-						newObj.reflect = true;
 						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
 						newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideShortInfo);
 						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo);

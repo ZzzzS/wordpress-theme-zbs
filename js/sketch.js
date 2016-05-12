@@ -50,47 +50,48 @@ var sketch = function(p){
 			globalVar.displayArray.backgroundBall.push(new Particle(options));
 		}
 	};
-	
+
 	p.draw = function(){
 		p.background(255);
 		//globalVar.attractPt.display();
 		//globalVar.attractPt.display();
-		var buttonHoverCount = 0;
 		for(var objType in globalVar.displayArray){
 			if (objType === "ButtonParticle"){     //重新排序控制绘图顺序
 				resortButtonParticle(globalVar.displayArray);
-				p.push();
-				p.translate(0,0);
-				var translate = {
-					x : globalVar.translate[globalVar.translate.length - 1].x + 0,
-					y : globalVar.translate[globalVar.translate.length - 1].y + 0
-				};
-				globalVar.translate.push(translate);
-			}else{
+				ButtonPlus.pushMatrix();
+				globalVar.translate.x += (globalVar.transTarget.x - globalVar.translate.x) * 0.2;
+				globalVar.translate.y += (globalVar.transTarget.y - globalVar.translate.y) * 0.2;
+				ButtonPlus.translate(globalVar.translate.x,globalVar.translate.y);
+
+				var totalHeight =  globalVar.displayArray[objType].length / globalVar.countPerRow * globalVar.cellSize;
+				globalVar.transTarget.totalPage = totalHeight / p.height;
+				 if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1 && globalVar.alignState){
+				 	$("#nextPage").fadeIn();
+				 }else{
+				 	$("#nextPage").fadeOut();
+				 }
+				 if (globalVar.translate.currentPage > 0 && globalVar.alignState){
+				 	$("#perPage").fadeIn();
+				 }else{
+				 	$("#perPage").fadeOut();
+				 }
 
 			}
 
 			for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
 				globalVar.displayArray[objType][i].display();
-				// if(i === 1 && globalVar.displayArray[objType][i].visualObject.isSelected()){
-				// 	buttonHoverCount++;
-				// }
 			}
+
 			if (objType === "ButtonParticle") {
-				p.pop();
-				globalVar.translate.pop();
+				ButtonPlus.popMatrix();
 			}
 		}
-		// var num = new p5.Noise();
-		// console.log(num);
-		// if(buttonHoverCount > 0){
-		// 	$(p.canvas).css("cursor","pointer");
-		// }
 	};	
 	
 };
 
 var myp5 = new p5(sketch,'sketch');
+
 
 function resortButtonParticle(bp){
 	/**
@@ -148,6 +149,11 @@ $(document).ready(function(){
 	
 	//排列
 	$("#align").click(function (){
+		if (globalVar.alignState){
+			globalVar.transTarget.x = 0;
+			globalVar.transTarget.y = 0;
+			globalVar.translate.currentPage = 0;
+		}
 		globalVar.alignState = ~globalVar.alignState;
 		var len = globalVar.displayArray.ButtonParticle.length;
 		if (globalVar.alignState){
@@ -156,7 +162,7 @@ $(document).ready(function(){
 				var j = Math.floor(k / globalVar.countPerRow) + 2;
 				
 				var options = {
-					"position" : new p5.Vector(i*70,j*70),
+					"position" : new p5.Vector(i * globalVar.cellSize,j * globalVar.cellSize),
 					"strength" : 1.5,
 					"vortex" : false
 				};
@@ -200,6 +206,20 @@ $(window).resize(function() {
 
 $("#filterBarBtn").click(function (){
 	$("#filter").slideToggle("slow");
+});
+
+$("#nextPage").click(function (){
+	if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
+		globalVar.transTarget.y -= 400;
+		globalVar.translate.currentPage += 1;
+	}
+});
+
+$("#perPage").click(function (){
+	if (globalVar.translate.currentPage > 0){
+		globalVar.transTarget.y += 400;
+		globalVar.translate.currentPage -= 1;
+	}
 });
 
 var options_2010 = {
@@ -296,10 +316,10 @@ var options7 = {
 
 var options8 = {
 	id : "syxf",
-	text : "试验先锋",
+	text : "先锋试验",
 	parentId : "type",
 	keyword : "cat",
-	value : "试验先锋"
+	value : "先锋试验"
 };
 
 var options_sjcd = {
@@ -382,39 +402,39 @@ var options_cancelAll = {
 	text : ""
 };
 
-var options_cancelYear = {
-	id : "bcancelYear",
-	type : "cancel",
-	class : "cancel",
-	parentId : "cancelYear",
-	title: "取消‘年份’",
-	keyword : "creationDate",
-	text : ""
-};
+// var options_cancelYear = {
+// 	id : "bcancelYear",
+// 	type : "cancel",
+// 	class : "cancel",
+// 	parentId : "cancelYear",
+// 	title: "取消‘年份’",
+// 	keyword : "creationDate",
+// 	text : ""
+// };
 
-var options_cancelMajor = {
-	id : "bcancelMajor",
-	type : "cancel",
-	class : "cancel",
-	parentId : "cancelMajor",
-	title: "取消‘专业’",
-	keyword : "major",
-	text : ""
-};
+// var options_cancelMajor = {
+// 	id : "bcancelMajor",
+// 	type : "cancel",
+// 	class : "cancel",
+// 	parentId : "cancelMajor",
+// 	title: "取消‘专业’",
+// 	keyword : "major",
+// 	text : ""
+// };
 
-var options_cancelType = {
-	id : "bcancelType",
-	type : "cancel",
-	class : "cancel",
-	parentId : "cancelType",
-	title: "取消‘类别’",
-	keyword : "cat",
-	text : ""
-};
+// var options_cancelType = {
+// 	id : "bcancelType",
+// 	type : "cancel",
+// 	class : "cancel",
+// 	parentId : "cancelType",
+// 	title: "取消‘类别’",
+// 	keyword : "cat",
+// 	text : ""
+// };
 
 
 
 globalVar.filterButton.push(new FilterButton(options_cancelAll));
-globalVar.filterButton.push(new FilterButton(options_cancelYear));
-globalVar.filterButton.push(new FilterButton(options_cancelMajor));
-globalVar.filterButton.push(new FilterButton(options_cancelType));
+// globalVar.filterButton.push(new FilterButton(options_cancelYear));
+// globalVar.filterButton.push(new FilterButton(options_cancelMajor));
+// globalVar.filterButton.push(new FilterButton(options_cancelType));

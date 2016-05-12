@@ -32,6 +32,10 @@ var eventHandleFunc = {
         event.target.p.line(-12,0,12,0);
         event.target.p.line(0,-12,0,12);
         event.target.p.pop();
+        
+        event.target.p.stroke('gray');
+        event.target.p.strokeWeight(1);
+        event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, event.target.position.y + 1500);
     },
 
     showShortUserInfo : function (event){
@@ -48,8 +52,8 @@ var eventHandleFunc = {
                 sortInfoFrame = document.createElement("div");
                 sortInfoFrame.id = "sortInfoFrame";
             }
-            sortInfoFrame.style.top = top+event.target.position.y-50 + "px";
-            sortInfoFrame.style.left = left+event.target.position.x+80 + "px";
+            sortInfoFrame.style.top = top+event.target.trans_position.y-50 + "px";
+            sortInfoFrame.style.left = left+event.target.trans_position.x+80 + "px";
 
             var img = document.createElement("img");
             img.src = event.target.info['avatar'];
@@ -80,8 +84,8 @@ var eventHandleFunc = {
                 sortInfoFrame = document.createElement("div");
                 sortInfoFrame.id = "sortInfoFrame";
             }
-            sortInfoFrame.style.top = top+event.target.position.y-50 + "px";
-            sortInfoFrame.style.left = left+event.target.position.x+80 + "px";
+            sortInfoFrame.style.top = top+event.target.trans_position.y-50 + "px";
+            sortInfoFrame.style.left = left+event.target.trans_position.x+80 + "px";
 
             var img = document.createElement("img");
             img.src = event.target.info['thumbnail'];

@@ -18,12 +18,15 @@ var FilterButton = function (options){
     }else{
         this.id = options.id;
         this.text = options.text;
+        this.class = options.class;
         this.parentId = options.parentId;
         this.createElement();
     }
-    if (options.class){
-        this.node.classList += options.class;
-    }
+
+    //this.class = options.class;
+    //if (this.class){
+    //    this.node.classList += this.class;
+    //}
     //this.node.classList += "FilterButton";
     this.node.title = options.title;
     this.attachEvent();
@@ -35,6 +38,7 @@ FilterButton.prototype.createElement = function (){
     var doc = document;
     this.node = doc.createElement("button");
     this.node.id = this.id;
+    this.node.className = this.class;
     this.node.innerHTML = this.text;
     //this.node.href = "#";
     if (this.parentId){

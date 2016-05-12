@@ -1,21 +1,23 @@
     <?php get_header();?>
 	<div id = "filterBar">
 		<div id = "filter">
-		<table id = "filterT" border="1" cellpadding="10">
+		<table id = "filterT" border="0" cellpadding="0">
 			<tr>
-				<th>年份<td id="cancelYear" class="cancelCell"></td></th>
+				<th>年份
+					<!--<td id="cancelYear" class="cancelCell"></td>-->
+				</th>
 				
 				<td id="year"></td>
 				<td id="cancelAll" class="cancelCell" rowspan="3"></td>
 			</tr>
 			<tr>
 				<th>类别</th>
-				<td id="cancelType" class="cancelCell"></td>
+				<!--<td id="cancelType" class="cancelCell"></td>-->
 				<td id="type"></td>
 			</tr>
 			<tr>
 				<th>专业</th>
-				<td id="cancelMajor" class="cancelCell"></td>
+				<!--<td id="cancelMajor" class="cancelCell"></td>-->
 				<td id="major"></td>
 			</tr>
 			<tr>
@@ -36,7 +38,10 @@
 	</div>
 	
 	<div id="sketch"></div>
-		
+	
+	<button id="perPage" title="上一页"></button>
+	<button id="nextPage" title="下一页"></button>
+	
 	</div>
 	
 	<?php get_sidebar(); ?>

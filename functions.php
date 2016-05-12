@@ -393,7 +393,7 @@ function my_custom_post_product() {
     'description'   => '我们网站的所有作品信息',
     'public'        => true,
     'menu_position' => 5,
-    'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', ),
+    'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments','author' ),
     'has_archive'   => true
   );
   register_post_type( 'product', $args );

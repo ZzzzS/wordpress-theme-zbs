@@ -22,8 +22,7 @@ $Red : #D9534F;
 
 table{
 	border-spacing: 0;
-	border-collapse:collapse;
-	border-radius: 10px;
+	border-radius: 5px;
 }
 
 @mixin borderRadius($rad: 10px){
@@ -70,7 +69,7 @@ body {
 #navigation_bar{
 	width:100%;
 	height:$navigation_bar_height;
-	position: absolute;
+	position: fixed;
 	top:0;
 	left:0;
 	z-index:9999;
@@ -129,26 +128,36 @@ body {
 		display: none;
 		#filterT{
 			background: rgba(255,255,255,0.5);
-			border: gray 1px solid;
+			border: 1px gray solid;
 			@include borderRadius(0 0 10px 10px);
 			margin: 0 auto;
+			tr{
+				&:nth-last-child(2){
+					th{
+						border-bottom: none;
+					}
+				}
+			}
 			th{
 				border-right: none;
 				background-color: #ccc;
 				color: $themeMajorCol;
-				padding: 2px 10px;
-				border-right: none;
+				padding: 10px 10px;
+				border-right: 1px gray solid;
+				font-size: 16px;
+				border-bottom: 1px gray dashed;
 			}
 			td{
 				//@extend th;
 				text-align: center;
-				padding:8px 10px;
+				padding: 0;
 				button{
-					padding: 2px 5px;
+					height: 25px;
+					padding: 2px 10px;
 					background-color: white;
 					color : $themeMajorCol;
-					border:1px #ddd solid ;
-					margin : 0 2px;
+					border: 1px solid transparent;
+					margin : 5px 3px;
 					@include borderRadius(3px);
 
 					&:hover{
@@ -158,8 +167,10 @@ body {
 				}
 
 				#getUsers{
+					margin: 10px 20px;
+					height: 30px;
 					 &:before{
-						 font-size: 14px;
+						 font-size: 20px;
 						 font-family: FontAwesome;
 						 color:gray;
 						 content: "\f0c0";
@@ -179,6 +190,10 @@ body {
 						content: "\f00a";
 					}
 				}
+
+				//#bcancelAll{
+				//	@extend .cancel;
+				//}
 
 				.cancel{
 					&:before{
@@ -212,8 +227,7 @@ body {
 				}
 			}
 			.cancelCell{
-				border-left: none;
-				padding: 0;
+				border-left: 1px gray solid;
 			}
 			.active{
 				background-color: $themeMajorCol;
@@ -222,16 +236,13 @@ body {
 			}
 		}
 		#btnGroup{
-			//border: 1px solid gray;
-			width:100%;
+			border-top: 1px solid gray;
+			width: 100%;
 			display: -webkit-flex; /* Safari */
 			display: flex;
 			justify-content:center;
 			flex-direction: row;
 			flex-wrap: nowrap;
-			button{
-				margin: 0px 20px  !important;
-			}
 		}
 	}
 
@@ -438,6 +449,40 @@ $iconSize: 16px;
 	position:absolute;
 	padding:15px;
 	@include borderRadius(5px);
+}
+
+#nextPage{
+	position: absolute;
+	display: none;
+	background-color: rgba(150,150,150,0.5);
+	@include borderRadius(3px);
+	border: none;
+	padding-right: 2px;
+	width: 30px;
+	height: 30px;
+	right: 300px;
+	bottom: 200px;
+	&:before{
+		content: "\f078";
+		@include icon();
+		color: white;
+	}
+	&:hover{
+		&:before{
+			color: $themeMajorCol;
+		}
+		//border: 1px solid $themeMajorCol;
+
+	}
+}
+
+#perPage{
+	@extend #nextPage;
+	bottom: 280px;
+	&:before{
+		content: "\f077";
+
+	}
 }
 
 

@@ -25,11 +25,13 @@ ButtonPlus.prototype.hoverObjCount = 0;
 
 //判断ButtonPlus是否被选中（加强版）
 ButtonPlus.prototype.isSelected = function () {
-	var translateX = globalVar.translate[globalVar.translate.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
-		translateY = globalVar.translate[globalVar.translate.length - 1].y,
+	//console.log(this.constructor.prototype.trans);
+	var translateX = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
+		translateY = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y,
 		mouseX = this.p.mouseX - translateX,
 		mouseY = this.p.mouseY - translateY;
 
+	//console.log(this.constructor.prototype.trans);
 	if (this.filtered){     //假如被排除了，那么所有的状态都为未选中（亦即永远选不中）
 		return false;
 	}
@@ -125,9 +127,12 @@ ButtonPlus.prototype.getState = function () {
 	}
 };
 
+ButtonPlus.prototype.update = function (){
+	this.trans_position = new p5.Vector(this.position.x + this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x, this.position.y + this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y);
+};
 //根据不同的状态绘制ButtonPlus（加强版）
 ButtonPlus.prototype.display = function () {
-	//this.update();
+	this.update();
 	if (this.strokeCol) {
 		this.p.stroke(this.strokeCol);
 	} else {
@@ -252,6 +257,45 @@ ButtonPlus.prototype.drawFilteredObj = function (){
 	this.p.translate(this.position.x, this.position.y);
 	this.p.ellipse(0, 0, this.width, this.height);
 	this.p.pop();
+};
+
+ButtonPlus.prototype.trans = [{
+	x : 0,
+	y : 0
+}];
+
+ButtonPlus.prototype._trans = null;
+
+ButtonPlus.translate = function (x, y){
+	globalVar.pp.translate(x,y);
+	this.prototype._trans = {
+		x : this.prototype.trans[this.prototype.trans.length - 2].x + x,       //什么bug来的！！！！！Array最后一个竟然是length - 2！！！！！！
+		y : this.prototype.trans[this.prototype.trans.length - 2].y + y
+	};
+};
+
+ButtonPlus.pushMatrix = function (){
+	//globalVar.pp.push();
+	//console.log(this.prototype.trans);
+	if (this.prototype._trans === null){
+		this.prototype.trans.push({
+			x : this.prototype.trans[this.prototype.trans.length - 1].x,
+			y : this.prototype.trans[this.prototype.trans.length - 1].y
+		});
+	}else{
+		this.prototype.trans.push({
+			x : this.prototype._trans.x,
+			y : this.prototype._trans.y
+		});
+	}
+	console.log(this.prototype.trans);
+};
+
+ButtonPlus.popMatrix = function (){
+	if (this.prototype.trans.length > 0){
+		globalVar.pp.pop();
+		this.prototype.trans.pop();
+	}
 };
 
 module.exports = ButtonPlus;

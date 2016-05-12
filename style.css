@@ -13,8 +13,7 @@ License URI: http://creativecommons.org/licenses/by-sa/3.0/
 @import url("font-awesome/css/font-awesome.min.css");
 table {
   border-spacing: 0;
-  border-collapse: collapse;
-  border-radius: 10px; }
+  border-radius: 5px; }
 
 body {
   padding-top: 0;
@@ -24,7 +23,7 @@ body {
 #navigation_bar {
   width: 100%;
   height: 50px;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 9999;
@@ -78,37 +77,45 @@ body {
     display: none; }
     #filterBar #filter #filterT {
       background: rgba(255, 255, 255, 0.5);
-      border: gray 1px solid;
+      border: 1px gray solid;
       border-radius: 0 0 10px 10px;
       -moz-border-radius: 0 0 10px 10px;
       -webkit-border-radius: 0 0 10px 10px;
       margin: 0 auto; }
+      #filterBar #filter #filterT tr:nth-last-child(2) th {
+        border-bottom: none; }
       #filterBar #filter #filterT th {
         border-right: none;
         background-color: #ccc;
         color: #3868ae;
-        padding: 2px 10px;
-        border-right: none; }
+        padding: 10px 10px;
+        border-right: 1px gray solid;
+        font-size: 16px;
+        border-bottom: 1px gray dashed; }
       #filterBar #filter #filterT td {
         text-align: center;
-        padding: 8px 10px; }
+        padding: 0; }
         #filterBar #filter #filterT td button {
-          padding: 2px 5px;
+          height: 25px;
+          padding: 2px 10px;
           background-color: white;
           color: #3868ae;
-          border: 1px #ddd solid;
-          margin: 0 2px;
+          border: 1px solid transparent;
+          margin: 5px 3px;
           border-radius: 3px;
           -moz-border-radius: 3px;
           -webkit-border-radius: 3px; }
           #filterBar #filter #filterT td button:hover {
             border: 1px #3868ae solid;
             cursor: pointer; }
-        #filterBar #filter #filterT td #getUsers:before, #filterBar #filter #filterT td #getPosts:before, #filterBar #filter #filterT td #align:before {
-          font-size: 14px;
-          font-family: FontAwesome;
-          color: gray;
-          content: "\f0c0"; }
+        #filterBar #filter #filterT td #getUsers, #filterBar #filter #filterT td #getPosts, #filterBar #filter #filterT td #align {
+          margin: 10px 20px;
+          height: 30px; }
+          #filterBar #filter #filterT td #getUsers:before, #filterBar #filter #filterT td #getPosts:before, #filterBar #filter #filterT td #align:before {
+            font-size: 20px;
+            font-family: FontAwesome;
+            color: gray;
+            content: "\f0c0"; }
         #filterBar #filter #filterT td #getPosts:before {
           content: "\f0f6"; }
         #filterBar #filter #filterT td #align:before {
@@ -139,13 +146,13 @@ body {
             border: 1px gray solid;
             cursor: pointer; }
       #filterBar #filter #filterT .cancelCell {
-        border-left: none;
-        padding: 0; }
+        border-left: 1px gray solid; }
       #filterBar #filter #filterT .active {
         background-color: #3868ae;
         border: 1px #3868ae solid;
         color: white; }
     #filterBar #filter #btnGroup {
+      border-top: 1px solid gray;
       width: 100%;
       display: -webkit-flex;
       /* Safari */
@@ -153,8 +160,6 @@ body {
       justify-content: center;
       flex-direction: row;
       flex-wrap: nowrap; }
-      #filterBar #filter #btnGroup button {
-        margin: 0px 20px  !important; }
   #filterBar #filterBarBtn {
     display: block;
     width: 100px;
@@ -328,5 +333,32 @@ body {
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px; }
+
+#nextPage, #perPage {
+  position: absolute;
+  display: none;
+  background-color: rgba(150, 150, 150, 0.5);
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border: none;
+  padding-right: 2px;
+  width: 30px;
+  height: 30px;
+  right: 300px;
+  bottom: 200px; }
+  #nextPage:before, #perPage:before {
+    content: "\f078";
+    font-family: FontAwesome;
+    margin-right: 5px;
+    color: #555;
+    color: white; }
+  #nextPage:hover:before, #perPage:hover:before {
+    color: #3868ae; }
+
+#perPage {
+  bottom: 280px; }
+  #perPage:before {
+    content: "\f077"; }
 
 /*# sourceMappingURL=style.css.map */

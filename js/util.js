@@ -41,8 +41,7 @@ var util = {
 		}
 		return Length;
 	}
-	
-}
+};
 
 module.exports = util;
 
