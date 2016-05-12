@@ -25,13 +25,11 @@ ButtonPlus.prototype.hoverObjCount = 0;
 
 //判断ButtonPlus是否被选中（加强版）
 ButtonPlus.prototype.isSelected = function () {
-	//console.log(this.constructor.prototype.trans);
 	var translateX = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
 		translateY = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y,
 		mouseX = this.p.mouseX - translateX,
 		mouseY = this.p.mouseY - translateY;
 
-	//console.log(this.constructor.prototype.trans);
 	if (this.filtered){     //假如被排除了，那么所有的状态都为未选中（亦即永远选不中）
 		return false;
 	}
@@ -275,8 +273,6 @@ ButtonPlus.translate = function (x, y){
 };
 
 ButtonPlus.pushMatrix = function (){
-	//globalVar.pp.push();
-	//console.log(this.prototype.trans);
 	if (this.prototype._trans === null){
 		this.prototype.trans.push({
 			x : this.prototype.trans[this.prototype.trans.length - 1].x,
@@ -288,7 +284,6 @@ ButtonPlus.pushMatrix = function (){
 			y : this.prototype._trans.y
 		});
 	}
-	console.log(this.prototype.trans);
 };
 
 ButtonPlus.popMatrix = function (){

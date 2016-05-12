@@ -208,6 +208,45 @@ $("#filterBarBtn").click(function (){
 	$("#filter").slideToggle("slow");
 });
 
+// firefox
+document.body.addEventListener("DOMMouseScroll", function(event) {
+	if (globalVar.alignState){
+		var direction= event.detail && (event.detail > 0 ? "mousedown" : "mouseup");
+		var direction = event.wheelDelta && (event.wheelDelta > 0 ? "mouseup" : "mousedown");
+		if (direction === "mouseup"){
+			if (globalVar.translate.currentPage > 0){
+				globalVar.transTarget.y += 400;
+				globalVar.translate.currentPage -= 1;
+			}
+		}else{
+			if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
+				globalVar.transTarget.y -= 400;
+				globalVar.translate.currentPage += 1;
+			}
+		}
+	}    
+});
+
+// chrome and ie
+document.body.onmousewheel = function (event) {
+	if (globalVar.alignState){
+		event = event || window.event;
+
+		var direction = event.wheelDelta && (event.wheelDelta > 0 ? "mouseup" : "mousedown");
+		if (direction === "mouseup"){
+			if (globalVar.translate.currentPage > 0){
+				globalVar.transTarget.y += 400;
+				globalVar.translate.currentPage -= 1;
+			}
+		}else{
+			if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
+				globalVar.transTarget.y -= 400;
+				globalVar.translate.currentPage += 1;
+			}
+		}
+	}
+};
+
 $("#nextPage").click(function (){
 	if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
 		globalVar.transTarget.y -= 400;
