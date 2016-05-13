@@ -10,8 +10,12 @@ var FilterButton = require("./FilterButton.js");
 var sketch = function(p){
 	globalVar.pp = p;
 	p.preload = function() {
-		p.soundFormats('wav', 'ogg');
-		globalVar.SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
+		try{
+			p.soundFormats('wav', 'ogg');
+			globalVar.SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
+		}catch(e){
+			console.log(e.message);      //貌似ie不支持soundformats方法
+		}
 
 		var optionL = {
 			"p":p,
@@ -53,15 +57,15 @@ var sketch = function(p){
 
 	p.draw = function(){
 		p.background(255);
-		//globalVar.attractPt.display();
-		//globalVar.attractPt.display();
+		// globalVar.attractPtL.display();
+		// globalVar.attractPtR.display();
 		for(var objType in globalVar.displayArray){
 			if (objType === "ButtonParticle"){     //重新排序控制绘图顺序
 				resortButtonParticle(globalVar.displayArray);
-				ButtonPlus.pushMatrix();
+				ButtonPlus.pushMatrix(globalVar.pp);
 				globalVar.translate.x += (globalVar.transTarget.x - globalVar.translate.x) * 0.2;
 				globalVar.translate.y += (globalVar.transTarget.y - globalVar.translate.y) * 0.2;
-				ButtonPlus.translate(globalVar.translate.x,globalVar.translate.y);
+				ButtonPlus.translate(globalVar.translate.x, globalVar.translate.y, globalVar.pp);
 
 				var totalHeight =  globalVar.displayArray[objType].length / globalVar.countPerRow * globalVar.cellSize;
 				globalVar.transTarget.totalPage = totalHeight / p.height;
@@ -83,7 +87,7 @@ var sketch = function(p){
 			}
 
 			if (objType === "ButtonParticle") {
-				ButtonPlus.popMatrix();
+				ButtonPlus.popMatrix(globalVar.pp);
 			}
 		}
 	};	
@@ -91,7 +95,6 @@ var sketch = function(p){
 };
 
 var myp5 = new p5(sketch,'sketch');
-
 
 function resortButtonParticle(bp){
 	/**
@@ -110,7 +113,6 @@ function resortButtonParticle(bp){
 		newList.push(selectObj);
 	}
 	bp.ButtonParticle = newList;
-	
 }
 
 $(document).ready(function(){
@@ -145,6 +147,7 @@ $(document).ready(function(){
 		}
 
 		getInfo("posts");
+		ButtonPlus.prototype.hoverObjCount += 1; //由于按钮是在FliterBar上，getInfo的时候被重置了，所以+1
 	});
 	
 	//排列
@@ -204,9 +207,10 @@ $(window).resize(function() {
 	$("#infoFrame").css("width", $(window).width());
 });
 
-$("#filterBarBtn").click(function (){
-	$("#filter").slideToggle("slow");
+$("#filterBarBtn").mouseover(function (){
+	$("#filter").slideDown("slow");
 });
+
 
 // firefox
 document.body.addEventListener("DOMMouseScroll", function(event) {
@@ -258,6 +262,18 @@ $("#perPage").click(function (){
 	if (globalVar.translate.currentPage > 0){
 		globalVar.transTarget.y += 400;
 		globalVar.translate.currentPage -= 1;
+	}
+});
+
+$("#filterT, #filterBarBtn").mouseover(function (){       //让鼠标选择不中FilterBar下面的button
+	if (ButtonPlus.prototype.hoverObjCount < 1){
+		ButtonPlus.prototype.hoverObjCount += 1;
+	}
+});
+
+$("#filterT, #filterBarBtn").mouseout(function (){
+	if (ButtonPlus.prototype.hoverObjCount > 0){
+		ButtonPlus.prototype.hoverObjCount -= 1;
 	}
 });
 
@@ -318,11 +334,11 @@ var options_2016 = {
 };
 
 var options3 = {
-	id : "grqg",
-	text : "个人情感",
+	id : "qgbd",
+	text : "情感表达",
 	parentId : "type",
 	keyword : "cat",
-	value : "个人情感"
+	value : "情感表达"
 };
 var options4 = {
 	id : "gnyh",
@@ -339,26 +355,58 @@ var options5 = {
 	value : "社会话题"
 };
 var options6 = {
-	id : "clyyycx",
-	text : "材料应用与创新",
+	id : "clyy",
+	text : "材料应用",
 	parentId : "type",
 	keyword : "cat",
-	value : "材料应用与创新"
+	value : "材料应用"
 };
 var options7 = {
-	id : "kxjs",
-	text : "科学技术",
+	id : "kjzp",
+	text : "跨界作品",
 	parentId : "type",
 	keyword : "cat",
-	value : "科学技术"
+	value : "跨界作品"
 };
 
 var options8 = {
 	id : "syxf",
-	text : "先锋试验",
+	text : "实验先锋",
 	parentId : "type",
 	keyword : "cat",
-	value : "先锋试验"
+	value : "实验先锋"
+};
+
+var options9 = {
+	id : "rqyj",
+	text : "人群研究",
+	parentId : "type",
+	keyword : "cat",
+	value : "人群研究"
+};
+
+var options10 = {
+	id : "syyy",
+	text : "商业运用",
+	parentId : "type",
+	keyword : "cat",
+	value : "商业运用"
+};
+
+var options11 = {
+	id : "whcc",
+	text : "文化传承",
+	parentId : "type",
+	keyword : "cat",
+	value : "文化传承"
+};
+
+var options12 = {
+	id : "qt",
+	text : "其他",
+	parentId : "type",
+	keyword : "cat",
+	value : "其他"
 };
 
 var options_sjcd = {
@@ -423,6 +471,10 @@ globalVar.filterButton.push(new FilterButton(options5));
 globalVar.filterButton.push(new FilterButton(options6));
 globalVar.filterButton.push(new FilterButton(options7));
 globalVar.filterButton.push(new FilterButton(options8));
+globalVar.filterButton.push(new FilterButton(options9));
+globalVar.filterButton.push(new FilterButton(options10));
+globalVar.filterButton.push(new FilterButton(options11));
+globalVar.filterButton.push(new FilterButton(options12));
 
 globalVar.filterButton.push(new FilterButton(options_sjcd));
 globalVar.filterButton.push(new FilterButton(options_gysj));
@@ -441,39 +493,4 @@ var options_cancelAll = {
 	text : ""
 };
 
-// var options_cancelYear = {
-// 	id : "bcancelYear",
-// 	type : "cancel",
-// 	class : "cancel",
-// 	parentId : "cancelYear",
-// 	title: "取消‘年份’",
-// 	keyword : "creationDate",
-// 	text : ""
-// };
-
-// var options_cancelMajor = {
-// 	id : "bcancelMajor",
-// 	type : "cancel",
-// 	class : "cancel",
-// 	parentId : "cancelMajor",
-// 	title: "取消‘专业’",
-// 	keyword : "major",
-// 	text : ""
-// };
-
-// var options_cancelType = {
-// 	id : "bcancelType",
-// 	type : "cancel",
-// 	class : "cancel",
-// 	parentId : "cancelType",
-// 	title: "取消‘类别’",
-// 	keyword : "cat",
-// 	text : ""
-// };
-
-
-
 globalVar.filterButton.push(new FilterButton(options_cancelAll));
-// globalVar.filterButton.push(new FilterButton(options_cancelYear));
-// globalVar.filterButton.push(new FilterButton(options_cancelMajor));
-// globalVar.filterButton.push(new FilterButton(options_cancelType));

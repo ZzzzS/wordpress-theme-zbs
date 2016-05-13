@@ -5,17 +5,6 @@ var util = require("./util.js");
 var getPostContent = require("./getPostContent.js");
 
 var eventHandleFunc = {
-    // clicked : function (event){
-    //     event.target.p.noStroke();
-    //     event.target.p.fill(0);
-    //     event.target.p.textAlign("center");
-    //     var text;
-    //     text = event.target.info['title'];
-    //     if(text){
-    //         event.target.p.text(text,event.target.position.x,event.target.position.y);
-    //     }	
-    // },
-
     clicked_animation : function (event){
         event.target.p.noStroke();
         event.target.p.fill(0);
@@ -24,6 +13,7 @@ var eventHandleFunc = {
         event.target.p.strokeWeight(5);
         event.target.p.push();
         event.target.p.translate(event.target.position.x,event.target.position.y);
+        
         if(event.target.clickTimeline < 40){
             event.target.p.rotate(event.target.p.map(event.target.clickTimeline,0,40,0,Math.PI/4));
         }else{
@@ -33,9 +23,22 @@ var eventHandleFunc = {
         event.target.p.line(0,-12,0,12);
         event.target.p.pop();
         
+        event.target.p.noFill();
+        var n = event.target.clickTimeline % 200;
+        event.target.p.stroke(200, 200,200, 200 - n);
+        event.target.p.strokeWeight(10 - n / 20);
+        
+        for (var i = 0; i < 3; i++){
+            event.target.p.ellipse(event.target.position.x, event.target.position.y, event.target.height + Math.sqrt((n - 60 * i) * 10, 2), event.target.height + Math.sqrt((n - 60 * i) * 10, 2));
+        }
+        
         event.target.p.stroke('gray');
         event.target.p.strokeWeight(1);
-        event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, event.target.position.y + 1500);
+        if(event.target.clickTimeline < 100){
+            event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, Math.max(event.target.position.y + 15 * event.target.clickTimeline, event.target.position.y + event.target.width / 2));
+        }else{
+            event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, event.target.position.y + 1500);
+        }
     },
 
     showShortUserInfo : function (event){
@@ -46,7 +49,7 @@ var eventHandleFunc = {
 
             var sortInfoFrame = document.getElementById("sortInfoFrame");
             if(sortInfoFrame){
-                sortInfoFrame.style.visibility = "visible";
+                $("#sortInfoFrame").fadeIn(0);
                 sortInfoFrame.innerHTML = "";
             }else{
                 sortInfoFrame = document.createElement("div");
@@ -78,7 +81,7 @@ var eventHandleFunc = {
 
             var sortInfoFrame = document.getElementById("sortInfoFrame");
             if(sortInfoFrame){
-                sortInfoFrame.style.visibility = "visible";
+                $("#sortInfoFrame").fadeIn(0);
                 sortInfoFrame.innerHTML = "";
             }else{
                 sortInfoFrame = document.createElement("div");
@@ -103,12 +106,11 @@ var eventHandleFunc = {
     },
 
     hideShortInfo : function (event){
-        if (event.target.hoverObjCount === 0 || event.target.state === "press") {
-            var doc = document;
-            var sortInfoFrame = doc.getElementById("sortInfoFrame");
-            if(sortInfoFrame){
-                sortInfoFrame.style.visibility = "hidden";
-            }
+        if (event.target.hoverObjCount === 0 && event.target.pState==="hover") {
+            $("#sortInfoFrame").fadeOut(0);
+        }
+        if (event.target.state === "press") {
+            $("#sortInfoFrame").fadeOut(400);
         }
     },
 
@@ -267,15 +269,14 @@ var eventHandleFunc = {
         infoFrame.appendChild(postContent);
         doc.body.appendChild(infoFrame);
 
-        $("#infoFrame").css("width", $(window).width());
+        $("#infoFrame").css("display", "none");
+        $("#infoFrame").fadeIn();
     },
 
     hideInfoFrame : function (event){
         var doc = document;
         var infoFrame = doc.getElementById("infoFrame");
-        if(infoFrame){
-            infoFrame.style.visibility = "hidden";
-        }
+        $("#infoFrame").fadeOut("fast",function (){infoFrame.style.visibility = "hidden";});
     }
 
 };

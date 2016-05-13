@@ -5,7 +5,7 @@ date:2016-03-03
 */
 var Button = require("./Button.js");
 var util = require("./util.js");
-var globalVar = require("./GlobalVar.js");
+// var globalVar = require("./GlobalVar.js");
 
 function ButtonPlus(options) {
 	Button.call(this, options);
@@ -214,12 +214,12 @@ ButtonPlus.prototype.display = function () {
 			} else {
 				this.clickTimeline++;
 			}
-			if (this.clickTimeline < 40) {
-				this.p.stroke(200, 200, 200, 200 - this.clickTimeline * 5);
-				this.p.strokeWeight(10 - this.clickTimeline / 4);
-				this.p.noFill();
-				this.p.ellipse(this.position.x, this.position.y, this.width + Math.sqrt(this.clickTimeline * 50, 2), this.height + Math.sqrt(this.clickTimeline * 50, 2));
-			}
+			// if (this.clickTimeline < 40) {
+			// 	this.p.stroke(200, 200, 200, 200 - this.clickTimeline * 5);
+			// 	this.p.strokeWeight(10 - this.clickTimeline / 4);
+			// 	this.p.noFill();
+			// 	this.p.ellipse(this.position.x, this.position.y, this.width + Math.sqrt(this.clickTimeline * 50, 2), this.height + Math.sqrt(this.clickTimeline * 50, 2));
+			// }
 
 
 			this.fire({ type: "click" });
@@ -264,15 +264,16 @@ ButtonPlus.prototype.trans = [{
 
 ButtonPlus.prototype._trans = null;
 
-ButtonPlus.translate = function (x, y){
-	globalVar.pp.translate(x,y);
+ButtonPlus.translate = function (x, y, p){
+	p.translate(x,y);
 	this.prototype._trans = {
 		x : this.prototype.trans[this.prototype.trans.length - 2].x + x,       //什么bug来的！！！！！Array最后一个竟然是length - 2！！！！！！
 		y : this.prototype.trans[this.prototype.trans.length - 2].y + y
 	};
 };
 
-ButtonPlus.pushMatrix = function (){
+ButtonPlus.pushMatrix = function (p){
+	p.push();
 	if (this.prototype._trans === null){
 		this.prototype.trans.push({
 			x : this.prototype.trans[this.prototype.trans.length - 1].x,
@@ -286,9 +287,9 @@ ButtonPlus.pushMatrix = function (){
 	}
 };
 
-ButtonPlus.popMatrix = function (){
+ButtonPlus.popMatrix = function (p){
 	if (this.prototype.trans.length > 0){
-		globalVar.pp.pop();
+		p.pop();
 		this.prototype.trans.pop();
 	}
 };

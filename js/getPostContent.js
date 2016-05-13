@@ -7,6 +7,7 @@ var getPostContent = function (id, title){
 
 	XMLHTTP.onreadystatechange=function(){
 		if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
+			$("#loading").fadeOut();
 			var navigation_bar = document.getElementById("navigation_bar");
 			var infoFrame = document.getElementById("infoFrame");
 			var postContent = document.getElementById("postContent");
@@ -103,12 +104,12 @@ var getPostContent = function (id, title){
 				rightCtrlBar.appendChild(cancel);
 			}
 			$("#postContent_delete").fadeIn();
-			
-
-			
+		
 			// $("#postContent").css("display","none");
 			// $("#postContent").fadeIn();
 			
+		}else{
+			$("#loading").fadeIn();
 		}
 	};
 	XMLHTTP.open("GET","wp-content/themes/zbs/getPostContent.php?id="+id+"&title="+title);

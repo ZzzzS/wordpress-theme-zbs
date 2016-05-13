@@ -18,6 +18,7 @@ var getInfo = function (type,arg){
 		XMLHTTP.onreadystatechange=function(){
 			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 				//alert(XMLHTTP.responseText);
+				$("#loading").fadeOut();
 				var posts = JSON.parse(XMLHTTP.responseText);
 				
 				for(var item in posts){
@@ -51,6 +52,8 @@ var getInfo = function (type,arg){
 					globalVar.displayArray.ButtonParticle.push(newObj);
 				}
 
+			}else{
+				$("#loading").fadeIn();
 			}
 		};
 		XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
@@ -63,6 +66,7 @@ var getInfo = function (type,arg){
 					//alert(XMLHTTP.responseText);
 					//console.log(XMLHTTP.responseText);
 					
+					$("#loading").fadeOut();
 					var i = 0;
 					var count = util.getJsonObjLength(users);
 					for(var item in users){
@@ -101,12 +105,8 @@ var getInfo = function (type,arg){
 					}
 					i = null;
 					count = null;
-					
-					
-					
-					
-			
-					
+				}else{
+					$("#loading").fadeIn();
 				}
 			}
 			XMLHTTP.open("GET","wp-content/themes/zbs/getUserInfo.php" + "?userRole=" + arg);

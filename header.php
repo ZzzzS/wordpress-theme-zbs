@@ -54,7 +54,7 @@
 		<div id="rightCtrlBar">
 			<form name="search">
 				<input type="text" name="search-input" />
-				<button type="submit" value="Submit" id="searchSubmit"/></button>
+				<button type="submit" value="Submit" id="searchSubmit"></button>
 			</form>
 		</div>
 	</div>

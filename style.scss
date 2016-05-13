@@ -403,6 +403,7 @@ body {
 		@include boxShadow(1px 1px 5px #ddd);
 		img{
 			max-width: 100%;
+			height: auto;
 		}
 	}
 

@@ -19,8 +19,8 @@ var Button = function (options) {
 	this.state;
 	this.pSwitch = "off";   //Button初始状态
 	this.hoverCol = options.hoverCol || this.p.color("#06799F");  //鼠标悬浮时Button的颜色
-	this.pressCol = options.pressCol || this.p.color("#216278");  //鼠标按下时Button的颜色
-	this.clickCol = options.clickCol || this.p.color("#024E68");  //Button处于on状态时的颜色
+	this.pressCol = options.pressCol || this.p.color("#D9534F");  //鼠标按下时Button的颜色
+	this.clickCol = options.clickCol || this.p.color("#D9534F");  //Button处于on状态时的颜色
 	this.positions = [];  //储存位置
 	this.handlers = {};  //事件处理程序
 }
