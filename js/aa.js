@@ -1,3 +1,5 @@
+//测试
+
 var pp;
 var sketch = function (p) {
     var width = Math.max(document.documentElement.clientWidth,960);

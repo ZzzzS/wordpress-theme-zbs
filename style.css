@@ -18,7 +18,9 @@ table {
 body {
   padding-top: 0;
   padding-bottom: 0;
-  font-family: 微软雅黑,宋体,Arial,Verdana,arial,serif; }
+  font-family: 微软雅黑,宋体,Arial,Verdana,arial,serif;
+  overflow: hidden;
+  margin: 0; }
 
 #navigation_bar {
   width: 100%;
@@ -98,7 +100,7 @@ body {
         #filterBar #filter #filterT td button {
           height: 25px;
           padding: 2px 10px;
-          background-color: white;
+          background-color: rgba(255, 255, 255, 0.7);
           color: #3868ae;
           border: 1px solid transparent;
           margin: 5px 3px;
@@ -186,10 +188,11 @@ body {
         color: #3868ae; }
 
 #sketch {
-  width: 962px;
-  height: 602px;
-  padding: 1px;
-  margin: 10px auto; }
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 50px;
+  z-index: -1; }
 
 #infoFrame {
   position: fixed;
@@ -373,17 +376,5 @@ body {
 
 #primary {
   margin-top: 60px; }
-  
-  
- #sketch1{
-   margin: 0;
-   padding: 0;
-   position: absolute;
-   top:50px;
- }
- body{
-   overflow: hidden;
-   margin: 0;
- }
 
 /*# sourceMappingURL=style.css.map */

@@ -22,7 +22,10 @@ var GlobalVar = {
         x : 0,
         y : 0,
         totalPage : 0
-    }
+    },
+    navigationBarHeight : 50,
+    width : 0,
+    height : 0
 };
 
 module.exports = GlobalVar;

@@ -23,8 +23,10 @@ var getInfo = function (type,arg){
 				
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
+					var width = Math.max(document.documentElement.clientWidth ,960);
+					var height = Math.max(document.documentElement.clientHeight ,600);
 					var options = {
-						position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+						position : new p5.Vector((Math.random() * globalVar.width - 100) + 50,(Math.random() * globalVar.height - 60) + 30),
 						width : size,
 						height : size,
 						r : 25,
@@ -72,7 +74,7 @@ var getInfo = function (type,arg){
 					for(var item in users){
 						var size = Math.random()*20 + 20;
 						var options = {
-							position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
+							position : new p5.Vector((Math.random() * globalVar.width - 100) + 50,(Math.random() * globalVar.height - 60) + 30),
 							width : size,
 							height : size,
 							r : 25,

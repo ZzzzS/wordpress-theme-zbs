@@ -8,6 +8,8 @@ var ButtonPlus = require("./ButtonPlus.js");
 var FilterButton = require("./FilterButton.js");
 
 var sketch = function (p){
+	globalVar.width = Math.max(document.documentElement.clientWidth,960);
+	globalVar.height = Math.max(document.documentElement.clientHeight,600);
 	globalVar.pp = p;
 	p.preload = function () {
 		try{
@@ -19,13 +21,13 @@ var sketch = function (p){
 
 		var optionL = {
 			"p":p,
-			"position" : new p5.Vector(200,300),
+			"position" : new p5.Vector(globalVar.width / 2 - 250,globalVar.height * 0.6),
 			"strength" : 0.1,
 			"vortex" : true
 		};
 		var optionR = {
 			"p":p,
-			"position" : new p5.Vector(700,300),
+			"position" : new p5.Vector(globalVar.width / 2 + 250,globalVar.height * 0.6),
 			"strength" : 0.1,
 			"clockwise" : true,
 			"vortex" : true
@@ -35,13 +37,13 @@ var sketch = function (p){
 
 	};
 	p.setup = function (){
-		p.createCanvas(960,600);
+		p.createCanvas(globalVar.width, globalVar.height);
 		p.canvas.id = "sketch_1";
 		globalVar.displayArray.backgroundBall = [];
 		for(var i = 0; i < 50; i++){
 			var size = Math.random()*20 + 15;
 			var optionsVO = {
-				position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+				position : new p5.Vector((Math.random() * p.width - 100) + 50,(Math.random() * p.height - 60) + 30),
 				width : size,
 				height : size,
 				p : globalVar.pp,
@@ -95,6 +97,33 @@ var sketch = function (p){
 };
 
 var myp5 = new p5(sketch,'sketch');
+
+setTimeout(resizeCanvas,0);    //延迟执行，不然canvas的width跟heigth的值为0；
+
+function resizeCanvas(){       //调整canvas的大小与位置
+    var sketch = document.getElementById("sketch");
+	globalVar.width = Math.max(document.documentElement.clientWidth ,960);
+    globalVar.height = Math.max(document.documentElement.clientHeight ,600);
+    var left,top;
+    globalVar.pp.resizeCanvas(globalVar.width, globalVar.height);
+    if (document.documentElement.clientWidth  < 960){
+        left = (document.documentElement.clientWidth - globalVar.width) / 2;
+    }else{
+        left = (globalVar.width - document.documentElement.clientWidth) / 2;
+    }
+    if (document.documentElement.clientHeight - 50  < 600){
+        top = (document.documentElement.clientHeight + 50 - globalVar.height) / 2;
+    }else{
+        top = (globalVar.height - document.documentElement.clientHeight + 50) / 2;
+    }
+    sketch.style.left = left + "px";
+    sketch.style.top = top + "px";
+	
+	globalVar.attractPtL.position.x = globalVar.width / 2 - 250;  //调整画布时,attractPtL与attractPtR也得更改位置
+	globalVar.attractPtR.position.x = globalVar.width / 2 + 250;
+	globalVar.attractPtL.position.y = globalVar.height * 0.6;
+	globalVar.attractPtR.position.y = globalVar.height * 0.6;
+}
 
 function resortButtonParticle(bp){
 	/**
@@ -152,6 +181,9 @@ $(document).ready(function(){
 	
 	//排列
 	$("#align").click(function (){
+		var w = globalVar.countPerRow * globalVar.cellSize;
+		var left = (globalVar.width - w) / 2 + 0.5 * globalVar.cellSize;
+		
 		if (globalVar.alignState){
 			globalVar.transTarget.x = 0;
 			globalVar.transTarget.y = 0;
@@ -161,11 +193,11 @@ $(document).ready(function(){
 		var len = globalVar.displayArray.ButtonParticle.length;
 		if (globalVar.alignState){
 			for(var k = 0; k < len; k++){
-				var i = k % globalVar.countPerRow + 2;
+				var i = k % globalVar.countPerRow;
 				var j = Math.floor(k / globalVar.countPerRow) + 2;
 				
 				var options = {
-					"position" : new p5.Vector(i * globalVar.cellSize,j * globalVar.cellSize),
+					"position" : new p5.Vector(i * globalVar.cellSize + left, j * globalVar.cellSize),
 					"strength" : 1.5,
 					"vortex" : false
 				};
@@ -182,15 +214,8 @@ $(document).ready(function(){
 		
 	});
 
-	setSketch();   //设置sketch的位置。
 });
 
-function setSketch(){      //设置sketch的位置。
-	var clientHeight = document.documentElement.clientHeight;
-	var sketch = $("#sketch");
-	var height = sketch.css("height");
-	sketch.css("margin-top", ((parseInt(clientHeight) - parseInt(height) + 50) / 2) + "px");
-}
 
 $("body").click(function (e){
 	if ($(e.target).is("#filterBar , #filterBarBtn , #filterBar button")){
@@ -203,14 +228,13 @@ $("body").click(function (e){
 
 //窗口尺寸改变
 $(window).resize(function() {
-	setSketch(); //设置sketch的位置。
 	$("#infoFrame").css("width", $(window).width());
+	resizeCanvas();   //调整canv位置与大小
 });
 
 $("#filterBarBtn").mouseover(function (){
 	$("#filter").slideDown("slow");
 });
-
 
 // firefox
 document.body.addEventListener("DOMMouseScroll", function(event) {

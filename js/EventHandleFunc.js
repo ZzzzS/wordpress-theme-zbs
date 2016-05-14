@@ -2,6 +2,7 @@
  * 定义与Button绑定的事件处理程序
  */
 var util = require("./util.js");
+var globalVar = require("./GlobalVar.js");
 var getPostContent = require("./getPostContent.js");
 
 var eventHandleFunc = {
@@ -44,11 +45,10 @@ var eventHandleFunc = {
     },
 
     showShortUserInfo : function (event){
-        if(event.target.pState !== "hover"){
-            var sketch = document.getElementById("sketch");
-            var top = util.getElementTop(sketch);
-            var left = util.getElementLeft(sketch);
-
+        if(event.target.pState !== "hover"){ 
+            var top = Math.floor(event.target.position.y + globalVar.navigationBarHeight + event.target.constructor.prototype.trans[event.target.constructor.prototype.trans.length - 1].y);
+            var left = Math.floor(event.target.position.x + event.target.constructor.prototype.trans[event.target.constructor.prototype.trans.length - 1].x);  
+            
             var sortInfoFrame = document.getElementById("sortInfoFrame");
             if(sortInfoFrame){
                 $("#sortInfoFrame").fadeIn(0);
@@ -57,8 +57,8 @@ var eventHandleFunc = {
                 sortInfoFrame = document.createElement("div");
                 sortInfoFrame.id = "sortInfoFrame";
             }
-            sortInfoFrame.style.top = top+event.target.trans_position.y-50 + "px";
-            sortInfoFrame.style.left = left+event.target.trans_position.x+80 + "px";
+            sortInfoFrame.style.top = top - 50 + "px";
+            sortInfoFrame.style.left = left + 80 + "px";
 
             var img = document.createElement("img");
             img.src = event.target.info['avatar'];
@@ -77,10 +77,10 @@ var eventHandleFunc = {
 
     showShortPostInfo : function (event){
         if(event.target.pState !== "hover"){
-            var sketch = document.getElementById("sketch");
-            var top = util.getElementTop(sketch);
-            var left = util.getElementLeft(sketch);
-
+            // var sketch = document.getElementById("sketch");
+            var top = Math.floor(event.target.position.y + globalVar.navigationBarHeight + event.target.constructor.prototype.trans[event.target.constructor.prototype.trans.length - 1].y);
+            var left = Math.floor(event.target.position.x + event.target.constructor.prototype.trans[event.target.constructor.prototype.trans.length - 1].x);
+               
             var sortInfoFrame = document.getElementById("sortInfoFrame");
             if(sortInfoFrame){
                 $("#sortInfoFrame").fadeIn(0);
@@ -89,8 +89,8 @@ var eventHandleFunc = {
                 sortInfoFrame = document.createElement("div");
                 sortInfoFrame.id = "sortInfoFrame";
             }
-            sortInfoFrame.style.top = top+event.target.trans_position.y-50 + "px";
-            sortInfoFrame.style.left = left+event.target.trans_position.x+80 + "px";
+            sortInfoFrame.style.top = top - 50 + "px";
+            sortInfoFrame.style.left = left + 80 + "px";
 
             var img = document.createElement("img");
             img.src = event.target.info['thumbnail'];
@@ -186,7 +186,7 @@ var eventHandleFunc = {
 
         var postContent = document.getElementById("postContent");
         if (!postContent){
-            document.createElement("div");
+            postContent = document.createElement("div");
             postContent.id = "postContent"
             postContent.style.display = "none";
             postContent.classList.add("articleBody");
@@ -203,6 +203,9 @@ var eventHandleFunc = {
         infoFrame.appendChild(introduction);
         infoFrame.appendChild(postContent);
         doc.body.appendChild(infoFrame);
+        
+        $("#infoFrame").css("display", "none");
+        $("#infoFrame").fadeIn();
     },
 
     showPostInfo : function (event){
