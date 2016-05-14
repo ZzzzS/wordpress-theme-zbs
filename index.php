@@ -37,7 +37,8 @@
 		<button id="filterBarBtn"><span></span></button>
 	</div>
 	
-	<div id="sketch"></div>
+	<!--<div id="sketch"></div>-->
+	<div id="sketch1"></div>
 	
 	<button id="perPage" title="上一页"></button>
 	<button id="nextPage" title="下一页"></button>
@@ -48,5 +49,7 @@
 	<script src="<?php bloginfo('template_directory'); ?>/bootstrap/js/jquery-2.1.4.min.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/p5.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/p5.sound.js" type="text/javascript"></script>
-	<script src="<?php bloginfo('template_directory'); ?>/js/infinite.js" type="text/javascript"></script>
+	<!--<script src="<?php bloginfo('template_directory'); ?>/js/infinite.js" type="text/javascript"></script>-->
+	<script src="<?php bloginfo('template_directory'); ?>/js/aa.js" type="text/javascript"></script>
+
 	<?php get_footer();?>

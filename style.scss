@@ -359,54 +359,8 @@ body {
 				}
 			}
 
-			.postMeta{
-				display:inline-block;
-				margin-right: 20px;
-				margin-top: 5px;
-				color: gray;
-				@include showBoxBorder();
-				&[title=author]:before{
-					content: "\f007";
-					@include icon();
-				}
-				&[title=productType]:before{
-					content: "\f02e";
-					@include icon();
-				}
-				&[title=major]:before{
-					content: "\f19d";
-					@include icon();
-				}
-				&[title=creationDate]:before{
-					 content: "\f073";
-					 @include icon();
-				 }
-				&[title=unit]:before{
-					content: "\f0f7";
-					@include icon();
-				}
-				&[title=profession]:before{
-					content: "\f0b1";
-					@include icon();
-				}
-			}
 		}
 	}
-
-	#postContent{
-		border:1px #ccc solid;
-		white-space: normal;
-		@include postInfo();
-		padding: 10px 20px;//calc((100vw - 100%) / 2 + 5px)
-		//padding-right: 20px;//calc(12px - (100vw - 100%) / 2);
-		margin: 10px auto;
-		@include boxShadow(1px 1px 5px #ddd);
-		img{
-			max-width: 100%;
-			height: auto;
-		}
-	}
-
 }
 
 $buttonSize : 30px;
@@ -486,7 +440,60 @@ $iconSize: 16px;
 	}
 }
 
+.articleBody{       //文章正文
+	font-size: 1em;
+	line-height: 1.5em;
+	border:1px #ccc solid;
+	white-space: normal;
+	@include postInfo();
+	padding: 10px 20px;//calc((100vw - 100%) / 2 + 5px)
+	//padding-right: 20px;//calc(12px - (100vw - 100%) / 2);
+	margin: 10px auto;
+	@include boxShadow(1px 1px 5px #ddd);
+	img{
+		max-width: 100%;
+		height: auto;
+	}
+	#postMeta{
+		text-align: right;
+		padding: 0 0 10px 0;
+		border-bottom: 1px gray dashed;
+	}
+}
 
+.postMeta{            //文章信息
+	display:inline-block;
+	font-size: 0.9em;
+	margin-right: 20px;
+	margin-top: 5px;
+	color: gray;
+	@include showBoxBorder();
+	&[title=author]:before{
+		content: "\f007";
+		@include icon();
+	}
+	&[title=productType]:before{
+		content: "\f02e";
+		@include icon();
+	}
+	&[title=major]:before{
+		content: "\f19d";
+		@include icon();
+	}
+	&[title=creationDate]:before{
+		content: "\f073";
+		@include icon();
+	}
+	&[title=unit]:before{
+		content: "\f0f7";
+		@include icon();
+	}
+	&[title=profession]:before{
+		content: "\f0b1";
+		@include icon();
+	}
+}
 
-
-
+#primary{
+	margin-top: 60px;
+}

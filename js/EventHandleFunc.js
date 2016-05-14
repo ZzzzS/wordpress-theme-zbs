@@ -14,6 +14,8 @@ var eventHandleFunc = {
         event.target.p.push();
         event.target.p.translate(event.target.position.x,event.target.position.y);
         
+        if (event.target.clickTimeline > 100000000) event.target.clickTimeline = 0;
+        
         if(event.target.clickTimeline < 40){
             event.target.p.rotate(event.target.p.map(event.target.clickTimeline,0,40,0,Math.PI/4));
         }else{
@@ -182,9 +184,13 @@ var eventHandleFunc = {
             fragment_1.appendChild(unit);
             fragment_1.appendChild(profession);
 
-        var postContent = document.createElement("div");
-        postContent.id = "postContent"
-        postContent.style.display = "none";
+        var postContent = document.getElementById("postContent");
+        if (!postContent){
+            document.createElement("div");
+            postContent.id = "postContent"
+            postContent.style.display = "none";
+            postContent.classList.add("articleBody");
+        }
 
         infoContainer.appendChild(name);
         infoContainer.appendChild(fragment_1);
@@ -253,7 +259,8 @@ var eventHandleFunc = {
                 creationDate.innerHTML = "创作年份：" + (event.target.info['creationDate'] || "-----") + "年";
 
         var postContent = document.createElement("div");
-        postContent.id = "postContent"
+        postContent.id = "postContent";
+        postContent.classList.add("articleBody");
         postContent.style.display = "none";
 
         infoContainer.appendChild(title);

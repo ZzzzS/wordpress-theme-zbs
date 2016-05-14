@@ -7,9 +7,9 @@ var Particle = require("./Particle.js");
 var ButtonPlus = require("./ButtonPlus.js");
 var FilterButton = require("./FilterButton.js");
 
-var sketch = function(p){
+var sketch = function (p){
 	globalVar.pp = p;
-	p.preload = function() {
+	p.preload = function () {
 		try{
 			p.soundFormats('wav', 'ogg');
 			globalVar.SOUNDFILE = p.loadSound('wp-content/themes/zbs/sound/water2.wav');
@@ -34,7 +34,7 @@ var sketch = function(p){
 		globalVar.attractPtR = new AttractPoint(optionR);
 
 	};
-	p.setup = function(){
+	p.setup = function (){
 		p.createCanvas(960,600);
 		p.canvas.id = "sketch_1";
 		globalVar.displayArray.backgroundBall = [];
@@ -55,7 +55,7 @@ var sketch = function(p){
 		}
 	};
 
-	p.draw = function(){
+	p.draw = function (){
 		p.background(255);
 		// globalVar.attractPtL.display();
 		// globalVar.attractPtR.display();
