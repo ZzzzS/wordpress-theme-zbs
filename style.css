@@ -19,7 +19,6 @@ body {
   padding-top: 0;
   padding-bottom: 0;
   font-family: 微软雅黑,宋体,Arial,Verdana,arial,serif;
-  overflow: hidden;
   margin: 0; }
 
 #navigation_bar {
@@ -324,14 +323,15 @@ body {
   white-space: normal;
   max-width: 850px;
   padding: 0 20px;
-  padding: 10px 20px;
+  padding: 30px 20px;
   margin: 10px auto;
   -webkit-box-shadow: 1px 1px 5px #ddd;
   -moz-box-shadow: 1px 1px 5px #ddd;
   box-shadow: 1px 1px 5px #ddd; }
   .articleBody img {
     max-width: 100%;
-    height: auto; }
+    height: auto;
+    margin: 30px; }
   .articleBody #postMeta {
     text-align: right;
     padding: 0 0 10px 0;

@@ -250,7 +250,7 @@ ButtonPlus.prototype.drawObj = function (){
 
 ButtonPlus.prototype.drawFilteredObj = function (){
 	//this.strokeCol ? this.p.stroke(this.strokeCol) : this.p.noStroke();
-	this.p.fill(this.p.color(150,150,150));
+	this.p.fill(this.p.color(200,200,200));
 	this.p.push();
 	this.p.translate(this.position.x, this.position.y);
 	this.p.ellipse(0, 0, this.width, this.height);
