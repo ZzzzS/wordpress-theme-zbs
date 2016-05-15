@@ -1,80 +1,84 @@
-var ButtonPlus = require("./ButtonPlus.js")
+var util = require("./util.js");
+var Particle = require("./Particle.js");
+var globalVar = require("./GlobalVar.js");
 
 var ButtonParticle = function (options){
-	this.b = new ButtonPlus(options);
-	this.p = options.p;
-	this.strength = 0.1;
-	this.reflect = false;
-	this.topspeed = options.topspeed || Math.random() * 3 + 2;  //控制最高速度
-	this.vortex = true;
-	//this.attractPtL = null;
-	
-	//加速度
-	if(!this.acceleration){
-		this.acceleration = new p5.Vector(0,0);  
-	}
-}
+	Particle.call(this,{
+		visualObject : options.visualObject,   //visualObject为实现了display方法的对象
+		p : options.p,
+		reflect : false,
+		topspeed : options.topspeed,   //控制最高速度
+		acceleration : options.acceleration,
+		velocity : options.velocity
+	});
+	//this.strength = 0.1;
+	this.vortexAttract = options.vortexAttract || true;   //vortexAttract确定button是被直线吸引还是漩涡吸引
+	this.xoff = Math.random() * 10;    //用于生产noise随机数
+};
+util.inheritPrototype(ButtonParticle, Particle);
 
 //粒子作用力
 ButtonParticle.prototype.applyForce = function(force){
 	this.acceleration.add(force);
-}
+};
 
 //更新粒子状态
 ButtonParticle.prototype.update = function(){
-	//速度
-	if(!this.velocity){
-		var random1 = Math.random()*((Math.random()>0.5)?-0.5:0.5);
-		var random2 = Math.random()-((Math.random()>0.5)?0.5:1);
-		this.velocity = new p5.Vector(random1,random2);
-	}
-	
-	/*if(this.b.anchor){
-		//console.log(this.b.anchor);
-		var force = p5.Vector.sub(this.b.anchor,this.b.position);
-		var dist = force.mag();
-		force.normalize();
-		force.mult(this.strength);
-		this.acceleration.add(force);
-	}*/
-	if(this.attractPtL){
-		if(this.vortex){
-			var force = this.attractPtL.vortexAttract(this,300);
-		}else{
-			var force = this.attractPtL.attract(this);
+	if (this.attractPt){
+		var vect = p5.Vector.sub(this.visualObject.position,this.attractPt.position);
+		var len = vect.mag();
+		if (this.vortexAttract){                  //两种吸引方式，两种运动模式
+			var options = {
+				b : this,
+				threshold : 400 
+			};
+			var force = this.attractPt.attract(options);   //引力与漩涡力
+			this.applyForce(force);
+			
+			var randomVect = this.velocity.copy();   //影响运行路径的随机向量防止所以的button都在运行一模一样的路径
+			randomVect.mult(0.3);
+			
+			this.xoff += 0.01;    
+			var effectAngle = (this.p.noise(this.xoff) - 0.5) * 2    //-1 to 1
+			* (Math.PI / 2 * 0.1);  
+			randomVect.rotate(effectAngle);
+			this.velocity.add(randomVect);
+			
+			if (this.reflect){
+				if(this.visualObject.position.x < this.visualObject.width/2 || this.visualObject.position.x > this.p.width - this.visualObject.width/2){
+					this.velocity.x *= -1;
+				}
+				if(this.visualObject.position.y < this.visualObject.height/2 || this.visualObject.position.y > this.p.height - this.visualObject.height/2){
+					this.velocity.y *= -1;
+				}
+			}
+			//无限符号（∞）运动路径的实现
+			var angle = vect.heading();
+			
+			if(!this.attractPt.clocklwise && len < 200 && angle < Math.PI/4 && angle > 0){
+				this.attractPt = globalVar.attractPtR;
+			}else{
+				if(this.attractPt.clockwise && len < 200 && angle < 3 * Math.PI/4 && angle > Math.PI/2){
+					this.attractPt = globalVar.attractPtL;
+				}
+			}
+			this.velocity.add(this.acceleration);   //更新速度
+			this.velocity.limit(this.topspeed);    //限制最高速度
+			this.acceleration.mult(0);  //加速度清零
+		}else{       //align模式的吸引方式（easing）
+			vect.mult(-0.1);
+			this.velocity = vect;
 		}
-		
-		this.applyForce(force);
 	}
-	
-	this.velocity.add(this.acceleration);
-	this.acceleration.mult(0);  //加速度清零
-	
-	if(this.reflect){
-		if(this.b.position.x < this.b.width/2 || this.b.position.x > this.p.width - this.b.width/2){
-			this.velocity.x *= -1;
-		}
-		if(this.b.position.y < this.b.height/2 || this.b.position.y > this.p.height - this.b.height/2){
-			this.velocity.y *= -1;
-		}
-	}
-	
-	this.velocity.limit(this.topspeed);
-	
-	/*var dist = p5.Vector.sub(this.position,this.attractPtL).mag();
-	if(this.fixed && dist <= 1){
-		this.velocity.mult(0.5);
-	}*/
-	
-	this.b.position.add(this.velocity);
-}
+	this.visualObject.position.add(this.velocity);   //更新位置
+};
 
 //绘制粒子
 ButtonParticle.prototype.display = function(){
-	if(this.b.pState != "click" && this.b.pState != "hover" && this.b.pState != "press"){
+	if(this.visualObject.pState != "click" && this.visualObject.pState != "hover" && this.visualObject.pState != "press"){
 		this.update();
 	}
-	this.b.display();
-}
+	this.visualObject.display();
+};
 
 module.exports = ButtonParticle;

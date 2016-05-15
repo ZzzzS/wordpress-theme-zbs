@@ -6,10 +6,7 @@ var ButtonParticle = require("./ButtonParticle.js");
 var ButtonPlus = require("./ButtonPlus.js");
 
 var getInfo = function (type,arg){
-	
-	globalVar.displayArray = [];
-	globalVar.mainButton = [];
-	globalVar.button = [];
+	globalVar.displayArray.ButtonParticle = [];
 	
 	if(window.XMLHttpRequest){
 		XMLHTTP=new XMLHttpRequest();
@@ -20,88 +17,98 @@ var getInfo = function (type,arg){
 	if(type === "posts"){
 		XMLHTTP.onreadystatechange=function(){
 			if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
-				ButtonPlus.stateReset();
-				var posts = JSON.parse(XMLHTTP.responseText);
 				//alert(XMLHTTP.responseText);
+				$("#loading").fadeOut();
+				var posts = JSON.parse(XMLHTTP.responseText);
+				
 				for(var item in posts){
 					var size = Math.random()*20 + 15;
+					var width = Math.max(document.documentElement.clientWidth ,960);
+					var height = Math.max(document.documentElement.clientHeight ,600);
 					var options = {
-						position : new p5.Vector(Math.random() * 900 + 10,Math.random() * 500 + 10),
+						position : new p5.Vector((Math.random() * globalVar.width - 100) + 50,(Math.random() * globalVar.height - 60) + 30),
 						width : size,
 						height : size,
 						r : 25,
 						p : globalVar.pp
-					}
-					var newObj = new ButtonParticle(options);
-					newObj.attractPtL = globalVar.attractPtL;
-					newObj.b.fillCol = globalVar.pp.color(Math.random()*200, Math.random()*200, Math.random()*200,50);
-					newObj.reflect = true;
-					newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
-					newObj.b.addHandler("click",eventHandleFunc.clicked);
-					newObj.b.addHandler("turnOn",eventHandleFunc.turnOn);
-					newObj.b.sound = globalVar.SOUNDFILE;
-					newObj.b.info = posts[item];
-					globalVar.mainButton.push(newObj);
+					};
+					var optionsBP = {
+						visualObject : new ButtonPlus(options),
+						p : globalVar.pp,
+						vortexAttract : true
+					};
+					
+					var newObj = new ButtonParticle(optionsBP);
+					newObj.attractPt = globalVar.attractPtL;
+
+					newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
+					newObj.visualObject.addHandler("turnOn",eventHandleFunc.showPostInfo);
+					newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideShortInfo);
+					newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
+					newObj.visualObject.addHandler("hover",eventHandleFunc.showShortPostInfo);
+					newObj.visualObject.addHandler("mouseOut",eventHandleFunc.hideShortInfo);
+
+					newObj.visualObject.sound = globalVar.SOUNDFILE;
+					newObj.visualObject.info = posts[item];
+					newObj.visualObject.buttonCol = newObj.visualObject.info["color"] || newObj.visualObject.p.color(Math.random() * 255, Math.random() * 255, Math.random() * 255);
+					globalVar.displayArray.ButtonParticle.push(newObj);
 				}
-				
-				globalVar.displayArray.push(globalVar.mainButton);
-				globalVar.displayArray.push(globalVar.button);
-				
+
+			}else{
+				$("#loading").fadeIn();
 			}
-		}
+		};
 		XMLHTTP.open("GET","wp-content/themes/zbs/getPostInfo.php");
 		XMLHTTP.send();
 	}else{
 		if(type === "users"){
 			XMLHTTP.onreadystatechange=function(){
-				ButtonPlus.stateReset();
 				if(XMLHTTP.readyState==4 && XMLHTTP.status==200){
 					var users = JSON.parse(XMLHTTP.responseText);
 					//alert(XMLHTTP.responseText);
-					console.log(XMLHTTP.responseText);
+					//console.log(XMLHTTP.responseText);
 					
+					$("#loading").fadeOut();
 					var i = 0;
 					var count = util.getJsonObjLength(users);
 					for(var item in users){
-						var size = Math.random()*20 + 15;
+						var size = Math.random()*20 + 20;
 						var options = {
-							position : new p5.Vector(Math.random()*900+30, Math.random()*550+25),
+							position : new p5.Vector((Math.random() * globalVar.width - 100) + 50,(Math.random() * globalVar.height - 60) + 30),
 							width : size,
 							height : size,
 							r : 25,
 							p : globalVar.pp
-						}
-						var newObj = new ButtonParticle(options);
+						};
+						var optionsBP = {
+							visualObject : new ButtonPlus(options),
+							p : globalVar.pp,
+							vortexAttract : true
+						};
+						var newObj = new ButtonParticle(optionsBP);
 						if(i < count/2){
-							newObj.attractPtL = globalVar.attractPtL;
+							newObj.attractPt = globalVar.attractPtL;
 						}else{
-							newObj.attractPtL = globalVar.attractPtR;
+							newObj.attractPt = globalVar.attractPtR;
 						}
 
-						newObj.b.fillCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,50);
-						newObj.reflect = true;
-						newObj.b.addHandler("turnOff",eventHandleFunc.turnOff);
-						newObj.b.addHandler("click",eventHandleFunc.clicked_users);
-						newObj.b.addHandler("turnOn",eventHandleFunc.delUserInfo);
-						newObj.b.addHandler("turnOn",eventHandleFunc.showUserInfo_fixed);
-						newObj.b.addHandler("turnOff",eventHandleFunc.delUserInfo_fixed);
-						newObj.b.addHandler("hover",eventHandleFunc.showUserInfo);
-						newObj.b.addHandler("mouseOut",eventHandleFunc.delUserInfo);
-						newObj.b.sound = globalVar.SOUNDFILE;
-						newObj.b.info = users[item];
-						//newObj.b.mask = MARK;
-						globalVar.mainButton.push(newObj);
+						newObj.visualObject.buttonCol = globalVar.pp.color(Math.random()*100, Math.random()*50, Math.random()*200,255);
+						newObj.visualObject.addHandler("click",eventHandleFunc.clicked_animation);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.hideShortInfo);
+						newObj.visualObject.addHandler("turnOn",eventHandleFunc.showUserInfo);
+						newObj.visualObject.addHandler("turnOff",eventHandleFunc.hideInfoFrame);
+						newObj.visualObject.addHandler("hover",eventHandleFunc.showShortUserInfo);
+						newObj.visualObject.addHandler("mouseOut",eventHandleFunc.hideShortInfo);
+						newObj.visualObject.sound = globalVar.SOUNDFILE;
+						newObj.visualObject.info = users[item];
+						
+						globalVar.displayArray.ButtonParticle.push(newObj);
 						i++;
 					}
 					i = null;
 					count = null;
-					
-					
-					globalVar.displayArray.push(globalVar.mainButton);
-					globalVar.displayArray.push(globalVar.button);
-					
-			
-					
+				}else{
+					$("#loading").fadeIn();
 				}
 			}
 			XMLHTTP.open("GET","wp-content/themes/zbs/getUserInfo.php" + "?userRole=" + arg);

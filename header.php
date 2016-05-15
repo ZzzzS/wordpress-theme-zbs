@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
     <meta charset="utf-8">
     <title><?php
@@ -49,3 +49,12 @@
     <![endif]-->
 	</head>
 <body>
+	<div id="navigation_bar">
+		<img id="logo" src="<?php bloginfo('template_directory'); ?>/logo01.jpg" />
+		<div id="rightCtrlBar">
+			<form name="search">
+				<input type="text" name="search-input" />
+				<button type="submit" value="Submit" id="searchSubmit"></button>
+			</form>
+		</div>
+	</div>

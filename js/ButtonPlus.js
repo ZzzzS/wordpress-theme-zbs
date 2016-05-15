@@ -5,6 +5,7 @@ date:2016-03-03
 */
 var Button = require("./Button.js");
 var util = require("./util.js");
+// var globalVar = require("./GlobalVar.js");
 
 function ButtonPlus(options) {
 	Button.call(this, options);
@@ -14,6 +15,8 @@ function ButtonPlus(options) {
 	this.h = options.height;  //原始高度数据备份
 	this.clickTimeline = 0;   //On状态的时间轴
 	this.geometryType = "circle";
+	this.maxWidth = 100;
+	this.filtered = false;   //用于过滤
 }
 util.inheritPrototype(ButtonPlus, Button);
 
@@ -22,14 +25,24 @@ ButtonPlus.prototype.hoverObjCount = 0;
 
 //判断ButtonPlus是否被选中（加强版）
 ButtonPlus.prototype.isSelected = function () {
+	var translateX = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
+		translateY = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y,
+		mouseX = this.p.mouseX - translateX,
+		mouseY = this.p.mouseY - translateY;
+
+	if (this.filtered){     //假如被排除了，那么所有的状态都为未选中（亦即永远选不中）
+		return false;
+	}
+	var width = this.width > 40 ? this.width : 40;
+	var height = this.width > 40 ? this.width : 40;
 	if (this.width === this.height && this.geometryType === "circle") {
-		if (Math.pow((this.p.mouseX - this.position.x), 2) + Math.pow((this.p.mouseY - this.position.y), 2) <= Math.pow(this.width / 2, 2)) {
+		if (Math.pow((mouseX - this.position.x), 2) + Math.pow((mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
 			return true;
 		} else {
 			return false;
 		}
 	} else {
-		if (this.p.mouseX >= this.position.x - this.width / 2 && this.p.mouseX <= this.position.x + this.width / 2 && this.p.mouseY >= this.position.y - this.height / 2 && this.p.mouseY <= this.position.y + this.height / 2) {
+		if (mouseX >= this.position.x - width / 2 && mouseX <= this.position.x + width / 2 && mouseY >= this.position.y - height / 2 && mouseY <= this.position.y + height / 2) {
 			return true;
 		} else {
 			return false;
@@ -38,15 +51,15 @@ ButtonPlus.prototype.isSelected = function () {
 };
 
 //判断ButtonPlus的状态（加强版）
-ButtonPlus.prototype.state = function () {
-	/*
-	**hover (pState) ： 鼠标悬浮（被选中）
-	**press (pState) ： 鼠标按下
-	**click (pState) ： 鼠标点击
-	**mouseOut (pState) ： 鼠标从button上移开/未被选中
-	**on (pSwitch) : Button处于开启状态
-	**off (pSwitch) ： Button处于关闭状态
-	*/
+ButtonPlus.prototype.getState = function () {
+	/**
+	 * hover (pState) ： 鼠标悬浮（被选中）
+	 * press (pState) ： 鼠标按下
+	 * click (pState) ： 鼠标点击
+	 * mouseOut (pState) ： 鼠标从button上移开/未被选中
+	 * on (pSwitch) : Button处于开启状态
+	 * off (pSwitch) ： Button处于关闭状态
+	 */
 	if (this.isSelected()) {
 		if (this.pState == "click") {
 			if (this.p.mouseIsPressed) {
@@ -63,8 +76,13 @@ ButtonPlus.prototype.state = function () {
 				if (this.p.mouseIsPressed) {
 					if (this.pState == "mouseOut") {
 						return "mouseOut";
-					} else {
-						return "press";
+					} else {	
+						//如果button的大小小于90,则不出现press状态
+						if(this.width >= this.maxWidth - 10){
+							return "press";
+						}else{
+							return "hover"
+						}
 					}
 				} else {
 					if (this.pState == "press") {
@@ -107,8 +125,12 @@ ButtonPlus.prototype.state = function () {
 	}
 };
 
+ButtonPlus.prototype.update = function (){
+	this.trans_position = new p5.Vector(this.position.x + this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x, this.position.y + this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y);
+};
 //根据不同的状态绘制ButtonPlus（加强版）
 ButtonPlus.prototype.display = function () {
+	this.update();
 	if (this.strokeCol) {
 		this.p.stroke(this.strokeCol);
 	} else {
@@ -116,31 +138,31 @@ ButtonPlus.prototype.display = function () {
 	}
 
 	this.p.rectMode('center');
-	var state = this.state();
-	this.cursorState(state);  //鼠标状态
-	switch (state) {
+	this.state = this.getState();
+	this.cursorState(this.state);  //鼠标状态
+	switch (this.state) {
 		case "hover":
 			//音效
 			if (this.pState == "mouseOut") {         //首次hover
 				if (this.sound) this.sound.play();
 			}
-			this.hoverCol = this.p.color(this.fillCol.getRed(), this.fillCol.getGreen(), this.fillCol.getBlue(), 150);
-			this.p.fill(this.hoverCol);
-			this.drawGeometry();
-			if (this.width > 100) {
+			this.fillCol = this.buttonCol;
+			//this.p.fill(this.fillCol);
+			this.drawObj();
+			if (this.width > this.maxWidth) {
 				this.breath = true;
 			}
 
 			var s = 1.1;
 			if (this.breath) {
 				//呼吸效果
-				if (!this.breathState && this.width <= 100) {
+				if (!this.breathState && this.width <= this.maxWidth) {
 					this.width *= 1.002;
 					this.height *= 1.002;
 				} else {
 					this.breathState = true;
 				}
-				if (this.breathState && this.width > 90) {
+				if (this.breathState && this.width > this.maxWidth - 10) {
 					this.width *= 0.995;
 					this.height *= 0.995;
 				} else {
@@ -148,7 +170,7 @@ ButtonPlus.prototype.display = function () {
 				}
 			} else {
 				//放大
-				if (this.width <= 100) {
+				if (this.width <= this.maxWidth) {
 					this.width *= s;
 					this.height *= s;
 				} else {
@@ -160,10 +182,10 @@ ButtonPlus.prototype.display = function () {
 			this.pState = "hover";
 			break;
 		case "mouseOut":
-			if (this.fillCol) {
-				this.p.fill(this.fillCol);
+			if (this.buttonCol) {
+				this.fillCol = this.buttonCol;
 			}
-			this.drawGeometry();
+			this.drawObj();
 			this.breath = false;
 
 			//缩小
@@ -177,14 +199,14 @@ ButtonPlus.prototype.display = function () {
 			this.pState = "mouseOut";
 			break;
 		case "press":
-			this.p.fill(this.pressCol);
-			this.drawGeometry();
+			this.fillCol = this.pressCol;
+			this.drawObj();
 			this.fire({ type: "press" });
 			this.pState = "press";
 			break;
 		case "click":
-			this.p.fill(this.clickCol);
-			this.drawGeometry();
+			this.fillCol = this.clickCol;
+			this.drawObj();
 
 			//点击反馈
 			if (this.pState === "press") {
@@ -192,31 +214,84 @@ ButtonPlus.prototype.display = function () {
 			} else {
 				this.clickTimeline++;
 			}
-			if (this.clickTimeline < 40) {
-				this.p.stroke(200, 200, 200, 200 - this.clickTimeline * 5);
-				this.p.strokeWeight(10 - this.clickTimeline / 4);
-				this.p.noFill();
-				this.p.ellipse(this.position.x, this.position.y, this.width + Math.sqrt(this.clickTimeline * 50, 2), this.height + Math.sqrt(this.clickTimeline * 50, 2));
-			}
+			// if (this.clickTimeline < 40) {
+			// 	this.p.stroke(200, 200, 200, 200 - this.clickTimeline * 5);
+			// 	this.p.strokeWeight(10 - this.clickTimeline / 4);
+			// 	this.p.noFill();
+			// 	this.p.ellipse(this.position.x, this.position.y, this.width + Math.sqrt(this.clickTimeline * 50, 2), this.height + Math.sqrt(this.clickTimeline * 50, 2));
+			// }
 
 
 			this.fire({ type: "click" });
 			this.pState = "click";
 			break;
 		default:
-			if (this.fillCol) {
-				this.p.fill(this.fillCol);
+			if (this.buttonCol) {
+				this.fillCol = this.buttonCol;
 			} else {
-				this.p.fill(this.p.color(0, 0, 100));
+				this.fillCol = this.p.color(0, 0, 100);
 			}
-			this.drawGeometry();
+			this.drawObj();
 	}
 };
 
 //ButtonPlus状态重置
 ButtonPlus.stateReset = function () {
 	this.prototype.hoverObjCount = 0;
-}; 
+};
+
+ButtonPlus.prototype.drawObj = function (){
+	if (this.filtered){
+		this.drawFilteredObj();
+	}else{
+		this.drawGeometry();
+	}
+};
+
+ButtonPlus.prototype.drawFilteredObj = function (){
+	//this.strokeCol ? this.p.stroke(this.strokeCol) : this.p.noStroke();
+	this.p.fill(this.p.color(200,200,200));
+	this.p.push();
+	this.p.translate(this.position.x, this.position.y);
+	this.p.ellipse(0, 0, this.width, this.height);
+	this.p.pop();
+};
+
+ButtonPlus.prototype.trans = [{
+	x : 0,
+	y : 0
+}];
+
+ButtonPlus.prototype._trans = null;
+
+ButtonPlus.translate = function (x, y, p){
+	p.translate(x,y);
+	this.prototype._trans = {
+		x : this.prototype.trans[this.prototype.trans.length - 2].x + x,       //什么bug来的！！！！！Array最后一个竟然是length - 2！！！！！！
+		y : this.prototype.trans[this.prototype.trans.length - 2].y + y
+	};
+};
+
+ButtonPlus.pushMatrix = function (p){
+	p.push();
+	if (this.prototype._trans === null){
+		this.prototype.trans.push({
+			x : this.prototype.trans[this.prototype.trans.length - 1].x,
+			y : this.prototype.trans[this.prototype.trans.length - 1].y
+		});
+	}else{
+		this.prototype.trans.push({
+			x : this.prototype._trans.x,
+			y : this.prototype._trans.y
+		});
+	}
+};
+
+ButtonPlus.popMatrix = function (p){
+	if (this.prototype.trans.length > 0){
+		p.pop();
+		this.prototype.trans.pop();
+	}
+};
 
 module.exports = ButtonPlus;
-

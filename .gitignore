@@ -1,2 +1,8 @@
 #bootstrap
 /bootstrap/*
+
+/node_modules/*
+/.sass-cache/*
+/.idea/*
+npm-debug.log
+zbs.iml

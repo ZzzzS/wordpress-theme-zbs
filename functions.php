@@ -199,12 +199,6 @@ if( function_exists('register_sidebar') ) {
 
 
 
-
-
-
-
-
-
 //增强编辑器开始
 function add_editor_buttons($buttons) {
 $buttons[] = 'fontselect';
@@ -234,6 +228,7 @@ add_filter("mce_buttons_3", "add_editor_buttons");
 
 
 function below_the_title() {
+    // 在编辑器下方添加的提示内容
 	$tips="
 	<div style='margin:30px 0 30px 0;background-color:#ddd;border:solid;border-color:gray;border-width:1px;border-radius:10px;
 	-moz-border-radius:10px;'>
@@ -243,7 +238,7 @@ function below_the_title() {
     echo $tips;
 }
  
-add_action( 'edit_form_after_title', 'below_the_title' );
+//add_action( 'edit_form_after_title', 'below_the_title' );
  
 /*function below_the_editor() {
     echo '<h4>在编辑器下方添加的提示内容</h4>';
@@ -252,16 +247,13 @@ add_action( 'edit_form_after_title', 'below_the_title' );
 add_action( 'edit_form_after_editor', 'below_the_editor' );*/
 
 
-
-
-
 global $texonomy_slug_color;
 $texonomy_slug_color='category';
 add_action($texonomy_slug_color.'_add_form_fields','categorycolor');
 function categorycolor($taxonomy){ ?>
-    <div>
+    <div class="form-field term-slug-wrap">
     <label for="tag-color">分类颜色</label>
-    <input type="text" name="tag-color" id="tag-color" value="" /><br /><span>请在此输入分类颜色。</span>    
+    <input type="text" name="tag-color" id="tag-color" value="" size="40"/><br /><p>请在此输入分类颜色。</p>    
 </div>
 <?php }
 add_action($texonomy_slug_color.'_edit_form_fields','categorycoloredit');
@@ -279,12 +271,6 @@ function categorycolorsave($term_id){
             update_option('_category_color'.$term_id,$_POST['tag-color'] );
     }
 }
-
-
-
-
-     
-
 
 
 
@@ -355,8 +341,6 @@ add_action('admin_init', 'ssid_add');
 
 
 
-
-
 /**
  * 自定义用户个人资料信息
  * 
@@ -375,58 +359,23 @@ function wpdaxue_add_contact_fields( $contactmethods ) {
 }
 
 
-/**
- * WordPress 个人资料添加额外的字段
- * http://www.wpdaxue.com/extra-user-profile-fields.html
- */
-/*add_action( 'show_user_profile', 'extra_user_profile_fields' );
-add_action( 'edit_user_profile', 'extra_user_profile_fields' );
- 
-function extra_user_profile_fields( $user ) { ?>
-<h3><?php _e("额外信息", "blank"); ?></h3>
- 
-<table class="form-table">
-	<tr>
-		<th><label for="facebook"><?php _e("Facebook URL"); ?></label></th>
-		<td>
-			<input type="text" name="facebook" id="facebook" value="<?php echo esc_attr( get_the_author_meta( 'facebook', $user->ID ) ); ?>" class="regular-text" /><br />
-			<span class="description"><?php _e("请输入您的 Facebook 地址"); ?></span>
-		</td>
-	</tr>
-	<tr>
-		<th><label for="twitter"><?php _e("Twitter"); ?></label></th>
-		<td>
-			<input type="text" name="twitter" id="twitter" value="<?php echo esc_attr( get_the_author_meta( 'twitter', $user->ID ) ); ?>" class="regular-text" /><br />
-			<span class="description"><?php _e("请输入您的 Twitter 用户名"); ?></span>
-		</td>
-	</tr>
-</table>
-<?php }
- 
-add_action( 'personal_options_update', 'save_extra_user_profile_fields' );
-add_action( 'edit_user_profile_update', 'save_extra_user_profile_fields' );*/
- 
-/*function save_extra_user_profile_fields( $user_id ) {
- 
-	if ( !current_user_can( 'edit_user', $user_id ) ) { return false; }
- 
-	update_usermeta( $user_id, 'facebook', $_POST['facebook'] );
-	update_usermeta( $user_id, 'twitter', $_POST['twitter'] );
-}
-
-
 //添加新角色
-add_role('basic_contributor', '精英用户', array(
+add_role('special_invitation', '特邀用户', array(
     'read' => true, // 使用 true 表示包含这个权限
-    'edit_posts' => flase,
+    'edit_posts' => true,
     'delete_posts' => false, // 使用 false 表示不包含这个权限
-));*/
-//remove_role( 'basic_contributor' );
+));
+//remove_role( 'special_invitation' );
+//basic_contributor  精英用户（备份）
 
+
+/***************************************************/
+/*************自定义文章类型*************************/
+/***************************************************/
 function my_custom_post_product() {
   $labels = array(
-    'name'               => _x( 'Products', 'post type 名称' ),
-    'singular_name'      => _x( 'Product', 'post type 单个 item 时的名称，因为英文有复数' ),
+    'name'               => _x( '作品', 'post type 名称' ),
+    'singular_name'      => _x( '作品', 'post type 单个 item 时的名称，因为英文有复数' ),
     'add_new'            => _x( '新建作品', '添加新内容的链接名称' ),
     'add_new_item'       => __( '新建一个作品' ),
     'edit_item'          => __( '编辑作品' ),
@@ -444,7 +393,7 @@ function my_custom_post_product() {
     'description'   => '我们网站的所有作品信息',
     'public'        => true,
     'menu_position' => 5,
-    'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', ),
+    'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments','author' ),
     'has_archive'   => true
   );
   register_post_type( 'product', $args );
@@ -466,7 +415,9 @@ function my_taxonomies_product() {
     'menu_name'         => __( '作品分类' ),
   );
   $args = array(
+	  'show_ui' => true,
     'labels' => $labels,
+	'show_admin_column'     => true,
     'hierarchical' => true,
   );
   register_taxonomy( 'product_category', 'product', $args );
@@ -474,666 +425,149 @@ function my_taxonomies_product() {
 add_action( 'init', 'my_taxonomies_product', 0 );
 
 
-add_action( 'add_meta_boxes', 'product_theme' );
-function product_theme() {
-    add_meta_box(
-        'product_theme',
-        '主题',
-        'product_theme_meta_box',
-        'product',
-        'side',
-        'low'
-    );
+function my_taxonomies_product_mat() {
+  $labels = array(
+    'name'              => _x( '作品材料', 'taxonomy 名称' ),
+    'singular_name'     => _x( '作品材料', 'taxonomy 单数名称' ),
+    'search_items'      => __( '搜索作品材料' ),
+	'popular_items'     => __( '热门材料' ),
+    'all_items'         => __( '所有作品材料' ),
+    'parent_item'       => null,
+    'parent_item_colon' => null,
+    'edit_item'         => __( '编辑作品材料' ),
+    'update_item'       => __( '更新作品材料' ),
+    'add_new_item'      => __( '添加新的作品材料' ),
+    'new_item_name'     => __( '新作品材料' ),
+    'menu_name'         => __( '作品材料' ),
+	'separate_items_with_commas' => __( '多个材料请用英文逗号（,）分开' ),
+	'add_or_remove_items'        => __( '添加或删除材料' ),
+	'choose_from_most_used'      => __( '从热门材料中选择' ),
+	'not_found'                  => __( '未找到材料' ),
+	'menu_name'                  => __( '作品材料' )
+  );
+  $args = array(
+	  'show_ui' => true,
+    'labels' => $labels,
+	'show_admin_column'     => true,
+	'rewrite' => array( 'slug' => 'writer' ),
+	'show_tagcloud' => true,
+    'hierarchical' => false,
+	'update_count_callback' => '_update_post_term_count',
+	'query_var'             => true,
+  );
+  register_taxonomy( 'product_post_tag', 'product', $args );
+}
+add_action( 'init', 'my_taxonomies_product_mat', 0 );
+
+//添加栏目
+add_filter( 'manage_edit-product_columns', 'my_columns' );
+function my_columns( $columns ) {
+    $columns['product_creation_date'] = '创作年份';
+    return $columns;
 }
 
-function product_theme_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_theme_meta_box', 'product_theme_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_theme', true );
-
-    ?>
-
-    <label for="product_theme"></label>
-    <input type="text" id="product_theme" name="product_theme" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品主题" >
-
-    <?php
+add_action( 'manage_posts_custom_column', 'populate_columns' );
+function populate_columns( $column ) {
+    if ( 'product_creation_date' == $column ) {
+        $creation_date = esc_html( get_post_meta( get_the_ID(), '_product_creation_date', true ) );
+        echo $creation_date;
+    }
 }
 
-add_action( 'save_post', 'product_theme_save_meta_box' );
-function product_theme_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_theme_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_theme_meta_box_nonce'], 'product_theme_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_theme'] ) ) {
-        return;
-    }
-
-    $product_theme = sanitize_text_field( $_POST['product_theme'] );
-    update_post_meta( $post_id, '_product_theme', $product_theme );
-
+add_filter( 'manage_edit-product_sortable_columns', 'sort_me' );
+function sort_me( $columns ) {
+    $columns['product_creation_date'] = 'product_creation_date';
+ 
+    return $columns;
 }
 
-
-
-add_action( 'add_meta_boxes', 'product_material' );
-function product_material() {
-    add_meta_box(
-        'product_material',
-        '材料',
-        'product_material_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_material_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_material_meta_box', 'product_material_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_material', true );
-
-    ?>
-
-    <label for="product_material"></label>
-    <input type="text" id="product_material" name="product_material" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品所用的材料" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_material_save_meta_box' );
-function product_material_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_material_meta_box_nonce'] ) ) {
-        return;
+/******************/
+//添加分类颜色
+/******************/
+global $product_category_color;
+$product_category_color='product_category';
+add_action($product_category_color.'_add_form_fields','productCategoryColor');
+function productCategoryColor($taxonomy){ ?>
+    <div class="form-field term-slug-wrap">
+    <label for="tag-color">分类颜色</label>
+    <input type="text" name="tag-color" id="tag-color" value=""  size="40"/><br /><p>请在此输入分类颜色。</p>    
+</div>
+<?php }
+add_action($product_category_color.'_edit_form_fields','productCategoryColorCdit');
+function productCategoryColorCdit($taxonomy){ ?>
+<tr class="form-field">
+    <th scope="row" valign="top"><label for="tag-color">颜色</label></th>
+    <td><div style="float:left;width:28px;height:28px;background-color:<?php echo get_option('product_category_color'.$taxonomy->term_id); ?>;margin-right:5px;border-radius:5px;-moz-border-radius:5px;"></div><input style="width:200px;" type="text" name="tag-color" id="tag-color" value="<?php echo get_option('product_category_color'.$taxonomy->term_id); ?>" /><br /><span class="description">请在此输入分类颜色。</span></td>
+</tr>              
+<?php  }
+add_action('edit_term','productCategoryColorCave');
+add_action('create_term','productCategoryColorCave');
+function productCategoryColorCave($term_id){
+    if(isset($_POST['tag-color'])){
+        if(isset($_POST['tag-color']))
+            update_option('product_category_color'.$term_id,$_POST['tag-color'] );
     }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_material_meta_box_nonce'], 'product_material_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_material'] ) ) {
-        return;
-    }
-
-    $product_material = sanitize_text_field( $_POST['product_material'] );
-    update_post_meta( $post_id, '_product_material', $product_material );
-
 }
 
 
+// 通过动作/过滤器输出各种表格和CSS
+function product_ssid_add() {
+	add_action('admin_head', 'ssid_css');
+
+	foreach ( get_taxonomies(array('name'=> 'product_category')) as $taxonomy ) {
+		add_action("manage_edit-${taxonomy}_columns", 'ssid_column');
+
+		function product_sscolor_value($column_name ,$id) {
+			if ($column_name == 'sscolor')
+				echo get_option('product_category_color'.$id);
+		}
+		add_action("manage_edit-${taxonomy}_columns", 'sscolor_column');
+		add_filter("manage_${taxonomy}_custom_column", 'ssid_return_value', 10, 3);
+		
+		function product_sscolor_return_value($value, $column_name ,$id) {
+			if ($column_name == 'sscolor')
+				$value = "<div style='float:left;width:28px;height:28px;background-color:".get_option('product_category_color'.$id).";margin:5px 5px 0 0;border-radius:5px;-moz-border-radius:5px;'></div>";
+			return $value;
+		}
+		add_filter("manage_${taxonomy}_custom_column", 'sscolor_return_value', 10, 3);
+	}	
+}
+ 
+add_action('admin_init', 'product_ssid_add');
 
 
-add_action( 'add_meta_boxes', 'product_major' );
-function product_major() {
-    add_meta_box(
-        'product_major',
-        '专业类别',
-        'product_major_meta_box',
-        'product',
-        'side',
-        'low'
-    );
+
+/*************************/
+/**后台引进自定义js脚本****/
+/*************************/
+function my_scripts_method() {
+    wp_enqueue_script('getUserByRole-aa', get_template_directory_uri().'/js/getUserByRole.js', array('jquery'));           
+}
+add_action('admin_enqueue_scripts', 'my_scripts_method');
+
+//getUser_action
+function getUserByRole() {
+    $Role = isset( $_POST['role'] ) ? $_POST['role'] : null;
+    if(strlen($Role) > 0){
+        $args = array('role' => $Role, );
+        $blogusers = get_users($args);
+?> 
+		<option value=''>请选择用户</option>
+        <?php foreach ($blogusers as $user){?>
+            <option value=<?php echo $user->ID; ?>><?php echo $user->display_name; ?></option>
+        <?php 
+        }
+    }
+    die();
 }
 
-function product_major_meta_box($post) {
+add_action('wp_ajax_getUser_action', 'getUserByRole');
+add_action( 'wp_ajax_nopriv_getUser_action', 'getUserByRole' );
 
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_major_meta_box', 'product_major_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_major', true );
 
-    ?>
-
-    <label for="product_major"></label>
-    <input type="text" id="product_major" name="product_major" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品所属的专业类别" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_major_save_meta_box' );
-function product_major_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_major_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_major_meta_box_nonce'], 'product_major_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_major'] ) ) {
-        return;
-    }
-
-    $product_major = sanitize_text_field( $_POST['product_major'] );
-    update_post_meta( $post_id, '_product_major', $product_major );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_technology' );
-function product_technology() {
-    add_meta_box(
-        'product_technology',
-        '工艺',
-        'product_technology_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_technology_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_technology_meta_box', 'product_technology_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_technology', true );
-
-    ?>
-
-    <label for="product_technology"></label>
-    <input type="text" id="product_technology" name="product_technology" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品所使用的工艺" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_technology_save_meta_box' );
-function product_technology_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_technology_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_technology_meta_box_nonce'], 'product_technology_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_technology'] ) ) {
-        return;
-    }
-
-    $product_technology = sanitize_text_field( $_POST['product_technology'] );
-    update_post_meta( $post_id, '_product_technology', $product_technology );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_cost' );
-function product_cost() {
-    add_meta_box(
-        'product_cost',
-        '费用',
-        'product_cost_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_cost_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_cost_meta_box', 'product_cost_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_cost', true );
-
-    ?>
-
-    <label for="product_cost"></label>
-    <input type="text" id="product_cost" name="product_cost" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作品的制作费用" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_cost_save_meta_box' );
-function product_cost_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_cost_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_cost_meta_box_nonce'], 'product_cost_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_cost'] ) ) {
-        return;
-    }
-
-    $product_cost = sanitize_text_field( $_POST['product_cost'] );
-    update_post_meta( $post_id, '_product_cost', $product_cost );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_state' );
-function product_state() {
-    add_meta_box(
-        'product_state',
-        '专业阶段',
-        'product_state_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_state_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_state_meta_box', 'product_state_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_state', true );
-
-    ?>
-
-    <label for="product_state"></label>
-    <input type="text" id="product_state" name="product_state" value="<?php echo esc_attr( $value ); ?>" placeholder="输入完成作品时的专业阶段" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_state_save_meta_box' );
-function product_state_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_state_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_state_meta_box_nonce'], 'product_state_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_state'] ) ) {
-        return;
-    }
-
-    $product_state = sanitize_text_field( $_POST['product_state'] );
-    update_post_meta( $post_id, '_product_state', $product_state );
-
-}
-
-add_action( 'add_meta_boxes', 'product_award' );
-function product_award() {
-    add_meta_box(
-        'product_award',
-        '荣誉',
-        'product_award_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_award_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_award_meta_box', 'product_award_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_award', true );
-
-    ?>
-
-    <label for="product_award"></label>
-    <input type="text" id="product_award" name="product_award" value="<?php echo esc_attr( $value ); ?>" placeholder="输入该作品所获得的荣誉奖项" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_award_save_meta_box' );
-function product_award_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_award_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_award_meta_box_nonce'], 'product_award_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_award'] ) ) {
-        return;
-    }
-
-    $product_award = sanitize_text_field( $_POST['product_award'] );
-    update_post_meta( $post_id, '_product_award', $product_award );
-
-}
-
-add_action( 'add_meta_boxes', 'product_tutor' );
-function product_tutor() {
-    add_meta_box(
-        'product_tutor',
-        '导师',
-        'product_tutor_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_tutor_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_tutor_meta_box', 'product_tutor_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_tutor', true );
-
-    ?>
-
-    <label for="product_tutor"></label>
-    <input type="text" id="product_tutor" name="product_tutor" value="<?php echo esc_attr( $value ); ?>" placeholder="输入导师名称" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_tutor_save_meta_box' );
-function product_tutor_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_tutor_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_tutor_meta_box_nonce'], 'product_tutor_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_tutor'] ) ) {
-        return;
-    }
-
-    $product_tutor = sanitize_text_field( $_POST['product_tutor'] );
-    update_post_meta( $post_id, '_product_tutor', $product_tutor );
-
-}
-
-add_action( 'add_meta_boxes', 'product_partner' );
-function product_partner() {
-    add_meta_box(
-        'product_partner',
-        '合作人',
-        'product_partner_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_partner_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_partner_meta_box', 'product_partner_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_partner', true );
-
-    ?>
-
-    <label for="product_partner"></label>
-    <input type="text" id="product_partner" name="product_partner" value="<?php echo esc_attr( $value ); ?>" placeholder="输入合作人名称" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_partner_save_meta_box' );
-function product_partner_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_partner_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_partner_meta_box_nonce'], 'product_partner_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_partner'] ) ) {
-        return;
-    }
-
-    $product_partner = sanitize_text_field( $_POST['product_partner'] );
-    update_post_meta( $post_id, '_product_partner', $product_partner );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_software' );
-function product_software() {
-    add_meta_box(
-        'product_software',
-        '软件',
-        'product_software_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_software_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_software_meta_box', 'product_software_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_software', true );
-
-    ?>
-
-    <label for="product_software"></label>
-    <input type="text" id="product_software" name="product_software" value="<?php echo esc_attr( $value ); ?>" placeholder="输入完成该作品所使用的软件" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_software_save_meta_box' );
-function product_software_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_software_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_software_meta_box_nonce'], 'product_software_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_software'] ) ) {
-        return;
-    }
-
-    $product_software = sanitize_text_field( $_POST['product_software'] );
-    update_post_meta( $post_id, '_product_software', $product_software );
-
-}
-
-add_action( 'add_meta_boxes', 'product_location' );
-function product_location() {
-    add_meta_box(
-        'product_location',
-        '创作地点',
-        'product_location_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_location_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_location_meta_box', 'product_location_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_location', true );
-
-    ?>
-
-    <label for="product_location"></label>
-    <input type="text" id="product_location" name="product_location" value="<?php echo esc_attr( $value ); ?>" placeholder="输入该作品的创作地点" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_location_save_meta_box' );
-function product_location_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_location_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_location_meta_box_nonce'], 'product_location_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_location'] ) ) {
-        return;
-    }
-
-    $product_location = sanitize_text_field( $_POST['product_location'] );
-    update_post_meta( $post_id, '_product_location', $product_location );
-
-}
-
-
-add_action( 'add_meta_boxes', 'product_time' );
-function product_time() {
-    add_meta_box(
-        'product_time',
-        '创作时间',
-        'product_time_meta_box',
-        'product',
-        'side',
-        'low'
-    );
-}
-
-function product_time_meta_box($post) {
-
-    // 创建临时隐藏表单，为了安全
-    wp_nonce_field( 'product_time_meta_box', 'product_time_meta_box_nonce' );
-    // 获取之前存储的值
-    $value = get_post_meta( $post->ID, '_product_time', true );
-
-    ?>
-
-    <label for="product_time"></label>
-    <input type="text" id="product_time" name="product_time" value="<?php echo esc_attr( $value ); ?>" placeholder="输入该作品的创作时间" >
-
-    <?php
-}
-
-add_action( 'save_post', 'product_time_save_meta_box' );
-function product_time_save_meta_box($post_id){
-
-    // 安全检查
-    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
-    if ( ! isset( $_POST['product_time_meta_box_nonce'] ) ) {
-        return;
-    }
-    // 判断隐藏表单的值与之前是否相同
-    if ( ! wp_verify_nonce( $_POST['product_time_meta_box_nonce'], 'product_time_meta_box' ) ) {
-        return;
-    }
-    // 判断该用户是否有权限
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-
-    // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_time'] ) ) {
-        return;
-    }
-
-    $product_time = sanitize_text_field( $_POST['product_time'] );
-    update_post_meta( $post_id, '_product_time', $product_time );
-
-}
-
-
-
+/*****************/
+/*添加修改作者表单*/
+/*****************/
 add_action( 'add_meta_boxes', 'product_author' );
 function product_author() {
     add_meta_box(
@@ -1142,7 +576,7 @@ function product_author() {
         'product_author_meta_box',
         'product',
         'side',
-        'low'
+        'high'
     );
 }
 
@@ -1152,20 +586,52 @@ function product_author_meta_box($post) {
     wp_nonce_field( 'product_author_meta_box', 'product_author_meta_box_nonce' );
     // 获取之前存储的值
     $value = get_the_author_meta( 'display_name', $post->post_author );
-
+    
+    //获取当前用户,用于检验权限
     $currentUser = wp_get_current_user();
-
+    
+    //获取某一角色的用户
+    $args = array('role' => 'special_invitation', );
+	$blogusers = get_users($args);
+    
 ?>
 
-    <label for="product_author"></label>
 	<?php if(!empty($currentUser->roles) && in_array('administrator', $currentUser->roles)) : ?>
-    <input type="text" id="product_author" name="product_author" value="<?php echo esc_attr( $value ); ?>" placeholder="输入作者名称" >
-
+	<?php  
+		$avatars = get_user_meta( get_the_author_meta( 'id', $post->post_author ), 'wp_user_avatars', true );
+		if(!empty($avatars)):
+	?>
+	<img src = <?php echo $avatars['250'] ?> style="width:70px;height:70px;border:solid #ccc 1px;border-radius:35px;-webkit-border-radius:35px;-moz-border-radius:35px;margin:10px auto;display:block">
+	<?php endif; ?>
+    <div style="text-align:center;font-size:16px"><?php echo esc_attr( $value ); ?></div>
+        
+	<label for="product_author">修改/设置为：</label>
+	<div style="margin:7px 0">
+		
+		<?php
+			$roles_obj = new WP_Roles();
+			$roles_names_array = $roles_obj->get_names();
+			//！！！！！！！！！引入getUserByRole.js后，"#selectRole"的value一旦修改就会触发ajax
+		?>
+		<select id="selectRole" name="role">
+			<option value=''>选择用户角色</option>
+		<?php foreach ($roles_names_array as $role_name => $display_name) {?>
+				<option value=<?php echo $role_name ?>><?php echo $display_name; ?></option>
+				<?php  ?>
+		<?php } ?>
+		</select>
+		<select id="selectUser" name="product_author">
+			<option value=''>请选择用户</option>
+		</select>
+		<div id="spinner_selectUser" style="background:url(images/spinner.gif) no-repeat;width:20px;height:20px;margin:5px 0;float:right;display:none"></div>
+	</div>
+    
     <?php else:?>
     <span><?php echo esc_attr( $value ); ?></span>
 	<?php endif;
 }
 
+//修改文章作者
 add_action( 'save_post', 'product_author_save_meta_box' );
 function product_author_save_meta_box($post_id){
 
@@ -1184,11 +650,11 @@ function product_author_save_meta_box($post_id){
     }
 
     // 判断 Meta Box 是否为空
-    if ( ! isset( $_POST['product_author'] ) ) {
+    if ( ! isset( $_POST['product_author']) || $_POST['product_author'] == '') {
         return;
     }
 	//ini_set('xdebug.max_nesting_level', 100);
-    $product_author = sanitize_text_field( $_POST['product_author'] );
+    $product_author = sanitize_text_field( $_POST['product_author']);
 	
 	if ( ! wp_is_post_revision( $post_id ) ){
 	
@@ -1196,10 +662,9 @@ function product_author_save_meta_box($post_id){
 		remove_action('save_post', 'product_author_save_meta_box');
 	
 		// update the post, which calls save_post again
-		//有待排查bug
+		//有待排查bug(真的有吗?)
 		$my_post = array();
 		$my_post['ID'] = $post_id;
-		//$my_post['post_title'] = "abc";
 		global $post;
 		$my_post['post_author'] = $product_author;
 		wp_update_post( $my_post );
@@ -1207,19 +672,195 @@ function product_author_save_meta_box($post_id){
 		// re-hook this function
 		add_action('save_post', 'product_author_save_meta_box');
 	}
-	
-	
-	
-	// Update the post into the database
-	//wp_update_post( $post );
-	
-    //update_post_meta( $post_id, '_product_author', $product_author );
 }
 
-//添加新角色
-add_role('basic_contributor', '精英用户', array(
-    'read' => true, // 使用 true 表示包含这个权限
-    'edit_posts' => true,
-    'delete_posts' => false, // 使用 false 表示不包含这个权限
-));
-//remove_role( 'basic_contributor' );
+
+// 添加作品信息表单
+add_action( 'add_meta_boxes', 'product_info' );
+function product_info() {
+    add_meta_box(
+        'product_info',
+        '作品信息',
+        'product_info_meta_box',
+        'product',
+        'side',
+        'high'
+    );
+}
+
+function product_info_meta_box($post) {
+
+    // 创建临时隐藏表单，为了安全
+    wp_nonce_field( 'product_info_meta_box', 'product_info_meta_box_nonce' );
+    // 获取之前存储的值
+    //$value = get_the_author_meta( 'display_name', $post->post_author );
+	$valueType = get_post_meta( $post->ID, '_product_type', true );
+	$valueDate = get_post_meta( $post->ID, '_product_creation_date', true );
+	$valueMajor = get_post_meta( $post->ID, '_product_major', true );
+	$valueSubMajor = get_post_meta( $post->ID, '_product_subMajor', true );
+	$valueMaterial = get_post_meta( $post->ID, '_product_material', true );
+	//$materials = ["纸本水墨","纸本彩墨","绢本彩墨","布面油彩","木板油彩","布面丙烯","丝网版画","黑白木刻","雕塑","陶","瓷","DV","装置","综合媒材","纸本","铸铜"]
+?>
+	<style>
+		.product_info_box{
+			margin:8px 0;
+		}
+		.product_info_box label{
+			font-weight : bold;
+		}
+	</style>
+	
+    <div class="product_info_box">
+	<label for="product_attribute">作品属性:</label>
+	<select id="product_attribute" name="product_attribute">
+		<option value='作业' <?php echo $valueType == '作业'?  "selected" : ''?>>作业</option>
+		<option value='毕业设计' <?php echo $valueType == '毕业设计'?  "selected" : ''?>>毕业设计</option>
+		<option value='其他' <?php echo $valueType == '其他'?  "selected" : ''?>>其他</option>
+	</select>
+	</div>
+	
+	<div class="product_info_box">
+	<label for="product_creation_date">创作年份:</label>
+	<select id="product_creation_date" name="product_creation_date">
+		<?php for ($i = 2010; $i <= date("Y"); $i++):?>
+			<option value=<?php echo $i ?> <?php echo $valueDate == $i?  "selected" : ''?>><?php echo $i ?></option>
+		<?php endfor; ?>
+	</select>
+	</div>
+	
+	<div class="product_info_box">
+	<label for="product_major">专业:</label>
+	<select id="product_major" name="product_major">
+		<?php  
+			$majorJson = get_template_directory_uri()."/major.json";
+			$majorJson_string = file_get_contents($majorJson);
+			$majors=json_decode($majorJson_string,true);
+			
+			foreach($majors as $major => $subMajor): ?>
+				<option value=<?php echo $major; ?> <?php echo $valueMajor == $major?  "selected" : ''?>><?php echo $major; ?></option>
+			<?php endforeach; ?>		
+	</select>
+	
+	<select id="product_subMajor" name="product_subMajor" style="display:<?php echo $valueSubMajor != "" ? "inline" : "none" ?>;margin-left:34px">
+	<?php if ($valueMajor != ""): ?>
+		<?php for($i = 0; $i < count($majors[$valueMajor]) ;$i++): ?>
+			<option value=<?php echo $majors[$valueMajor][$i]; ?> <?php echo $majors[$valueMajor][$i] == $valueSubMajor?  "selected" : ''?>><?php echo $majors[$valueMajor][$i]; ?></option>
+		<?php endfor; ?>
+	<?php endif; ?>
+	</select>
+	<div id="spinner_major" style="background:url(images/spinner.gif) no-repeat;width:20px;height:20px;margin:5px 0;float:right;display:none"></div>
+
+	</div>
+	
+	<!--<div class="product_info_box">
+	<label for="product_material">材料:</label>
+	<select id="product_material" name="product_material">
+		<?php for($i = 0; $i < count($materials); $i++): ?>
+		<option value=<?php echo $materials[$i] ?> <?php echo $valueMaterial == $materials[$i]?  "selected" : ''?>><?php echo $materials[$i] ?></option>
+		<?php endfor; ?>
+	</select>
+	</div>-->
+	
+<?php 
+}
+
+add_action( 'save_post', 'product_info_save_meta_box' );
+function product_info_save_meta_box($post_id){
+
+    // 安全检查
+    // 检查是否发送了一次性隐藏表单内容（判断是否为第三者模拟提交）
+    if ( ! isset( $_POST['product_info_meta_box_nonce'] ) ) {
+        return;
+    }
+    // 判断隐藏表单的值与之前是否相同
+    if ( ! wp_verify_nonce( $_POST['product_info_meta_box_nonce'], 'product_info_meta_box' ) ) {
+        return;
+    }
+    // 判断该用户是否有权限
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    // 判断 product_attribute 是否为空
+    if ( ! isset( $_POST['product_attribute'] ) ) {
+        return;
+    }
+
+    $product_attribute = sanitize_text_field( $_POST['product_attribute'] );
+    update_post_meta( $post_id, '_product_type', $product_attribute );
+	
+	
+	// 判断 product_creation_date 是否为空
+    if ( ! isset( $_POST['product_creation_date'] ) ) {
+        return;
+    }
+
+    $product_creation_date = sanitize_text_field( $_POST['product_creation_date'] );
+    update_post_meta( $post_id, '_product_creation_date', $product_creation_date );
+	
+	
+	// 判断 product_major 是否为空
+    if ( ! isset( $_POST['product_major'] ) ) {
+        return;
+    }
+
+    $product_major = sanitize_text_field( $_POST['product_major'] );
+    update_post_meta( $post_id, '_product_major', $product_major );
+	
+	
+	// 判断 product_subMajor 是否为空
+    if ( ! isset( $_POST['product_subMajor'] ) ) {
+        return;
+    }
+
+    $product_subMajor = sanitize_text_field( $_POST['product_subMajor'] );
+    update_post_meta( $post_id, '_product_subMajor', $product_subMajor );
+	
+	
+	// 判断 product_material 是否为空
+    if ( ! isset( $_POST['product_material'] ) ) {
+        return;
+    }
+
+    $product_material = sanitize_text_field( $_POST['product_material'] );
+    update_post_meta( $post_id, '_product_material', $product_material );
+
+}
+
+//getSubMajor_action
+function getSubMajor() {
+    $major = isset( $_POST['major'] ) ? $_POST['major'] : null;
+    if(strlen($major) > 0){
+		if(!$majors){
+			$majorJson = get_template_directory_uri()."/major.json";
+			$majorJson_string = file_get_contents($majorJson);
+			$majors=json_decode($majorJson_string,true);
+		}
+		$count_subMajor = count($majors[$major]);
+?>
+		<?php for($i = 0; $i < $count_subMajor; $i++): ?>
+			<option value=<?php echo $majors[$major][$i]; ?>><?php echo $majors[$major][$i]; ?></option>
+		<?php endfor; ?>
+	<?php 
+	}
+    die();
+}
+
+add_action('wp_ajax_getSubMajor_action', 'getSubMajor');
+add_action( 'wp_ajax_nopriv_getSubMajor_action', 'getSubMajor' );
+
+
+
+// 页面链接添加html后缀
+add_action('init', 'html_page_permalink', -1);
+function html_page_permalink() {
+    global $wp_rewrite;
+    if ( !strpos($wp_rewrite->get_page_permastruct(), '.html')){
+        $wp_rewrite->page_structure = $wp_rewrite->page_structure . '.html';
+    }
+	
+	// if ( !strpos($wp_rewrite->get_category_permastruct(), '.html')){
+    //     $wp_rewrite->category_structure = $wp_rewrite->category_structure . '.html';
+    // }
+}
+
