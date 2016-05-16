@@ -61,6 +61,7 @@ table{
 	color: #555;
 }
 
+
 body {
 	 padding-top: 0;
 	 padding-bottom: 0;
@@ -167,27 +168,30 @@ body {
 						cursor: pointer;
 					}
 				}
-
-				#getUsers{
+				
+				#getPosts{
 					margin: 10px 20px;
 					height: 30px;
 					 &:before{
 						 font-size: 20px;
 						 font-family: FontAwesome;
 						 color:gray;
+						 content: "\f0f6";
+					 }
+				}
+
+				#getUsers{
+					@extend #getPosts;
+					 &:before{
 						 content: "\f0c0";
+					 }
+					 &:hover{
+						 cursor:not-allowed;
 					 }
 				 }
 
-				#getPosts{
-					@extend #getUsers;
-					&:before{
-						content: "\f0f6";
-					}
-				}
-
 				#align{
-					@extend #getUsers;
+					@extend #getPosts;
 					&:before{
 						content: "\f00a";
 					}
@@ -417,7 +421,7 @@ $iconSize: 16px;
 	padding-right: 2px;
 	width: 30px;
 	height: 30px;
-	right: 300px;
+	right: 100px;
 	bottom: 200px;
 	&:before{
 		content: "\f078";
@@ -454,7 +458,7 @@ $iconSize: 16px;
 	img{
 		max-width: 100%;
 		height: auto;
-		margin: 30px;
+		margin: 30px 0;
 	}
 	#postMeta{
 		text-align: right;
@@ -498,4 +502,18 @@ $iconSize: 16px;
 
 #primary{
 	margin-top: 60px;
+}
+
+#loading{
+	font-size: 2em;
+	color: gray;
+	text-align: center;
+	z-index: 9999;
+	// display: none;
+	position: absolute;
+	top: calc(50% - 50px);
+	left: calc(50% - 50px);
+	i{
+		font-size: 2em;
+	}
 }

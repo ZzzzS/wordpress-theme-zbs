@@ -119,10 +119,24 @@ function resizeCanvas(){       //调整canvas的大小与位置
     sketch.style.left = left + "px";
     sketch.style.top = top + "px";
 	
-	globalVar.attractPtL.position.x = globalVar.width / 2 - 250;  //调整画布时,attractPtL与attractPtR也得更改位置
-	globalVar.attractPtR.position.x = globalVar.width / 2 + 250;
-	globalVar.attractPtL.position.y = globalVar.height * 0.6;
-	globalVar.attractPtR.position.y = globalVar.height * 0.6;
+	/**
+	 * resize后button自适应位置
+	 */
+	var len = globalVar.displayArray.ButtonParticle.length;
+	var w = globalVar.countPerRow * globalVar.cellSize;
+	left = (globalVar.width - w) / 2 + 0.5 * globalVar.cellSize;
+	if (globalVar.alignState){
+		for(var k = 0; k < len; k++){
+			var i = k % globalVar.countPerRow;
+			var j = Math.floor(k / globalVar.countPerRow) + 2;
+			globalVar.displayArray.ButtonParticle[k].attractPt.position =  new p5.Vector(i * globalVar.cellSize + left, j * globalVar.cellSize);
+		}
+	}else{
+		globalVar.attractPtL.position.x = globalVar.width / 2 - 250;  //调整画布时,attractPtL与attractPtR也得更改位置
+		globalVar.attractPtR.position.x = globalVar.width / 2 + 250;
+		globalVar.attractPtL.position.y = globalVar.height * 0.6;
+		globalVar.attractPtR.position.y = globalVar.height * 0.6;
+	}
 }
 
 function resortButtonParticle(bp){
@@ -152,16 +166,16 @@ $(document).ready(function(){
 	
 	//获取用户
 	$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置
-		ButtonPlus.stateReset();    //状态重置
-		globalVar.alignState = false;    //状态重置
+		// ButtonPlus.stateReset();    //状态重置
+		// globalVar.alignState = false;    //状态重置
 
-		var doc = document;                             ////重置infoFrame
-		var infoFrame = doc.getElementById("infoFrame");
-		if(infoFrame){
-			infoFrame.style.visibility = "hidden";
-		}
+		// var doc = document;                             ////重置infoFrame
+		// var infoFrame = doc.getElementById("infoFrame");
+		// if(infoFrame){
+		// 	infoFrame.style.visibility = "hidden";
+		// }
 
-		getInfo("users","special_invitation");
+		// getInfo("users","special_invitation");
 	});
 	
 	//获取文章
@@ -221,8 +235,8 @@ $("body").click(function (e){
 	if ($(e.target).is("#filterBar , #filterBarBtn , #filterBar button")){
 		return;
 	}else{
-		//折叠FilterBar,并隐藏filterBarBtn
-		$("#filter").slideUp("fast");
+		//折叠FilterBar
+		$("#filter").slideUp("fast");    //隐藏fliter
 	}
 });
 
@@ -233,7 +247,16 @@ $(window).resize(function() {
 });
 
 $("#filterBarBtn").mouseover(function (){
-	$("#filter").slideDown("slow");
+	$("#filter").slideDown("slow");      //下拉显示fliter
+});
+
+// $("#filterBar").mouseleave(function (e){
+// 	$("#filter").slideUp("fast");     //隐藏fliter
+// 	console.log($(e.target).attr('id'));
+// });
+
+$("#sketch").mouseenter(function (e){
+	$("#filter").slideUp("fast");
 });
 
 // firefox
@@ -257,6 +280,8 @@ document.body.addEventListener("DOMMouseScroll", function(event) {
 
 // chrome and ie
 document.body.onmousewheel = function (event) {
+	$("#filter").slideUp("fast");     //隐藏fliter
+	
 	if (globalVar.alignState){
 		event = event || window.event;
 
