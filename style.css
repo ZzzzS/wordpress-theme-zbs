@@ -18,7 +18,7 @@ table {
 body {
   padding-top: 0;
   padding-bottom: 0;
-  font-family: 微软雅黑,宋体,Arial,Verdana,arial,serif;
+  font-family: "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", 微软雅黑, Arial, Verdana, arial, serif;
   margin: 0; }
 
 #navigation_bar {
@@ -28,13 +28,13 @@ body {
   top: 0;
   left: 0;
   z-index: 9999;
-  border-bottom: solid gray 1px;
+  border-bottom: solid #bbb 1px;
   background-color: white; }
   #navigation_bar #logo {
     width: auto;
     height: 50px;
     position: fixed;
-    left: 0;
+    left: 30px;
     top: 0; }
   #navigation_bar #rightCtrlBar {
     float: right;
@@ -97,6 +97,7 @@ body {
         text-align: center;
         padding: 0; }
         #filterBar #filter #filterT td button {
+          font-family: "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", 微软雅黑, Arial, Verdana, arial, serif;
           height: 25px;
           padding: 2px 10px;
           background-color: rgba(255, 255, 255, 0.7);

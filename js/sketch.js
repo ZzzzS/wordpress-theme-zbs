@@ -40,7 +40,7 @@ var sketch = function (p){
 		p.createCanvas(globalVar.width, globalVar.height);
 		p.canvas.id = "sketch_1";
 		globalVar.displayArray.backgroundBall = [];
-		for(var i = 0; i < 50; i++){
+		for(var i = 0; i < 200; i++){
 			var size = Math.random()*20 + 15;
 			var optionsVO = {
 				position : new p5.Vector((Math.random() * p.width - 100) + 50,(Math.random() * p.height - 60) + 30),
