@@ -50,7 +50,7 @@
 	</head>
 <body>
 	<div id="navigation_bar">
-		<img id="logo" src="<?php bloginfo('template_directory'); ?>/logo01.jpg" />
+		<img id="logo" src="<?php bloginfo('template_directory'); ?>/logo.png" />
 		<div id="rightCtrlBar">
 			<form name="search">
 				<input type="text" name="search-input" />
