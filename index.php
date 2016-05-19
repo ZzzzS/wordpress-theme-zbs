@@ -23,7 +23,7 @@
 			<tr>
 				<td colspan="4">
 					<div id="btnGroup">
-						<button type="button" class="" id="getUsers" title="作者"></button>
+						<button type="button" class="" id="getUsers" title="尚未开通此功能"></button>
 						<button type="button" class="" id="getPosts" title="作品"></button>
 						<button type="button" class="" id="align" title="排列"></button>
 					</div>
@@ -39,6 +39,7 @@
 	
 	<!--<div id="sketch"></div>-->
 	<div id="sketch"></div>
+	<div id="loading"><i class="fa fa-circle-o-notch fa-spin"></i><br/e>Loading....</div>
 	
 	<button id="perPage" title="上一页"></button>
 	<button id="nextPage" title="下一页"></button>
@@ -47,7 +48,7 @@
 	
 	<?php get_sidebar(); ?>
 	<script src="<?php bloginfo('template_directory'); ?>/bootstrap/js/jquery-2.1.4.min.js" type="text/javascript"></script>
-	<script src="<?php bloginfo('template_directory'); ?>/js/p5.min.js" type="text/javascript"></script>
+	<script src="<?php bloginfo('template_directory'); ?>/js/p5.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/p5.sound.js" type="text/javascript"></script>
 	<script src="<?php bloginfo('template_directory'); ?>/js/infinite.js" type="text/javascript"></script>
 

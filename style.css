@@ -110,16 +110,18 @@ body {
           #filterBar #filter #filterT td button:hover {
             border: 1px #3868ae solid;
             cursor: pointer; }
-        #filterBar #filter #filterT td #getUsers, #filterBar #filter #filterT td #getPosts, #filterBar #filter #filterT td #align {
+        #filterBar #filter #filterT td #getPosts, #filterBar #filter #filterT td #getUsers, #filterBar #filter #filterT td #align {
           margin: 10px 20px;
           height: 30px; }
-          #filterBar #filter #filterT td #getUsers:before, #filterBar #filter #filterT td #getPosts:before, #filterBar #filter #filterT td #align:before {
+          #filterBar #filter #filterT td #getPosts:before, #filterBar #filter #filterT td #getUsers:before, #filterBar #filter #filterT td #align:before {
             font-size: 20px;
             font-family: FontAwesome;
             color: gray;
-            content: "\f0c0"; }
-        #filterBar #filter #filterT td #getPosts:before {
-          content: "\f0f6"; }
+            content: "\f0f6"; }
+        #filterBar #filter #filterT td #getUsers:before {
+          content: "\f0c0"; }
+        #filterBar #filter #filterT td #getUsers:hover {
+          cursor: not-allowed; }
         #filterBar #filter #filterT td #align:before {
           content: "\f00a"; }
         #filterBar #filter #filterT td .cancel {
@@ -192,7 +194,8 @@ body {
   padding: 0;
   position: absolute;
   top: 50px;
-  z-index: -1; }
+  z-index: -1;
+  }
 
 #infoFrame {
   position: fixed;
@@ -301,7 +304,7 @@ body {
   padding-right: 2px;
   width: 30px;
   height: 30px;
-  right: 300px;
+  right: 100px;
   bottom: 200px; }
   #nextPage:before, #perPage:before {
     content: "\f078";
@@ -332,7 +335,7 @@ body {
   .articleBody img {
     max-width: 100%;
     height: auto;
-    margin: 30px; }
+    margin: 30px 0; }
   .articleBody #postMeta {
     text-align: right;
     padding: 0 0 10px 0;
@@ -377,5 +380,16 @@ body {
 
 #primary {
   margin-top: 60px; }
+
+#loading {
+  font-size: 2em;
+  color: gray;
+  text-align: center;
+  z-index: 9999;
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px); }
+  #loading i {
+    font-size: 2em; }
 
 /*# sourceMappingURL=style.css.map */

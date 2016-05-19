@@ -50,7 +50,7 @@
 	</head>
 <body>
 	<div id="navigation_bar">
-		<img id="logo" src="<?php bloginfo('template_directory'); ?>/logo.png" />
+		<a href=<?php bloginfo('url')?> title="最毕设-首页"><img id="logo" src="<?php bloginfo('template_directory'); ?>/logo.png" /></a>
 		<div id="rightCtrlBar">
 			<form name="search">
 				<input type="text" name="search-input" />

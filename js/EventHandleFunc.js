@@ -234,8 +234,9 @@ var eventHandleFunc = {
                 var title = doc.createElement("div");     //title
                 title.classList.add("title_link");     //添加标题鼠标悬浮样式
                 title.onclick = function (){
-                    getPostContent(event.target.info['id'], false);  //false : no title
-                    var infoContainer = document.getElementById("infoContainer");
+                    if (this.classList.contains("title_link")){
+                        getPostContent(event.target.info['id'], false);  //false : no title
+                    }
                     this.classList.remove("title_link");     //删除标题鼠标悬浮样式
                 };
                 title.id += "title";
