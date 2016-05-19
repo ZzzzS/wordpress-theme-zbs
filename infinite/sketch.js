@@ -6,6 +6,7 @@ var VisualObject = require("./VisualObject.js");
 var Particle = require("./Particle.js");
 var ButtonPlus = require("./ButtonPlus.js");
 var FilterButton = require("./FilterButton.js");
+require('./main.scss');
 
 var sketch = function (p){
 	globalVar.width = Math.max(document.documentElement.clientWidth,960);
@@ -159,7 +160,13 @@ function resortButtonParticle(bp){
 }
 
 $(document).ready(function(){
-	document.body.style.overflow = 'hidden';
+	var doc = document;
+	// var head = doc.head;
+	// var link = doc.createElement("link");
+	// link.rel = "stylesheet";
+	// link.type = "text/css";
+	// link.href = "style.css"
+	doc.body.style.overflow = 'hidden';
     var getInfo = require("./getInfo.js");
 	//默认获取用户
 	getInfo("posts","special_invitation");
@@ -183,7 +190,7 @@ $(document).ready(function(){
 		ButtonPlus.stateReset();    //状态重置
 		globalVar.alignState = false;    //状态重置
 
-		var doc = document;            //重置infoFrame
+        //重置infoFrame
 		var infoFrame = doc.getElementById("infoFrame");
 		if(infoFrame){
 			infoFrame.style.visibility = "hidden";
