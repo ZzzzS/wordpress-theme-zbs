@@ -6,7 +6,7 @@ module.exports = {
         path:__dirname,
         filename:"./js/infinite.js"
     },
-    //devtool: 'eval-source-map',
+    devtool: 'eval-source-map',
     module: {
         loaders: [
         //    {

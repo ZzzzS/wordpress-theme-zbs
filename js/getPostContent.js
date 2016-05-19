@@ -1,3 +1,5 @@
+var globalVar = require("./GlobalVar.js");
+
 var getPostContent = function (id, title){
 	//postContent.style.display = "block";//
 	$("#postContent").fadeIn();
@@ -11,14 +13,15 @@ var getPostContent = function (id, title){
 	//窗口尺寸改变
 	$(window).resize(function() {
 		if($("#postContent").css("display") !== "none"){ //如果这个框不是停靠在下方时
-			$infoFrame.css("height",document.documentElement.clientHeight - 50);
+			$infoFrame.css("height",document.documentElement.clientHeight - globalVar.navigationBarHeight);
 		}
 	});
 	
 	//将sketch隐藏并移出显示范围，否则即使被遮盖也会有交互效果
-	$sketch.fadeOut();
-	setTimeout(function (){$('#sketch').css('position','fixed')},200);
-	$sketch.css("bottom","-900px");
+	// setTimeout(function (){$('#sketch').css('position','fixed')},200);
+	var top = $sketch.css("top");
+	$sketch.css("top", parseInt(top) - 900 + "px");
+	// $sketch.fadeOut();
 
 	//折叠FilterBar,并隐藏filterBarBtn
 	$("#filter").slideUp("fast",function (){
@@ -79,8 +82,9 @@ var getPostContent = function (id, title){
 				title.classList.add("title_link");     //添加标题鼠标悬浮样式
 			}
 			$(this).fadeOut();
-
-			$sketch.css("position","static"); //将sketch移回
+			
+			var top = $sketch.css("top");
+			$sketch.css("top",parseInt(top) + 900 + "px"); //将sketch移回
 			$sketch.fadeIn();
 			$("#filterBarBtn").fadeIn();
 		};

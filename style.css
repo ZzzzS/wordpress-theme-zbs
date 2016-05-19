@@ -194,7 +194,8 @@ body {
   padding: 0;
   position: absolute;
   top: 50px;
-  z-index: -1; }
+  z-index: -1;
+  }
 
 #infoFrame {
   position: fixed;
