@@ -41,7 +41,7 @@ var sketch = function (p){
 		p.createCanvas(globalVar.width, globalVar.height);
 		p.canvas.id = "sketch_1";
 		globalVar.displayArray.backgroundBall = [];
-		for(var i = 0; i < 200; i++){
+		for(var i = 0; i < 100; i++){
 			var size = Math.random()*20 + 15;
 			var optionsVO = {
 				position : new p5.Vector((Math.random() * p.width - 100) + 50,(Math.random() * p.height - 60) + 30),
@@ -60,6 +60,7 @@ var sketch = function (p){
 
 	p.draw = function (){
 		p.background(255);
+		// console.log(ButtonPlus.prototype.clickObjCount);
 		// globalVar.attractPtL.display();
 		// globalVar.attractPtR.display();
 		for(var objType in globalVar.displayArray){
@@ -93,6 +94,7 @@ var sketch = function (p){
 				ButtonPlus.popMatrix(globalVar.pp);
 			}
 		}
+		
 	};	
 	
 };
@@ -145,16 +147,16 @@ function resortButtonParticle(bp){
 	 * 为displayArray.ButtonParticle
 	 */
 	var newList = [],
-		selectObj = null;
+		selectObj = [];
 	for(var i = 0, len = bp.ButtonParticle.length; i < len; i++){
 		if(bp.ButtonParticle[i].visualObject.pState === "mouseOut"){
 			newList.push(bp.ButtonParticle[i]);
 		}else{
-			selectObj = bp.ButtonParticle[i];
+			selectObj.push(bp.ButtonParticle[i]);
 		}
 	}
-	if(selectObj !== null){
-		newList.push(selectObj);
+	if(selectObj.length !== 0){
+		newList = newList.concat(selectObj);
 	}
 	bp.ButtonParticle = newList;
 }

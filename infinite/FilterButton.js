@@ -77,6 +77,7 @@ FilterButton.prototype.doFilter = function (){
                     if (BP[i].visualObject.pState === "click") {
                         BP[i].visualObject.pState = "mouseOut";       //fliter切换后，将之前“click”状态的button改为普通状态，即状态重置
                         ButtonPlus.prototype.hoverObjCount = 0;        //选中个数也必须重置
+                        ButtonPlus.prototype.clickObjCount = 0; 
                         BP[i].visualObject.fire({type: "turnOff"});     //ButtonPlus触发turnOff事件
                     }
 
