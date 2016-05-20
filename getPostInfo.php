@@ -28,7 +28,7 @@
 			
 			$thumbnail_id = get_post_thumbnail_id();
 			if($thumbnail_id ){
-				$thumb = wp_get_attachment_image_src($thumbnail_id, 'thumbnail');
+				$thumb = wp_get_attachment_image_src($thumbnail_id);
 				$postInfo["thumbnail"] = $thumb[0];
 			}else{
 				$postInfo["thumbnail"] = get_template_directory_uri()."/image/sky01.jpg";

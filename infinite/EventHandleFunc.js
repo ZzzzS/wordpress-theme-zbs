@@ -1,7 +1,6 @@
 /**
  * 定义与Button绑定的事件处理程序
  */
-var util = require("./util.js");
 var globalVar = require("./GlobalVar.js");
 var getPostContent = require("./getPostContent.js");
 
@@ -77,7 +76,6 @@ var eventHandleFunc = {
 
     showShortPostInfo : function (event){
         if(event.target.pState !== "hover"){
-            // var sketch = document.getElementById("sketch");
             var top = Math.floor(event.target.position.y + globalVar.navigationBarHeight + event.target.constructor.prototype.trans[event.target.constructor.prototype.trans.length - 1].y);
             var left = Math.floor(event.target.position.x + event.target.constructor.prototype.trans[event.target.constructor.prototype.trans.length - 1].x);
                
@@ -118,7 +116,6 @@ var eventHandleFunc = {
 
     showUserInfo : function (event){
         var doc = document;
-        var sketch = document.getElementById("sketch");
 
         var infoFrame = document.getElementById("infoFrame");
         if(infoFrame){

@@ -60,12 +60,11 @@ var sketch = function (p){
 
 	p.draw = function (){
 		p.background(255);
-		// console.log(ButtonPlus.prototype.clickObjCount);
 		// globalVar.attractPtL.display();
 		// globalVar.attractPtR.display();
 		for(var objType in globalVar.displayArray){
-			if (objType === "ButtonParticle"){     //重新排序控制绘图顺序
-				resortButtonParticle(globalVar.displayArray);
+			if (objType === "ButtonParticle"){     
+				resortButtonParticle(globalVar.displayArray);   //重新排序控制绘图顺序
 				ButtonPlus.pushMatrix(globalVar.pp);
 				globalVar.translate.x += (globalVar.transTarget.x - globalVar.translate.x) * 0.2;
 				globalVar.translate.y += (globalVar.transTarget.y - globalVar.translate.y) * 0.2;
@@ -73,17 +72,18 @@ var sketch = function (p){
 
 				var totalHeight =  globalVar.displayArray[objType].length / globalVar.countPerRow * globalVar.cellSize;
 				globalVar.transTarget.totalPage = totalHeight / p.height;
+				var nextPage = $("#nextPage"),
+					perPage = $("#perPage");
 				 if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1 && globalVar.alignState){
-				 	$("#nextPage").fadeIn();
+				 	nextPage.fadeIn();
 				 }else{
-				 	$("#nextPage").fadeOut();
+				 	nextPage.fadeOut();
 				 }
 				 if (globalVar.translate.currentPage > 0 && globalVar.alignState){
-				 	$("#perPage").fadeIn();
+				 	perPage.fadeIn();
 				 }else{
-				 	$("#perPage").fadeOut();
+				 	perPage.fadeOut();
 				 }
-
 			}
 
 			for(var i = 0, length = globalVar.displayArray[objType].length;i < length;i++){
@@ -99,7 +99,8 @@ var sketch = function (p){
 	
 };
 
-var myp5 = new p5(sketch,'sketch');
+new p5(sketch,'sketch');
+
 var doc = document;
 setTimeout(resizeCanvas,0);    //延迟执行，不然canvas的width跟heigth的值为0；
 
@@ -144,7 +145,7 @@ function resizeCanvas(){       //调整canvas的大小与位置
 
 function resortButtonParticle(bp){
 	/**
-	 * 为displayArray.ButtonParticle
+	 * 为displayArray.ButtonParticle重新排序
 	 */
 	var newList = [],
 		selectObj = [];
