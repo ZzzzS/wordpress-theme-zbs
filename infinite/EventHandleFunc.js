@@ -189,7 +189,6 @@ var eventHandleFunc = {
             postContent = document.createElement("div");
             postContent.id = "postContent"
             postContent.style.display = "none";
-            postContent.classList.add("articleBody");
         }
 
         infoContainer.appendChild(name);
@@ -264,7 +263,6 @@ var eventHandleFunc = {
 
         var postContent = document.createElement("div");
         postContent.id = "postContent";
-        postContent.classList.add("articleBody");
         postContent.style.display = "none";
 
         infoContainer.appendChild(title);

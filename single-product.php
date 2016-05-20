@@ -3,7 +3,7 @@
     <div id="content" role="main">
 
     
-        <article id="post-<?php the_ID(); ?>" class="articleBody">
+        <article id="postContent">
             <?php if (have_posts()) : the_post(); update_post_caches($posts); ?> 
             <?php 
                 $author_id = $post->post_author;
