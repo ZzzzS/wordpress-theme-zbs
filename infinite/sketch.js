@@ -98,24 +98,24 @@ var sketch = function (p){
 };
 
 var myp5 = new p5(sketch,'sketch');
-
+var doc = document;
 setTimeout(resizeCanvas,0);    //延迟执行，不然canvas的width跟heigth的值为0；
 
 function resizeCanvas(){       //调整canvas的大小与位置
-    var sketch = document.getElementById("sketch");
-	globalVar.width = Math.max(document.documentElement.clientWidth ,960);
-    globalVar.height = Math.max(document.documentElement.clientHeight ,600);
+    var sketch = doc.getElementById("sketch");
+	globalVar.width = Math.max(doc.documentElement.clientWidth ,960);
+    globalVar.height = Math.max(doc.documentElement.clientHeight ,600);
     var left,top;
     globalVar.pp.resizeCanvas(globalVar.width, globalVar.height);
-    if (document.documentElement.clientWidth  < 960){
-        left = (document.documentElement.clientWidth - globalVar.width) / 2;
+    if (doc.documentElement.clientWidth  < 960){
+        left = (doc.documentElement.clientWidth - globalVar.width) / 2;
     }else{
-        left = (globalVar.width - document.documentElement.clientWidth) / 2;
+        left = (globalVar.width - doc.documentElement.clientWidth) / 2;
     }
-    if (document.documentElement.clientHeight - 50  < 600){
-        top = (document.documentElement.clientHeight + 50 - globalVar.height) / 2;
+    if (doc.documentElement.clientHeight - 50  < 600){
+        top = (doc.documentElement.clientHeight + 50 - globalVar.height) / 2;
     }else{
-        top = (globalVar.height - document.documentElement.clientHeight + 50) / 2;
+        top = (globalVar.height - doc.documentElement.clientHeight + 50) / 2;
     }
     sketch.style.left = left + "px";
     sketch.style.top = top + "px";
@@ -159,13 +159,7 @@ function resortButtonParticle(bp){
 	bp.ButtonParticle = newList;
 }
 
-$(document).ready(function(){
-	var doc = document;
-	// var head = doc.head;
-	// var link = doc.createElement("link");
-	// link.rel = "stylesheet";
-	// link.type = "text/css";
-	// link.href = "style.css"
+$(doc).ready(function(){
 	doc.body.style.overflow = 'hidden';
     var getInfo = require("./getInfo.js");
 	//默认获取用户
@@ -257,17 +251,12 @@ $("#filterBarBtn").mouseover(function (){
 	$("#filter").slideDown("slow");      //下拉显示fliter
 });
 
-// $("#filterBar").mouseleave(function (e){
-// 	$("#filter").slideUp("fast");     //隐藏fliter
-// 	console.log($(e.target).attr('id'));
-// });
-
 $("#sketch").mouseenter(function (e){
 	$("#filter").slideUp("fast");
 });
 
 // firefox
-document.body.addEventListener("DOMMouseScroll", function(event) {
+doc.body.addEventListener("DOMMouseScroll", function(event) {
 	if (globalVar.alignState){
 		var direction= event.detail && (event.detail > 0 ? "mousedown" : "mouseup");
 		var direction = event.wheelDelta && (event.wheelDelta > 0 ? "mouseup" : "mousedown");
@@ -286,7 +275,7 @@ document.body.addEventListener("DOMMouseScroll", function(event) {
 });
 
 // chrome and ie
-document.body.onmousewheel = function (event) {
+doc.body.onmousewheel = function (event) {
 	$("#filter").slideUp("fast");     //隐藏fliter
 	
 	if (globalVar.alignState){
