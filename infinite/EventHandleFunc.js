@@ -31,7 +31,7 @@ var eventHandleFunc = {
         event.target.p.stroke(200, 200,200, 200 - n);
         event.target.p.strokeWeight(10 - n / 20);
         
-        for (var i = 0; i < 3; i++){
+        for (var i = 0; i < 1; i++){
             event.target.p.ellipse(event.target.position.x, event.target.position.y, event.target.height + Math.sqrt((n - 60 * i) * 10, 2), event.target.height + Math.sqrt((n - 60 * i) * 10, 2));
         }
         
@@ -285,7 +285,10 @@ var eventHandleFunc = {
     hideInfoFrame : function (event){
         var doc = document;
         var infoFrame = doc.getElementById("infoFrame");
-        $("#infoFrame").fadeOut("fast",function (){infoFrame.style.visibility = "hidden";});
+        if (event.target.constructor.prototype.clickObjCount <= 1){
+            $("#infoFrame").fadeOut("fast",function (){infoFrame.style.visibility = "hidden";});
+        }
+        
     }
 
 };

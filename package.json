@@ -5,7 +5,8 @@
   "main": "sketch.js",
   "scripts": {
     "test": "webpack",
-    "test-min": "webpack --config webpack.min.js"
+    "test-min": "webpack -p",
+    "release" : "webpack --config webpack.release.js -p"
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,8 @@
   },
   "dependencies": {
     "extract-text-webpack-plugin": "^1.0.1"
+  },
+  "comment": {
+    "test-min": "webpack --config webpack.min.js  //这是注释，备份"
   }
 }

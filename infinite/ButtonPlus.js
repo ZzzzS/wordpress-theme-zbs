@@ -5,7 +5,6 @@ date:2016-03-03
 */
 var Button = require("./Button.js");
 var util = require("./util.js");
-// var globalVar = require("./GlobalVar.js");
 
 function ButtonPlus(options) {
 	Button.call(this, options);
@@ -22,6 +21,8 @@ util.inheritPrototype(ButtonPlus, Button);
 
 //统计ButtonPlus实例被选中个数，主要目的在于控制每次只能选择一个Button
 ButtonPlus.prototype.hoverObjCount = 0;
+ButtonPlus.prototype.clickObjCount = 0;
+ButtonPlus.prototype.unselectableArea = null;
 
 //判断ButtonPlus是否被选中（加强版）
 ButtonPlus.prototype.isSelected = function () {
@@ -37,18 +38,33 @@ ButtonPlus.prototype.isSelected = function () {
 	var height = this.width > 40 ? this.width : 40;
 	if (this.width === this.height && this.geometryType === "circle") {
 		if (Math.pow((mouseX - this.position.x), 2) + Math.pow((mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
-			return true;
+			if (this.isMouseInUnSectArea(mouseX, mouseY) && this.pState !== "click" && this.pState !== "press"){
+				return false;
+			}else{
+				return true;
+			}
 		} else {
 			return false;
 		}
 	} else {
-		if (mouseX >= this.position.x - width / 2 && mouseX <= this.position.x + width / 2 && mouseY >= this.position.y - height / 2 && mouseY <= this.position.y + height / 2) {
+		if (mouseX >= this.position.x - width / 2 && mouseX <= this.position.x + width / 2 && mouseY >= this.position.y - height / 2) {
+			if (this.isMouseInUnSectArea(mouseX, mouseY)){
+				return false;
+			}
 			return true;
 		} else {
 			return false;
 		}
 	}
 };
+
+ButtonPlus.prototype.isMouseInUnSectArea = function (mouseX, mouseY){
+	if (this.constructor.prototype.unselectableArea !== null && (Math.pow((mouseX - this.constructor.prototype.unselectableArea.x), 2) + Math.pow((mouseY - this.constructor.prototype.unselectableArea.y), 2) <= Math.pow(this.maxWidth / 2, 2))){
+		return true;
+	}else{
+		return false;
+	}
+}
 
 //判断ButtonPlus的状态（加强版）
 ButtonPlus.prototype.getState = function () {
@@ -61,9 +77,9 @@ ButtonPlus.prototype.getState = function () {
 	 * off (pSwitch) ： Button处于关闭状态
 	 */
 	if (this.isSelected()) {
-		if (this.pState == "click") {
+		if (this.pState === "click") {
 			if (this.p.mouseIsPressed) {
-				if (this.pState != "mouseOut") {
+				if (this.pState !== "mouseOut") {
 					return "press";
 				} else {
 					return;
@@ -74,7 +90,7 @@ ButtonPlus.prototype.getState = function () {
 		} else {
 			if (this.constructor.prototype.hoverObjCount <= 0 || this.pState != "mouseOut") {
 				if (this.p.mouseIsPressed) {
-					if (this.pState == "mouseOut") {
+					if (this.pState === "mouseOut") {
 						return "mouseOut";
 					} else {	
 						//如果button的大小小于90,则不出现press状态
@@ -85,10 +101,15 @@ ButtonPlus.prototype.getState = function () {
 						}
 					}
 				} else {
-					if (this.pState == "press") {
-						if (this.pSwitch == "on") {
+					if (this.pState === "press") {
+						if (this.pSwitch === "on") {
 							this.pSwitch = "off";
 							this.fire({ type: "turnOff" });
+							this.constructor.prototype.hoverObjCount += 1;
+							this.constructor.prototype.clickObjCount -= 1;
+							if (this.constructor.prototype.clickObjCount === 0){
+								this.constructor.prototype.unselectableArea = null;
+							}
 							return "hover";
 						} else {
 
@@ -98,7 +119,7 @@ ButtonPlus.prototype.getState = function () {
 
 						}
 					} else {
-						if (this.pState != "hover") {
+						if (this.pState !== "hover") {
 							//first
 							this.constructor.prototype.hoverObjCount += 1;
 						}
@@ -111,13 +132,21 @@ ButtonPlus.prototype.getState = function () {
 		}
 	} else {
 		if (this.pState == "click") {
+			if (this.constructor.prototype.clickObjCount > 1 && this.clickTimeline !== 0){
+				this.constructor.prototype.clickObjCount -= 1;
+				this.pSwitch = "off";
+				return "mouseOut";
+			}
 			return "click";
 		} else {
 			if (this.p.mouseIsPressed && this.pSwitch == "on") {
 				this.pSwitch = "off";
 				this.fire({ type: "turnOff" });
+				if (this.constructor.prototype.clickObjCount === 0){
+					this.constructor.prototype.unselectableArea = null;
+				}
 			}
-			if (this.pState == "hover" || this.pState == "press") {
+			if (this.pState == "hover" ) {  //|| this.pState == "press"
 				this.constructor.prototype.hoverObjCount -= 1;
 			}
 			return "mouseOut";
@@ -177,7 +206,6 @@ ButtonPlus.prototype.display = function () {
 
 				}
 			}
-
 			this.fire({ type: "hover" });
 			this.pState = "hover";
 			break;
@@ -209,19 +237,15 @@ ButtonPlus.prototype.display = function () {
 			this.drawObj();
 
 			//点击反馈
-			if (this.pState === "press") {
+			if (this.pState === "press") {    //trunOn
 				this.clickTimeline = 0;
+				this.constructor.prototype.hoverObjCount -= 1;
+				this.constructor.prototype.clickObjCount += 1;
+				this.constructor.prototype.unselectableArea = this.position.copy();
 			} else {
 				this.clickTimeline++;
 			}
-			// if (this.clickTimeline < 40) {
-			// 	this.p.stroke(200, 200, 200, 200 - this.clickTimeline * 5);
-			// 	this.p.strokeWeight(10 - this.clickTimeline / 4);
-			// 	this.p.noFill();
-			// 	this.p.ellipse(this.position.x, this.position.y, this.width + Math.sqrt(this.clickTimeline * 50, 2), this.height + Math.sqrt(this.clickTimeline * 50, 2));
-			// }
-
-
+			
 			this.fire({ type: "click" });
 			this.pState = "click";
 			break;
