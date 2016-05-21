@@ -168,80 +168,82 @@ $(doc).ready(function(){
 	//默认获取用户
 	getInfo("posts","special_invitation");
 	
-	//获取用户
-	$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置
-		// ButtonPlus.stateReset();    //状态重置
-		// globalVar.alignState = false;    //状态重置
-
-		// var doc = document;                             ////重置infoFrame
-		// var infoFrame = doc.getElementById("infoFrame");
-		// if(infoFrame){
-		// 	infoFrame.style.visibility = "hidden";
+	$("body").click(function (e){              //事件委托
+		// if ($(e.target).is("#filterBar , #filterBarBtn , #filterBar button , #filterBar_search")){
+		// 	return;
+		// }else {
+		// 	//折叠FilterBar
+		// 	$("#filter").slideUp("fast");    //隐藏fliter
 		// }
-
-		// getInfo("users","special_invitation");
-	});
-	
-	//获取文章
-	$("#getPosts").click(function(){   //相当于刷新，所有很多状态要重置
-		ButtonPlus.stateReset();    //状态重置
-		globalVar.alignState = false;    //状态重置
-
-        //重置infoFrame
-		var infoFrame = doc.getElementById("infoFrame");
-		if(infoFrame){
-			infoFrame.style.visibility = "hidden";
-		}
-
-		getInfo("posts");
-		ButtonPlus.prototype.hoverObjCount += 1; //由于按钮是在FliterBar上，getInfo的时候被重置了，所以+1
-	});
-	
-	//排列
-	$("#align").click(function (){
-		var w = globalVar.countPerRow * globalVar.cellSize;
-		var left = (globalVar.width - w) / 2 + 0.5 * globalVar.cellSize;
 		
-		if (globalVar.alignState){
-			globalVar.transTarget.x = 0;
-			globalVar.transTarget.y = 0;
-			globalVar.translate.currentPage = 0;
-		}
-		globalVar.alignState = ~globalVar.alignState;
-		var len = globalVar.displayArray.ButtonParticle.length;
-		if (globalVar.alignState){
-			for(var k = 0; k < len; k++){
-				var i = k % globalVar.countPerRow;
-				var j = Math.floor(k / globalVar.countPerRow) + 2;
-				
-				var options = {
-					"position" : new p5.Vector(i * globalVar.cellSize + left, j * globalVar.cellSize),
-					"strength" : 1.5,
-					"vortex" : false
-				};
-				var attractPt = new AttractPoint(options);
-				globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
-				globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
+		if ($(e.target).is("#getUsers")){      //相当于刷新，所有很多状态要重置
+			// ButtonPlus.stateReset();    //状态重置
+			// globalVar.alignState = false;    //状态重置
+
+			// var doc = document;                             ////重置infoFrame
+			// var infoFrame = doc.getElementById("infoFrame");
+			// if(infoFrame){
+			// 	infoFrame.style.visibility = "hidden";
+			// }
+
+			// getInfo("users","special_invitation");
+		}else if ($(e.target).is("#getPosts")){      //相当于刷新，所有很多状态要重置
+			ButtonPlus.stateReset();    //状态重置
+			globalVar.alignState = false;    //状态重置
+
+			//重置infoFrame
+			var infoFrame = doc.getElementById("infoFrame");
+			if(infoFrame){
+				infoFrame.style.visibility = "hidden";
 			}
-		}else{
-			for(var k = 0; k < len; k++){
-				globalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;
-				globalVar.displayArray.ButtonParticle[k].vortexAttract = true;
+
+			getInfo("posts");
+			ButtonPlus.prototype.hoverObjCount += 1; //由于按钮是在FliterBar上，getInfo的时候被重置了，所以+1
+		}else if($(e.target).is("#align")){
+			var w = globalVar.countPerRow * globalVar.cellSize;
+			var left = (globalVar.width - w) / 2 + 0.5 * globalVar.cellSize;
+			
+			if (globalVar.alignState){
+				globalVar.transTarget.x = 0;
+				globalVar.transTarget.y = 0;
+				globalVar.translate.currentPage = 0;
 			}
+			globalVar.alignState = ~globalVar.alignState;
+			var len = globalVar.displayArray.ButtonParticle.length;
+			if (globalVar.alignState){
+				for(var k = 0; k < len; k++){
+					var i = k % globalVar.countPerRow;
+					var j = Math.floor(k / globalVar.countPerRow) + 2;
+					
+					var options = {
+						"position" : new p5.Vector(i * globalVar.cellSize + left, j * globalVar.cellSize),
+						"strength" : 1.5,
+						"vortex" : false
+					};
+					var attractPt = new AttractPoint(options);
+					globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
+					globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
+				}
+			}else{
+				for(var k = 0; k < len; k++){
+					globalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;
+					globalVar.displayArray.ButtonParticle[k].vortexAttract = true;
+				}
+			}
+		}else if($(e.target).is("#nextPage")){
+			if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
+				globalVar.transTarget.y -= 400;
+				globalVar.translate.currentPage += 1;
+			}
+		}else if($(e.target).is("#perPage")){
+			if (globalVar.translate.currentPage > 0){
+				globalVar.transTarget.y += 400;
+				globalVar.translate.currentPage -= 1;
+			}
+		}else if($(e.target).is("#filterBarBtn")){
+			$("#filter").slideDown("slow");      //下拉显示fliter
 		}
-		
 	});
-
-});
-
-
-$("body").click(function (e){
-	if ($(e.target).is("#filterBar , #filterBarBtn , #filterBar button")){
-		return;
-	}else{
-		//折叠FilterBar
-		$("#filter").slideUp("fast");    //隐藏fliter
-	}
 });
 
 //窗口尺寸改变
@@ -250,9 +252,6 @@ $(window).resize(function() {
 	resizeCanvas();   //调整canv位置与大小
 });
 
-$("#filterBarBtn").mouseover(function (){
-	$("#filter").slideDown("slow");      //下拉显示fliter
-});
 
 $("#sketch").mouseenter(function (e){
 	$("#filter").slideUp("fast");
@@ -299,19 +298,6 @@ doc.body.onmousewheel = function (event) {
 	}
 };
 
-$("#nextPage").click(function (){
-	if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
-		globalVar.transTarget.y -= 400;
-		globalVar.translate.currentPage += 1;
-	}
-});
-
-$("#perPage").click(function (){
-	if (globalVar.translate.currentPage > 0){
-		globalVar.transTarget.y += 400;
-		globalVar.translate.currentPage -= 1;
-	}
-});
 
 $("#filterT, #filterBarBtn").mouseover(function (){       //让鼠标选择不中FilterBar下面的button
 	if (ButtonPlus.prototype.hoverObjCount < 1){
@@ -541,4 +527,15 @@ var options_cancelAll = {
 	text : ""
 };
 
+var options_search = {
+	id : "filterBar_search",
+	type : "search",
+	class : "search",
+	keyword : "search",
+	parentId : "btnGroup",
+	title: "搜索",
+	text : ""
+};
+
 globalVar.filterButton.push(new FilterButton(options_cancelAll));
+globalVar.filterButton.push(new FilterButton(options_search));
