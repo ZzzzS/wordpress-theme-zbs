@@ -214,80 +214,82 @@
 		//默认获取用户
 		getInfo("posts","special_invitation");
 		
-		//获取用户
-		$("#getUsers").click(function(){    //相当于刷新，所有很多状态要重置
-			// ButtonPlus.stateReset();    //状态重置
-			// globalVar.alignState = false;    //状态重置
-	
-			// var doc = document;                             ////重置infoFrame
-			// var infoFrame = doc.getElementById("infoFrame");
-			// if(infoFrame){
-			// 	infoFrame.style.visibility = "hidden";
+		$("body").click(function (e){              //事件委托
+			// if ($(e.target).is("#filterBar , #filterBarBtn , #filterBar button , #filterBar_search")){
+			// 	return;
+			// }else {
+			// 	//折叠FilterBar
+			// 	$("#filter").slideUp("fast");    //隐藏fliter
 			// }
-	
-			// getInfo("users","special_invitation");
-		});
-		
-		//获取文章
-		$("#getPosts").click(function(){   //相当于刷新，所有很多状态要重置
-			ButtonPlus.stateReset();    //状态重置
-			globalVar.alignState = false;    //状态重置
-	
-	        //重置infoFrame
-			var infoFrame = doc.getElementById("infoFrame");
-			if(infoFrame){
-				infoFrame.style.visibility = "hidden";
-			}
-	
-			getInfo("posts");
-			ButtonPlus.prototype.hoverObjCount += 1; //由于按钮是在FliterBar上，getInfo的时候被重置了，所以+1
-		});
-		
-		//排列
-		$("#align").click(function (){
-			var w = globalVar.countPerRow * globalVar.cellSize;
-			var left = (globalVar.width - w) / 2 + 0.5 * globalVar.cellSize;
 			
-			if (globalVar.alignState){
-				globalVar.transTarget.x = 0;
-				globalVar.transTarget.y = 0;
-				globalVar.translate.currentPage = 0;
-			}
-			globalVar.alignState = ~globalVar.alignState;
-			var len = globalVar.displayArray.ButtonParticle.length;
-			if (globalVar.alignState){
-				for(var k = 0; k < len; k++){
-					var i = k % globalVar.countPerRow;
-					var j = Math.floor(k / globalVar.countPerRow) + 2;
-					
-					var options = {
-						"position" : new p5.Vector(i * globalVar.cellSize + left, j * globalVar.cellSize),
-						"strength" : 1.5,
-						"vortex" : false
-					};
-					var attractPt = new AttractPoint(options);
-					globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
-					globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
+			if ($(e.target).is("#getUsers")){      //相当于刷新，所有很多状态要重置
+				// ButtonPlus.stateReset();    //状态重置
+				// globalVar.alignState = false;    //状态重置
+	
+				// var doc = document;                             ////重置infoFrame
+				// var infoFrame = doc.getElementById("infoFrame");
+				// if(infoFrame){
+				// 	infoFrame.style.visibility = "hidden";
+				// }
+	
+				// getInfo("users","special_invitation");
+			}else if ($(e.target).is("#getPosts")){      //相当于刷新，所有很多状态要重置
+				ButtonPlus.stateReset();    //状态重置
+				globalVar.alignState = false;    //状态重置
+	
+				//重置infoFrame
+				var infoFrame = doc.getElementById("infoFrame");
+				if(infoFrame){
+					infoFrame.style.visibility = "hidden";
 				}
-			}else{
-				for(var k = 0; k < len; k++){
-					globalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;
-					globalVar.displayArray.ButtonParticle[k].vortexAttract = true;
+	
+				getInfo("posts");
+				ButtonPlus.prototype.hoverObjCount += 1; //由于按钮是在FliterBar上，getInfo的时候被重置了，所以+1
+			}else if($(e.target).is("#align")){
+				var w = globalVar.countPerRow * globalVar.cellSize;
+				var left = (globalVar.width - w) / 2 + 0.5 * globalVar.cellSize;
+				
+				if (globalVar.alignState){
+					globalVar.transTarget.x = 0;
+					globalVar.transTarget.y = 0;
+					globalVar.translate.currentPage = 0;
 				}
+				globalVar.alignState = ~globalVar.alignState;
+				var len = globalVar.displayArray.ButtonParticle.length;
+				if (globalVar.alignState){
+					for(var k = 0; k < len; k++){
+						var i = k % globalVar.countPerRow;
+						var j = Math.floor(k / globalVar.countPerRow) + 2;
+						
+						var options = {
+							"position" : new p5.Vector(i * globalVar.cellSize + left, j * globalVar.cellSize),
+							"strength" : 1.5,
+							"vortex" : false
+						};
+						var attractPt = new AttractPoint(options);
+						globalVar.displayArray.ButtonParticle[k].attractPt = attractPt;
+						globalVar.displayArray.ButtonParticle[k].vortexAttract = false;
+					}
+				}else{
+					for(var k = 0; k < len; k++){
+						globalVar.displayArray.ButtonParticle[k].attractPt = globalVar.attractPtL;
+						globalVar.displayArray.ButtonParticle[k].vortexAttract = true;
+					}
+				}
+			}else if($(e.target).is("#nextPage")){
+				if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
+					globalVar.transTarget.y -= 400;
+					globalVar.translate.currentPage += 1;
+				}
+			}else if($(e.target).is("#perPage")){
+				if (globalVar.translate.currentPage > 0){
+					globalVar.transTarget.y += 400;
+					globalVar.translate.currentPage -= 1;
+				}
+			}else if($(e.target).is("#filterBarBtn")){
+				$("#filter").slideDown("slow");      //下拉显示fliter
 			}
-			
 		});
-	
-	});
-	
-	
-	$("body").click(function (e){
-		if ($(e.target).is("#filterBar , #filterBarBtn , #filterBar button")){
-			return;
-		}else{
-			//折叠FilterBar
-			$("#filter").slideUp("fast");    //隐藏fliter
-		}
 	});
 	
 	//窗口尺寸改变
@@ -296,9 +298,6 @@
 		resizeCanvas();   //调整canv位置与大小
 	});
 	
-	$("#filterBarBtn").mouseover(function (){
-		$("#filter").slideDown("slow");      //下拉显示fliter
-	});
 	
 	$("#sketch").mouseenter(function (e){
 		$("#filter").slideUp("fast");
@@ -345,19 +344,6 @@
 		}
 	};
 	
-	$("#nextPage").click(function (){
-		if (globalVar.translate.currentPage < globalVar.transTarget.totalPage - 1){
-			globalVar.transTarget.y -= 400;
-			globalVar.translate.currentPage += 1;
-		}
-	});
-	
-	$("#perPage").click(function (){
-		if (globalVar.translate.currentPage > 0){
-			globalVar.transTarget.y += 400;
-			globalVar.translate.currentPage -= 1;
-		}
-	});
 	
 	$("#filterT, #filterBarBtn").mouseover(function (){       //让鼠标选择不中FilterBar下面的button
 		if (ButtonPlus.prototype.hoverObjCount < 1){
@@ -587,7 +573,18 @@
 		text : ""
 	};
 	
+	var options_search = {
+		id : "filterBar_search",
+		type : "search",
+		class : "search",
+		keyword : "search",
+		parentId : "btnGroup",
+		title: "搜索",
+		text : ""
+	};
+	
 	globalVar.filterButton.push(new FilterButton(options_cancelAll));
+	globalVar.filterButton.push(new FilterButton(options_search));
 
 /***/ },
 /* 1 */
@@ -955,6 +952,11 @@
 		this.geometryType = "circle";
 		this.maxWidth = 100;
 		this.filtered = false;   //用于过滤
+		
+		var translateX = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
+			translateY = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y;
+		this.mouseX = this.p.mouseX - translateX;
+		this.mouseY = this.p.mouseY - translateY;
 	}
 	util.inheritPrototype(ButtonPlus, Button);
 	
@@ -965,10 +967,7 @@
 	
 	//判断ButtonPlus是否被选中（加强版）
 	ButtonPlus.prototype.isSelected = function () {
-		var translateX = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
-			translateY = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y,
-			mouseX = this.p.mouseX - translateX,
-			mouseY = this.p.mouseY - translateY;
+		
 	
 		if (this.filtered){     //假如被排除了，那么所有的状态都为未选中（亦即永远选不中）
 			return false;
@@ -976,8 +975,8 @@
 		var width = this.width > 40 ? this.width : 40;
 		var height = this.width > 40 ? this.width : 40;
 		if (this.width === this.height && this.geometryType === "circle") {
-			if (Math.pow((mouseX - this.position.x), 2) + Math.pow((mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
-				if (this.isMouseInUnSectArea(mouseX, mouseY) && this.pState !== "click" && this.pState !== "press"){
+			if (Math.pow((this.mouseX - this.position.x), 2) + Math.pow((this.mouseY - this.position.y), 2) <= Math.pow(width / 2, 2)) {
+				if (this.isMouseInUnSectArea(this.mouseX, this.mouseY) && this.pState !== "click" && this.pState !== "press"){
 					return false;
 				}else{
 					return true;
@@ -986,8 +985,8 @@
 				return false;
 			}
 		} else {
-			if (mouseX >= this.position.x - width / 2 && mouseX <= this.position.x + width / 2 && mouseY >= this.position.y - height / 2) {
-				if (this.isMouseInUnSectArea(mouseX, mouseY)){
+			if (this.mouseX >= this.position.x - width / 2 && this.mouseX <= this.position.x + width / 2 && this.mouseY >= this.position.y - height / 2) {
+				if (this.isMouseInUnSectArea(this.mouseX, this.mouseY)){
 					return false;
 				}
 				return true;
@@ -1095,6 +1094,10 @@
 	
 	ButtonPlus.prototype.update = function (){
 		this.trans_position = new p5.Vector(this.position.x + this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x, this.position.y + this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y);
+		var translateX = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].x,     //p5的bug,translate后,鼠标位置出错.
+			translateY = this.constructor.prototype.trans[this.constructor.prototype.trans.length - 1].y;
+		this.mouseX = this.p.mouseX - translateX;
+		this.mouseY = this.p.mouseY - translateY;
 	};
 	//根据不同的状态绘制ButtonPlus（加强版）
 	ButtonPlus.prototype.display = function () {
@@ -1463,13 +1466,13 @@
 	
 	var FilterButton = function (options){
 	    this.type = options.type;
-	    if (this.type !== "cancel"){
+	    
+	    if (this.type !== "cancel" && this.type !== "search"){
 	        this.value = options.value;
 	        this.switch = false;
 	    }
+	    
 	    this.keyword = options.keyword;
-	
-	
 	    if (options.node){
 	        this.node = options.node;
 	    }else{
@@ -1493,11 +1496,16 @@
 	
 	FilterButton.prototype.createElement = function (){
 	    var doc = document;
-	    this.node = doc.createElement("button");
+	    if (this.type === "search"){
+	        this.node = doc.createElement("input");
+	        this.node.type = "text";
+	    }else{
+	        this.node = doc.createElement("button");
+	        this.node.innerHTML = this.text;
+	    }
 	    this.node.id = this.id;
 	    this.node.className = this.class;
-	    this.node.innerHTML = this.text;
-	    //this.node.href = "#";
+	    
 	    if (this.parentId){
 	        var parentNode = doc.getElementById(this.parentId);
 	        if (parentNode){
@@ -1523,20 +1531,34 @@
 	        for (var keyword in this.constructor.prototype.select) {
 	            if (this.constructor.prototype.select[keyword].length === 0){      //如果有一列的多选按钮点击个数减少到0，则filter失效
 	                if (m === 0){
-	                    status[i] = false;
+	                    status[i] = false;    //BP[i].visualObject.filtered = false;
 	                }else{
 	                    status[i] |= false;
 	                }
-	                //BP[i].visualObject.filtered = false;
 	                delete this.constructor.prototype.select[keyword];
 	            }else{
-	                if (this.constructor.prototype.select[keyword].indexOf(BP[i].visualObject.info[keyword]) === -1) {     // ===-1说明不存在
-	                    if (BP[i].visualObject.pState === "click") {
-	                        BP[i].visualObject.pState = "mouseOut";       //fliter切换后，将之前“click”状态的button改为普通状态，即状态重置
-	                        ButtonPlus.prototype.hoverObjCount = 0;        //选中个数也必须重置
-	                        ButtonPlus.prototype.clickObjCount = 0; 
-	                        BP[i].visualObject.fire({type: "turnOff"});     //ButtonPlus触发turnOff事件
+	                if (keyword === "search"){    //是否是搜索框
+	                    var value = this.constructor.prototype.select[keyword];
+	                    if (value !== ""){
+	                        var re = new RegExp(value + "", "gi");
+	                        var resule = re.test(BP[i].visualObject.info["title"]);
+	                        if (!resule){
+	                            this.changeBtnStatus(BP[i])
+	                            if (m === 0){
+	                                status[i] = true;
+	                            }else{
+	                                status[i] |= true;
+	                            }
+	                        }
 	                    }
+	                }else if (this.constructor.prototype.select[keyword].indexOf(BP[i].visualObject.info[keyword]) === -1) {     // ===-1说明不存在
+	                    this.changeBtnStatus(BP[i])
+	                    // if (BP[i].visualObject.pState === "click") {
+	                    //     BP[i].visualObject.pState = "mouseOut";       //fliter切换后，将之前“click”状态的button改为普通状态，即状态重置
+	                    //     ButtonPlus.prototype.hoverObjCount = 0;        //选中个数也必须重置
+	                    //     ButtonPlus.prototype.clickObjCount = 0; 
+	                    //     BP[i].visualObject.fire({type: "turnOff"});     //ButtonPlus触发turnOff事件
+	                    // }
 	
 	                    if (m === 0){
 	                        status[i] = true;
@@ -1562,7 +1584,50 @@
 	};
 	
 	FilterButton.prototype.attachEvent = function (){
-	    if (this.type !== "cancel"){
+	    if (this.type === "cancel"){                                              //如果是删除按钮
+	        this.node.onclick = function (){
+	            if (this.keyword){       //操作分类删除按钮
+	                this.constructor.prototype.select[this.keyword] = [];
+	
+	                for (var i in globalVar.filterButton){        //清除某个类型的按钮
+	                    if (globalVar.filterButton[i].switch && globalVar.filterButton[i].keyword === this.keyword){
+	                        globalVar.filterButton[i].switch = globalVar.filterButton[i].switch ? false : true;
+	                        globalVar.filterButton[i].node.classList.remove("active");
+	                    }
+	                }
+	
+	                this.disactiveCancelAll();    //当所有按钮没被按下时,取消激活cancelAll
+	
+	            }else{                              //全部清除
+	                for (var keyword in this.constructor.prototype.select) {
+	                    if (keyword !== "search"){
+	                        this.constructor.prototype.select[keyword] = [];     //cancelAll按钮不清楚搜索框的内容
+	                    }
+	                }
+	                for (i in globalVar.filterButton){
+	                    if (globalVar.filterButton[i].switch){
+	                        globalVar.filterButton[i].switch = globalVar.filterButton[i].switch ? false : true;
+	                        globalVar.filterButton[i].node.classList.remove("active");
+	                    }
+	                    if (globalVar.filterButton[i].type === "cancel"){
+	                        globalVar.filterButton[i].node.classList.remove("cancelActive");
+	                    }
+	                }
+	            } 
+	            this.node.classList.remove("cancelActive");
+	            this.doFilter();
+	        }.bind(this);
+	    }else if(this.type === "search"){
+	        this.node.onchange = function (){
+	            var value = this.node.value;
+	            if (value === ""){
+	                this.constructor.prototype.select["search"] = [];
+	            }else{
+	                this.constructor.prototype.select["search"] = value;
+	            }
+	            this.doFilter();
+	        }.bind(this);
+	    }else{
 	        this.node.onclick = function (){
 	            this.switch = this.switch ? false : true;
 	
@@ -1589,7 +1654,7 @@
 	                    var id = keyword.indexOf(this.value);
 	                    keyword.splice(id, 1);
 	                }
-	                if (keyword.length === 0){
+	                if (keyword.length === 0){       //操作分类删除按钮
 	                    for(var i in globalVar.filterButton){                                        //当该类型的所有按钮没被按下时,取消激活该类型的删除按钮
 	                        if (globalVar.filterButton[i].type === "cancel" && globalVar.filterButton[i].keyword === this.keyword){
 	                            globalVar.filterButton[i].node.classList.remove("cancelActive");
@@ -1600,37 +1665,6 @@
 	                this.disactiveCancelAll();    //当所有按钮没被按下时,取消激活cancelAll
 	            }
 	
-	            this.doFilter();
-	        }.bind(this);
-	    }else{                                              //如果是删除按钮
-	        this.node.onclick = function (){
-	            if (this.keyword){
-	                this.constructor.prototype.select[this.keyword] = [];
-	
-	                for (var i in globalVar.filterButton){        //清除某个类型的按钮
-	                    if (globalVar.filterButton[i].switch && globalVar.filterButton[i].keyword === this.keyword){
-	                        globalVar.filterButton[i].switch = globalVar.filterButton[i].switch ? false : true;
-	                        globalVar.filterButton[i].node.classList.remove("active");
-	                    }
-	                }
-	
-	                this.disactiveCancelAll();    //当所有按钮没被按下时,取消激活cancelAll
-	
-	            }else{                              //全部清除
-	                for (var keyword in this.constructor.prototype.select) {
-	                    this.constructor.prototype.select[keyword] = [];
-	                }
-	                for (i in globalVar.filterButton){
-	                    if (globalVar.filterButton[i].switch){
-	                        globalVar.filterButton[i].switch = globalVar.filterButton[i].switch ? false : true;
-	                        globalVar.filterButton[i].node.classList.remove("active");
-	                    }
-	                    if (globalVar.filterButton[i].type === "cancel"){
-	                        globalVar.filterButton[i].node.classList.remove("cancelActive");
-	                    }
-	                }
-	            }
-	            this.node.classList.remove("cancelActive");
 	            this.doFilter();
 	        }.bind(this);
 	    }
@@ -1648,6 +1682,16 @@
 	        }
 	    }
 	};
+	
+	FilterButton.prototype.changeBtnStatus = function (btn){ 
+	    if (btn.visualObject.pState === "click") {
+	        btn.visualObject.pState = "mouseOut";       //fliter切换后，将之前“click”状态的button改为普通状态，即状态重置
+	        ButtonPlus.prototype.hoverObjCount = 0;        //选中个数也必须重置
+	        ButtonPlus.prototype.clickObjCount = 0; 
+	        btn.visualObject.fire({type: "turnOff"});     //ButtonPlus触发turnOff事件
+	    }
+	}
+	
 	
 	module.exports = FilterButton;
 
@@ -1825,12 +1869,47 @@
 	            event.target.p.ellipse(event.target.position.x, event.target.position.y, event.target.height + Math.sqrt((n - 60 * i) * 10, 2), event.target.height + Math.sqrt((n - 60 * i) * 10, 2));
 	        }
 	        
+	        //画线
 	        event.target.p.stroke('gray');
-	        event.target.p.strokeWeight(1);
+	        event.target.p.strokeWeight(0.8);
 	        if(event.target.clickTimeline < 100){
 	            event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, Math.max(event.target.position.y + 15 * event.target.clickTimeline, event.target.position.y + event.target.width / 2));
+	            if (event.target.clickTimeline === 0){
+	                event.target.pts = [];
+	                event.target.pts.push(new p5.Vector(event.target.position.x, event.target.position.y + event.target.width / 2));
+	                event.target.pts.push(new p5.Vector(event.target.position.x, event.target.position.y + event.target.width / 2));
+	                for (i = 2; i < 20; i++){
+	                    event.target.pts.push(new p5.Vector(event.target.position.x, event.target.position.y + event.target.width / 2 + (i - 1) * 50));
+	                }
+	            }
 	        }else{
-	            event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, event.target.position.y + 1500);
+	            // event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, event.target.position.y + 1500);
+	            event.target.p.noFill();
+	            // event.target.p.stroke("red");
+	            event.target.p.beginShape();
+	            var pt,mouseX,mouseY;
+	            for (i = 0; i < 20; i++){
+	                pt = event.target.pts[i];
+	                mouseX = event.target.mouseX;
+	                mouseY = event.target.mouseY;
+	                // var mouse = new p5.Vector(event.target.mouseX, event.target.mouseX);
+	                
+	                if (i > 1){
+	                    var dis = Math.sqrt(Math.pow(pt.x - mouseX, 2) + Math.pow(pt.y - mouseY, 2));
+	                    dis = event.target.p.map(dis, 0, 1300, 0, 100);
+	                    dis = 100 / event.target.p.constrain(dis,1,100);
+	                    // var rand = (Math.random() - 0.5) * 0.5 * dis;
+	                    // pt.x += dis;
+	                    event.target.p.curveVertex(pt.x + dis, pt.y);
+	                    event.target.p.ellipse(pt.x + dis, pt.y,10,10);
+	                }else{
+	                    event.target.p.curveVertex(pt.x, pt.y);
+	                    event.target.p.ellipse(pt.x,pt.y,10,10);
+	                }
+	                
+	                event.target.p.ellipse(mouseX,mouseY,10,10);
+	            }
+	            event.target.p.endShape();
 	        }
 	    },
 	

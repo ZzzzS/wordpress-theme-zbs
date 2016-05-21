@@ -34,12 +34,47 @@ var eventHandleFunc = {
             event.target.p.ellipse(event.target.position.x, event.target.position.y, event.target.height + Math.sqrt((n - 60 * i) * 10, 2), event.target.height + Math.sqrt((n - 60 * i) * 10, 2));
         }
         
+        //画线
         event.target.p.stroke('gray');
-        event.target.p.strokeWeight(1);
+        event.target.p.strokeWeight(0.8);
         if(event.target.clickTimeline < 100){
             event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, Math.max(event.target.position.y + 15 * event.target.clickTimeline, event.target.position.y + event.target.width / 2));
+            if (event.target.clickTimeline === 0){
+                event.target.pts = [];
+                event.target.pts.push(new p5.Vector(event.target.position.x, event.target.position.y + event.target.width / 2));
+                event.target.pts.push(new p5.Vector(event.target.position.x, event.target.position.y + event.target.width / 2));
+                for (i = 2; i < 20; i++){
+                    event.target.pts.push(new p5.Vector(event.target.position.x, event.target.position.y + event.target.width / 2 + (i - 1) * 50));
+                }
+            }
         }else{
-            event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, event.target.position.y + 1500);
+            // event.target.p.line(event.target.position.x, event.target.position.y + event.target.width / 2, event.target.position.x, event.target.position.y + 1500);
+            event.target.p.noFill();
+            // event.target.p.stroke("red");
+            event.target.p.beginShape();
+            var pt,mouseX,mouseY;
+            for (i = 0; i < 20; i++){
+                pt = event.target.pts[i];
+                mouseX = event.target.mouseX;
+                mouseY = event.target.mouseY;
+                // var mouse = new p5.Vector(event.target.mouseX, event.target.mouseX);
+                
+                if (i > 1){
+                    var dis = Math.sqrt(Math.pow(pt.x - mouseX, 2) + Math.pow(pt.y - mouseY, 2));
+                    dis = event.target.p.map(dis, 0, 1300, 0, 100);
+                    dis = 100 / event.target.p.constrain(dis,1,100);
+                    // var rand = (Math.random() - 0.5) * 0.5 * dis;
+                    // pt.x += dis;
+                    event.target.p.curveVertex(pt.x + dis, pt.y);
+                    event.target.p.ellipse(pt.x + dis, pt.y,10,10);
+                }else{
+                    event.target.p.curveVertex(pt.x, pt.y);
+                    event.target.p.ellipse(pt.x,pt.y,10,10);
+                }
+                
+                event.target.p.ellipse(mouseX,mouseY,10,10);
+            }
+            event.target.p.endShape();
         }
     },
 

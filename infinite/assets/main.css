@@ -70,14 +70,14 @@
       #filterBar #filter #filterT td {
         text-align: center;
         padding: 0; }
-        #filterBar #filter #filterT td #getPosts, #filterBar #filter #filterT td #getUsers, #filterBar #filter #filterT td #align {
+        #filterBar #filter #filterT td input, #filterBar #filter #filterT td #getPosts, #filterBar #filter #filterT td #getUsers, #filterBar #filter #filterT td #align {
           margin: 10px 20px;
           height: 30px; }
-          #filterBar #filter #filterT td #getPosts:before, #filterBar #filter #filterT td #getUsers:before, #filterBar #filter #filterT td #align:before {
-            font-size: 20px;
-            font-family: FontAwesome;
-            color: gray;
-            content: "\F0F6"; }
+        #filterBar #filter #filterT td #getPosts:before, #filterBar #filter #filterT td #getUsers:before, #filterBar #filter #filterT td #align:before {
+          font-size: 20px;
+          font-family: FontAwesome;
+          color: gray;
+          content: "\F0F6"; }
         #filterBar #filter #filterT td #getUsers:before {
           content: "\F0C0"; }
         #filterBar #filter #filterT td #getUsers:hover {
